@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Former_Member</fullName>
+    <label>Former_Member</label>
+    <description>Previous member who has left</description>
+    <active>true</active>
+    <deploy>true</deploy>
+</CustomObjectType>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>validate_status_progression</fullName>
+    <active>true</active>
+    <description>validate_status_progression</description>
+    <errorConditionFormula>CASE(Lead_Status__c, 'New', 1, 'Contacted', 2, 'Qualified', 3, 'Unqualified', 4, 'Converted', 5, 0) = 0</errorConditionFormula>
+    <errorMessage>Invalid Lead Status value</errorMessage>
+</ValidationRule>

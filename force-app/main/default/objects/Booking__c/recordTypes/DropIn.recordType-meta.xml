@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DropIn</fullName>
+    <label>DropIn</label>
+    <description>Walk-in member joins on the spot</description>
+    <active>true</active>
+    <deploy>true</deploy>
+</CustomObjectType>

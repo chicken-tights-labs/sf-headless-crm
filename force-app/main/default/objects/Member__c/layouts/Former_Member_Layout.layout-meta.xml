@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Layout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Former_Member_Layout</fullName>
+    <label>Former_Member_Layout</label>
+    <layoutType>Former_Member</layoutType>
+    <layoutSections>
+        <label>Personal Info</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>First_Name__c</field>
+        </columns>
+        <columns>
+            <field>Last_Name__c</field>
+        </columns>
+        <columns>
+            <field>Email__c</field>
+        </columns>
+        <columns>
+            <field>Phone__c</field>
+        </columns>
+    </layoutSections>
+    <layoutSections>
+        <label>Membership History</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Home_Location__c</field>
+        </columns>
+        <columns>
+            <field>Membership_Tier__c</field>
+        </columns>
+        <columns>
+            <field>Start_Date__c</field>
+        </columns>
+        <columns>
+            <field>Expiry_Date__c</field>
+        </columns>
+        <columns>
+            <field>Status__c</field>
+        </columns>
+    </layoutSections>
+    <layoutSections>
+        <label>Billing</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Payment_Method__c</field>
+        </columns>
+    </layoutSections>
+    <layoutSections>
+        <label>Notes</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Medical_Notes__c</field>
+        </columns>
+    </layoutSections>
+</Layout>

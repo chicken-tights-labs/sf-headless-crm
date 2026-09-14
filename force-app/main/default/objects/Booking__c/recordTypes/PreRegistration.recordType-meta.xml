@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PreRegistration</fullName>
+    <label>PreRegistration</label>
+    <description>Member books ahead for a class</description>
+    <active>true</active>
+    <deploy>true</deploy>
+</CustomObjectType>

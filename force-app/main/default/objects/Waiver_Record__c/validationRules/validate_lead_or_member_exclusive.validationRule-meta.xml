@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>validate_lead_or_member_exclusive</fullName>
+    <active>true</active>
+    <description>validate_lead_or_member_exclusive</description>
+    <errorConditionFormula>(NOT(ISBLANK(Lead__c)) AND NOT(ISBLANK(Member__c))) OR (ISBLANK(Lead__c) AND ISBLANK(Member__c))</errorConditionFormula>
+    <errorMessage>Must specify either a Lead OR a Member, not both or neither</errorMessage>
+</ValidationRule>

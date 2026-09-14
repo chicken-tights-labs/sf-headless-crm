@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Layout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Prospect_Layout</fullName>
+    <label>Prospect_Layout</label>
+    <layoutType>Prospect</layoutType>
+    <layoutSections>
+        <label>Basic Info</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>First_Name__c</field>
+        </columns>
+        <columns>
+            <field>Last_Name__c</field>
+        </columns>
+        <columns>
+            <field>Email__c</field>
+        </columns>
+        <columns>
+            <field>Phone__c</field>
+        </columns>
+        <columns>
+            <field>Date_of_Birth__c</field>
+        </columns>
+    </layoutSections>
+    <layoutSections>
+        <label>Lead Source</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Lead_Source__c</field>
+        </columns>
+        <columns>
+            <field>Home_Location__c</field>
+        </columns>
+    </layoutSections>
+    <layoutSections>
+        <label>Follow-Up</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Notes__c</field>
+        </columns>
+        <columns>
+            <field>Next_Follow_Up_Date__c</field>
+        </columns>
+    </layoutSections>
+</Layout>

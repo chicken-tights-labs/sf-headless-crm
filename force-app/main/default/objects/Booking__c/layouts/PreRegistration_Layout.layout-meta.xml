@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Layout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PreRegistration_Layout</fullName>
+    <label>PreRegistration_Layout</label>
+    <layoutType>PreRegistration</layoutType>
+    <layoutSections>
+        <label>Booking Info</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Member__c</field>
+        </columns>
+        <columns>
+            <field>Scheduled_Session__c</field>
+        </columns>
+        <columns>
+            <field>Booking_Date__c</field>
+        </columns>
+    </layoutSections>
+    <layoutSections>
+        <label>Status</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Status__c</field>
+        </columns>
+        <columns>
+            <field>Checked_In_At__c</field>
+        </columns>
+    </layoutSections>
+</Layout>

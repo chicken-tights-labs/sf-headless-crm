@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+  <deploymentStatus>Deployed</deploymentStatus>
+  <enableFeeding>true</enableFeeding>
+  <enableFeeds>true</enableFeeds>
+  <label>Sale Line Item</label>
+  <pluralLabel>Sale Line Items</pluralLabel>
+  <nameField>
+    <type>Text</type>
+    <label>Sale Line Item Name</label>
+  </nameField>
+  <deploymentStatus>Deployed</deploymentStatus>
+  <sharingModel>ReadWriteTransfer</sharingModel>
+  <type>CustomObject</type>
+</CustomObject>

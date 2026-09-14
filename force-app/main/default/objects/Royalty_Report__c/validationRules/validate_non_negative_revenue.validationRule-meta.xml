@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>validate_non_negative_revenue</fullName>
+    <active>true</active>
+    <description>validate_non_negative_revenue</description>
+    <errorConditionFormula>Gross_Revenue__c < 0</errorConditionFormula>
+    <errorMessage>Gross Revenue cannot be negative</errorMessage>
+</ValidationRule>

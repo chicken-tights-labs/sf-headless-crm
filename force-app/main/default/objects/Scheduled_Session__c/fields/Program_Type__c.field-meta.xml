@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fullName>Program_Type__c</fullName>
+  <label>Program Type</label>
+  <type>Picklist</type>
+  <required>true</required>
+  <valueSet>
+    <restricted>true</restricted>
+    <valueSetDefinition>
+      <value>
+        <fullName>Boxing Fundamentals</fullName>
+        <default>false</default>
+      </value>
+      <value>
+        <fullName>Kickboxing Basics</fullName>
+        <default>false</default>
+      </value>
+      <value>
+        <fullName>BoxFit</fullName>
+        <default>false</default>
+      </value>
+      <value>
+        <fullName>1-on-1 Training</fullName>
+        <default>false</default>
+      </value>
+      <value>
+        <fullName>Kids Boxing</fullName>
+        <default>false</default>
+      </value>
+      <value>
+        <fullName>HIIT Boxing</fullName>
+        <default>false</default>
+      </value>
+    </valueSetDefinition>
+  </valueSet>
+</CustomField>

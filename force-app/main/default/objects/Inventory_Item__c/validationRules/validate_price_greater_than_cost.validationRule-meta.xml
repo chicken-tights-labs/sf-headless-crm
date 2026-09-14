@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>validate_price_greater_than_cost</fullName>
+    <active>true</active>
+    <description>validate_price_greater_than_cost</description>
+    <errorConditionFormula>Unit_Price__c < Cost__c</errorConditionFormula>
+    <errorMessage>Unit price must be greater than or equal to cost</errorMessage>
+</ValidationRule>

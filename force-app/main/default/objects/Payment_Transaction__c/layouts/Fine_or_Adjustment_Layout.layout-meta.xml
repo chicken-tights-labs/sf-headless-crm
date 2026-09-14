@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Layout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Fine_or_Adjustment_Layout</fullName>
+    <label>Fine_or_Adjustment_Layout</label>
+    <layoutType>Fine_or_Adjustment</layoutType>
+    <layoutSections>
+        <label>Adjustment Info</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Member__c</field>
+        </columns>
+        <columns>
+            <field>Amount__c</field>
+        </columns>
+        <columns>
+            <field>Transaction_Date__c</field>
+        </columns>
+        <columns>
+            <field>Payment_Type__c</field>
+        </columns>
+        <columns>
+            <field>Status__c</field>
+        </columns>
+    </layoutSections>
+    <layoutSections>
+        <label>Notes</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Notes__c</field>
+        </columns>
+    </layoutSections>
+    <layoutSections>
+        <label>Location</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Franchise_Location__c</field>
+        </columns>
+    </layoutSections>
+</Layout>

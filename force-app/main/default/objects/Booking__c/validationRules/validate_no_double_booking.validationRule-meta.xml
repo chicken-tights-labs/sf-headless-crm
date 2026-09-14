@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>validate_no_double_booking</fullName>
+    <active>true</active>
+    <description>validate_no_double_booking</description>
+    <errorConditionFormula>EXISTS([SELECT Id FROM Booking__c WHERE Member__c = :Member__c AND Scheduled_Session__c = :Scheduled_Session__c AND Id != :Id])</errorConditionFormula>
+    <errorMessage>Member already booked for this session</errorMessage>
+</ValidationRule>

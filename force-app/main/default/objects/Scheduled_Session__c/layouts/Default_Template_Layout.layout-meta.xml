@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Layout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Default_Template_Layout</fullName>
+    <label>Default_Template_Layout</label>
+    <layoutType>Default_Template</layoutType>
+    <layoutSections>
+        <label>Template Info</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Program_Type__c</field>
+        </columns>
+        <columns>
+            <field>Based_On_Template__c</field>
+        </columns>
+    </layoutSections>
+    <layoutSections>
+        <label>Schedule</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Franchise_Location__c</field>
+        </columns>
+        <columns>
+            <field>Start_Time__c</field>
+        </columns>
+        <columns>
+            <field>End_Time__c</field>
+        </columns>
+        <columns>
+            <field>Max_Capacity__c</field>
+        </columns>
+    </layoutSections>
+    <layoutSections>
+        <label>Status</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Session_Status__c</field>
+        </columns>
+        <columns>
+            <field>Assigned_Trainer__c</field>
+        </columns>
+    </layoutSections>
+</Layout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fullName>Session_Status__c</fullName>
+  <label>Session Status</label>
+  <type>Picklist</type>
+  <required>true</required>
+  <valueSet>
+    <restricted>true</restricted>
+    <valueSetDefinition>
+      <value>
+        <fullName>Scheduled</fullName>
+        <default>false</default>
+      </value>
+      <value>
+        <fullName>Cancelled</fullName>
+        <default>false</default>
+      </value>
+      <value>
+        <fullName>Completed</fullName>
+        <default>false</default>
+      </value>
+    </valueSetDefinition>
+  </valueSet>
+</CustomField>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fullName>Waiver_Signed__c</fullName>
+  <label>Waiver Signed</label>
+  <type>Lookup</type>
+  <referenceTo>Waiver_Record__c</referenceTo>
+  <relationshipField>Waiver_Signed__r</relationshipField>
+  <relationshipName>Waiver_Signed_ref</relationshipName>
+</CustomField>

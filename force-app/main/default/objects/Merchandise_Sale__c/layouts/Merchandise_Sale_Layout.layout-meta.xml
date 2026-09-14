@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Layout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Merchandise_Sale_Layout</fullName>
+    <label>Merchandise_Sale_Layout</label>
+    <layoutType>Master</layoutType>
+    <layoutSections>
+        <label>Sale Info</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Sale_Date__c</field>
+        </columns>
+        <columns>
+            <field>Member__c</field>
+        </columns>
+        <columns>
+            <field>Franchise_Location__c</field>
+        </columns>
+        <columns>
+            <field>Payment_Method__c</field>
+        </columns>
+    </layoutSections>
+    <layoutSections>
+        <label>Discounts</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Discount_Percentage__c</field>
+        </columns>
+        <columns>
+            <field>Manager_Override_Reason__c</field>
+        </columns>
+        <columns>
+            <field>Discount_Approved_By__c</field>
+        </columns>
+    </layoutSections>
+    <layoutSections>
+        <label>Totals</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Total_Amount__c</field>
+        </columns>
+    </layoutSections>
+</Layout>

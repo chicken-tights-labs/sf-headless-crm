@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fullName>Signature_Method__c</fullName>
+  <label>Signature Method</label>
+  <type>Picklist</type>
+  <required>true</required>
+  <valueSet>
+    <restricted>true</restricted>
+    <valueSetDefinition>
+      <value>
+        <fullName>Digital In-Person</fullName>
+        <default>false</default>
+      </value>
+      <value>
+        <fullName>Digital Remote</fullName>
+        <default>false</default>
+      </value>
+      <value>
+        <fullName>Paper Scanned</fullName>
+        <default>false</default>
+      </value>
+    </valueSetDefinition>
+  </valueSet>
+</CustomField>

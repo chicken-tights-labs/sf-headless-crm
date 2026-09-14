@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fullName>Signed_By__c</fullName>
+  <label>Signed By</label>
+  <type>Lookup</type>
+  <referenceTo>User</referenceTo>
+  <relationshipField>Signed_By__r</relationshipField>
+  <relationshipName>Signed_By_ref</relationshipName>
+</CustomField>

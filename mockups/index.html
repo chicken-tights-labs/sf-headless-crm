@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer App Mockup</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+        }
+        .device-frame {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #1e1e1e;
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .screen {
+            background: #0f0f0f;
+            border-radius: 20px;
+            padding: 20px;
+            min-height: 500px;
+        }
+        h1 {
+            color: #ffcc00;
+            text-align: center;
+            margin-top: 0;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+        .btn-primary {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .btn-secondary {
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 16px;
+        }
+        .card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #ff6b35;
+        }
+        .stat-badge {
+            display: inline-block;
+            background: #2a2a2a;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .green { color: #4caf50; }
+        .orange { color: #ff9800; }
+        .red { color: #f44336; }
+        .divider {
+            height: 1px;
+            background: #333;
+            margin: 15px 0;
+        }
+        .reminder-item {
+            background: #1a1a1a;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #222;
+        }
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            margin: 5px 0;
+        }
+        .attendee-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #222;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="device-frame">
+    <div class="screen">
+        <h1>Screen 1: Login</h1>
+        <div class="header">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='%23ff6b35'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3E%3E%3Ctext x='12' y='16' font-size='10' text-anchor='middle' fill='%23fff'%3EGLOVE%3C/text%3E%3C/svg%3E" alt="Logo">
+            <span style="color:#ff6b35; font-size:20px;">Title Boxing Club</span>
+        </div>
+
+        <p style="text-align:center; margin-top:20px;">Boxing Gym POS</p>
+        
+        <input type="text" placeholder="Username">
+        <input type="password" placeholder="Password">
+        
+        <button class="btn-primary">Login</button>
+        
+        <p style="text-align:center; font-size:12px; margin-top:20px;">
+            Forgot Password?
+        </p>
+    </div>
+</div>
+
+<div style="margin-top:30px;"></div>
+
+<div class="device-frame">
+    <div class="screen">
+        <h1>Screen 2: Today's Dashboard</h1>
+        <div class="header">
+            <div>
+                <h3>Good morning, Alex!</h3>
+                <small>June 13, 2024</small>
+            </div>
+        </div>
+
+        <h4>Today's Classes:</h4>
+        
+        <div class="card">
+            <strong>Boxing Fundamentals</strong><br>
+            <span class="stat-badge green">5/10 ⬤</span>
+        </div>
+        
+        <div class="card">
+            <strong>Kickboxing Basics</strong><br>
+            <span class="stat-badge orange">8/12 ⬤</span>
+        </div>
+        
+        <div class="card">
+            <strong>BoxFit</strong><br>
+            <span class="stat-badge green">3/15 ⬤</span>
+        </div>
+
+        <div class="divider"></div>
+        
+        <button class="btn-primary">Check-In Member</button>
+        <button class="btn-secondary">New Lead</button>
+        <button class="btn-secondary">Sell Merchandise</button>
+
+        <h4 style="margin-top:20px;">Reminders:</h4>
+        <div class="reminder-item">• Jane Doe - Renewal due tomorrow</div>
+        <div class="reminder-item">• Low Stock Alert: Wraps (&lt;5 left)</div>
+    </div>
+</div>
+
+<div style="margin-top:30px;"></div>
+
+<div class="device-frame">
+    <div class="screen">
+        <h1>Screen 3: Check-In</h1>
+        <div class="header">
+            <button class="btn-secondary">← Back</button>
+        </div>
+
+        <h3>Check In Member</h3>
+        
+        <button class="btn-secondary" style="text-align:left;">📷 Scan QR Code</button>
+        
+        <p style="text-align:center; margin:15px 0;">OR</p>
+        
+        <input type="tel" placeholder="Phone Number">
+        <button class="btn-primary">Search</button>
+
+        <div class="divider"></div>
+        
+        <div class="card">
+            <strong>Alex Johnson</strong><br>
+            <small>📅 Last Visited: June 10</small><br>
+            <small>🏋️ Workouts: 42</small><br>
+            <span class="stat-badge green">Active until 2025-06-30</span>
+        </div>
+        
+        <button class="btn-primary">Confirm Check-In</button>
+        <button class="btn-secondary">View Profile</button>
+        
+        <p style="text-align:center; margin-top:20px;">
+            Not found? <a href="#" style="color:#ff6b35;">Add New Lead</a>
+        </p>
+    </div>
+</div>
+
+<div style="margin-top:30px;"></div>
+
+<div class="device-frame">
+    <div class="screen">
+        <h1>Screen 4: New Lead</h1>
+        <div class="header">
+            <button class="btn-secondary">← Back</button>
+        </div>
+
+        <h3>New Lead</h3>
+        
+        <input type="text" placeholder="First Name">
+        <input type="text" placeholder="Last Name">
+        <input type="email" placeholder="Email">
+        <input type="tel" placeholder="Phone">
+        
+        <select>
+            <option>Select Location</option>
+            <option>Downtown Gym</option>
+            <option>Midtown Boxing</option>
+            <option>Uptown Fitness</option>
+        </select>
+        
+        <textarea placeholder="Notes (optional)" rows="3"></textarea>
+        
+        <label style="display:flex; align-items:center; gap:8px; margin:10px 0;">
+            <input type="checkbox"> Save & Create Member
+        </label>
+        
+        <button class="btn-primary" style="margin-top:15px;">Submit</button>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Layout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Guardian_Consent_Layout</fullName>
+    <label>Guardian_Consent_Layout</label>
+    <layoutType>Guardian_Consent</layoutType>
+    <layoutSections>
+        <label>Participant Info</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Lead__c</field>
+        </columns>
+        <columns>
+            <field>Member__c</field>
+        </columns>
+        <columns>
+            <field>Franchise_Location__c</field>
+        </columns>
+    </layoutSections>
+    <layoutSections>
+        <label>Guardian Consent</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Is_Minor__c</field>
+        </columns>
+        <columns>
+            <field>Minor_First_Name__c</field>
+        </columns>
+        <columns>
+            <field>Minor_Last_Name__c</field>
+        </columns>
+        <columns>
+            <field>Minor_Date_of_Birth__c</field>
+        </columns>
+        <columns>
+            <field>Parent_Guardian_Name__c</field>
+        </columns>
+        <columns>
+            <field>Parent_Guardian_Signature_Link__c</field>
+        </columns>
+    </layoutSections>
+    <layoutSections>
+        <label>Status</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Status__c</field>
+        </columns>
+    </layoutSections>
+</Layout>

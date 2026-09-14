@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fullName>Franchise_Location__c</fullName>
+  <label>Franchise Location</label>
+  <type>Lookup</type>
+  <required>true</required>
+  <referenceTo>Franchise_Location__c</referenceTo>
+  <relationshipField>Franchise_Location__r</relationshipField>
+  <relationshipName>Franchise_Location_ref</relationshipName>
+</CustomField>

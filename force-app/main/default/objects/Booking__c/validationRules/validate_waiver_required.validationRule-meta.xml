@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>validate_waiver_required</fullName>
+    <active>true</active>
+    <description>validate_waiver_required</description>
+    <errorConditionFormula>ISBLANK(Member__r.Waiver_Signed__c)</errorConditionFormula>
+    <errorMessage>Member must have signed a waiver before booking classes</errorMessage>
+</ValidationRule>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Active_Member</fullName>
+    <label>Active_Member</label>
+    <description>Paying member with current membership</description>
+    <active>true</active>
+    <deploy>true</deploy>
+</CustomObjectType>

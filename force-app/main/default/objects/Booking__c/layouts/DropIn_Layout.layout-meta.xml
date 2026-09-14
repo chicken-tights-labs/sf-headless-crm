@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Layout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DropIn_Layout</fullName>
+    <label>DropIn_Layout</label>
+    <layoutType>DropIn</layoutType>
+    <layoutSections>
+        <label>Quick Booking</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Member__c</field>
+        </columns>
+        <columns>
+            <field>Scheduled_Session__c</field>
+        </columns>
+        <columns>
+            <field>Status__c</field>
+        </columns>
+    </layoutSections>
+</Layout>

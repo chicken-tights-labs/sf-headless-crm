@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>validate_content_required</fullName>
+    <active>true</active>
+    <description>validate_content_required</description>
+    <errorConditionFormula>ISBLANK(Content_Version_Id__c)</errorConditionFormula>
+    <errorMessage>Waiver template must contain a document</errorMessage>
+</ValidationRule>

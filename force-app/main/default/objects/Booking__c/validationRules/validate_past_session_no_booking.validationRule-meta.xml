@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>validate_past_session_no_booking</fullName>
+    <active>true</active>
+    <description>validate_past_session_no_booking</description>
+    <errorConditionFormula>Scheduled_Session__r.End_Time__c < NOW()</errorConditionFormula>
+    <errorMessage>Cannot book past sessions</errorMessage>
+</ValidationRule>

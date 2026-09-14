@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Layout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Merchandise_Sale_Layout</fullName>
+    <label>Merchandise_Sale_Layout</label>
+    <layoutType>Merchandise_Sale</layoutType>
+    <layoutSections>
+        <label>Sale Details</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Member__c</field>
+        </columns>
+        <columns>
+            <field>Amount__c</field>
+        </columns>
+        <columns>
+            <field>Transaction_Date__c</field>
+        </columns>
+        <columns>
+            <field>Payment_Type__c</field>
+        </columns>
+        <columns>
+            <field>Status__c</field>
+        </columns>
+        <columns>
+            <field>Transaction_Method__c</field>
+        </columns>
+    </layoutSections>
+    <layoutSections>
+        <label>Related Sale</label>
+        <style>TwoColumnsLeft</style>
+        <columns>
+            <field>Franchise_Location__c</field>
+        </columns>
+    </layoutSections>
+</Layout>

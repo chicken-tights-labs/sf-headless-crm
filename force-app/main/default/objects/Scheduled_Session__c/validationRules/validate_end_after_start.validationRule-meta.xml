@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>validate_end_after_start</fullName>
+    <active>true</active>
+    <description>validate_end_after_start</description>
+    <errorConditionFormula>End_Time__c <= Start_Time__c</errorConditionFormula>
+    <errorMessage>End time must be after start time</errorMessage>
+</ValidationRule>

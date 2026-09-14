@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fullName>Converted_Member__c</fullName>
+  <label>Converted Member</label>
+  <type>Lookup</type>
+  <referenceTo>Member__c</referenceTo>
+  <relationshipField>Converted_Member__r</relationshipField>
+  <relationshipName>Converted_Member_ref</relationshipName>
+</CustomField>

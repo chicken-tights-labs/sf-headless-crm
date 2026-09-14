@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fullName>Number_of_Active_Members__c</fullName>
+  <label>Active Members</label>
+  <type>RollUpSummary</type>
+  <referenceTo>Member__c</referenceTo>
+  <relationshipField>Number_of_Active_Members__r</relationshipField>
+  <relationshipName>Number_of_Active_Members_ref</relationshipName>
+  <referenceTo>Member__c</referenceTo>
+  <relationshipField>home_location__c</relationshipField>
+  <aggregate>COUNT</aggregate>
+  <filterItems>
+    <field>Status__c</field>
+    <operation>equals</operation>
+    <value>Active</value>
+  </filterItems>
+</CustomField>

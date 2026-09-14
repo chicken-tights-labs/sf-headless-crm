@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>validate_status_not_blank</fullName>
+    <active>true</active>
+    <description>validate_status_not_blank</description>
+    <errorConditionFormula>ISBLANK(Status__c)</errorConditionFormula>
+    <errorMessage>Status must be specified</errorMessage>
+</ValidationRule>

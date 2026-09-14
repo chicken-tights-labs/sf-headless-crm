@@ -1,0 +1,14 @@
+{
+  "packageDirectories": [
+    {
+      "path": "force-app",
+      "default": true,
+      "package": "boxing_gym_crm",
+      "versionName": "ver 0.1",
+      "versionNumber": "0.1.0.NEXT"
+    }
+  ],
+  "namespace": "",
+  "sfdx-project-runs-on": "unix",
+  "sourceApiVersion": "58.0"
+}

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer App Mockup - Merchandise & Classes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+        }
+        .device-frame {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #1e1e1e;
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .screen {
+            background: #0f0f0f;
+            border-radius: 20px;
+            padding: 20px;
+            min-height: 500px;
+        }
+        h1 {
+            color: #ffcc00;
+            text-align: center;
+            margin-top: 0;
+            font-size: 18px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+        .btn-primary {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .btn-secondary {
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 16px;
+        }
+        .card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #ff6b35;
+        }
+        .stat-badge {
+            display: inline-block;
+            background: #2a2a2a;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .divider {
+            height: 1px;
+            background: #333;
+            margin: 15px 0;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #222;
+            font-size: 14px;
+        }
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            margin: 5px 0;
+        }
+        .attendee-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #222;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="device-frame">
+    <div class="screen">
+        <h1>Screen 5: Merchandise Sale</h1>
+        <div class="header">
+            <button class="btn-secondary">← Back</button>
+        </div>
+
+        <h3>Merchandise Sale</h3>
+        
+        <select>
+            <option>Search Members/Leads</option>
+        </select>
+        
+        <div class="card" style="margin: 15px 0;">
+            <label style="display:flex; align-items:center; gap:8px;">
+                📷 Scan Item Barcode
+            </label>
+        </div>
+
+        <h4>Cart:</h4>
+        <div class="cart-item">
+            <div>
+                Boxing Gloves ($79.99) ×1
+            </div>
+            <div>$79.99</div>
+        </div>
+        <div class="cart-item">
+            <div>
+                Hand Wraps ($15.00) ×2
+            </div>
+            <div>$30.00</div>
+        </div>
+
+        <div class="divider"></div>
+        
+        <div class="cart-item">
+            <strong>Subtotal</strong>
+            <strong>$109.99</strong>
+        </div>
+        
+        <input type="text" placeholder="Apply Discount Code">
+        
+        <div class="cart-item">
+            <strong>Total</strong>
+            <strong>$109.99</strong>
+        </div>
+
+        <h4 style="margin-top:20px;">Payment Method:</h4>
+        <div class="payment-option">
+            <input type="radio" name="payment" id="card">
+            <label for="card" style="margin:0; cursor:pointer;">Card</label>
+        </div>
+        <div class="payment-option">
+            <input type="radio" name="payment" id="cash">
+            <label for="cash" style="margin:0; cursor:pointer;">Cash</label>
+        </div>
+        <div class="payment-option">
+            <input type="radio" name="payment" id="credit">
+            <label for="credit" style="margin:0; cursor:pointer;">Account Credit</label>
+        </div>
+        
+        <button class="btn-primary" style="margin-top:20px;">Process Payment</button>
+        <button class="btn-secondary">Cancel</button>
+    </div>
+</div>
+
+<div style="margin-top:30px;"></div>
+
+<div class="device-frame">
+    <div class="screen">
+        <h1>Screen 6: Class Management</h1>
+        <div class="header">
+            <button class="btn-secondary">← Back</button>
+        </div>
+
+        <h3>Boxing Fundamentals</h3>
+        <p style="color:#888; font-size:14px;">June 13 • 6:00 PM - 7:00 PM • Coach Mike</p>
+
+        <h4>Attendees:</h4>
+        
+        <div class="attendee-row">
+            <div>
+                Alex Johnson
+                <span class="stat-badge green">Attended</span>
+            </div>
+        </div>
+        
+        <div class="attendee-row">
+            <div>
+                Sam Lee
+                <span class="stat-badge orange">Confirmed</span>
+            </div>
+        </div>
+        
+        <div class="attendee-row">
+            <div>
+                Taylor Kim
+                <span class="stat-badge orange">Confirmed</span>
+            </div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <button class="btn-primary">+ Add Attendee</button>
+        <button class="btn-secondary" style="background:#8B0000; border-color:#A00;">Cancel Class</button>
+    </div>
+</div>
+
+</body>
+</html>
