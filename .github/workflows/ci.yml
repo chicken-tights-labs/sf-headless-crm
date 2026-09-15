@@ -14,6 +14,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Skip if secrets not configured
+        if: ${{ secrets.SF_USERNAME == '' }}
+        run: |
+          echo "⚠️ SF_USERNAME secret not set. Deploy workflow is manual-only until org credentials are configured."
+          echo "See docs/CI_CD_SECRETS.md for setup instructions."
+          exit 0
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
