@@ -3,6 +3,6 @@
     <fullName>validate_end_after_start</fullName>
     <active>true</active>
     <description>validate_end_after_start</description>
-    <errorConditionFormula>End_Time__c <= Start_Time__c</errorConditionFormula>
+    <errorConditionFormula>End_Time__c &lt;= Start_Time__c</errorConditionFormula>
     <errorMessage>End time must be after start time</errorMessage>
 </ValidationRule>

@@ -3,6 +3,6 @@
     <fullName>validate_positive_amount</fullName>
     <active>true</active>
     <description>validate_positive_amount</description>
-    <errorConditionFormula>Amount__c <= 0 AND NOT(Payment_Type__c = 'Refund')</errorConditionFormula>
+    <errorConditionFormula>Amount__c &lt;= 0 AND NOT(Payment_Type__c = 'Refund')</errorConditionFormula>
     <errorMessage>Amount must be positive</errorMessage>
 </ValidationRule>

@@ -3,6 +3,6 @@
     <fullName>validate_signature_timestamp_past</fullName>
     <active>true</active>
     <description>validate_signature_timestamp_past</description>
-    <errorConditionFormula>Signature_Timestamp__c > NOW()</errorConditionFormula>
+    <errorConditionFormula>Signature_Timestamp__c &gt; NOW()</errorConditionFormula>
     <errorMessage>Signature timestamp cannot be in the future</errorMessage>
 </ValidationRule>

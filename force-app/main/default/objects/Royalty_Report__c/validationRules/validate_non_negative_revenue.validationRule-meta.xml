@@ -3,6 +3,6 @@
     <fullName>validate_non_negative_revenue</fullName>
     <active>true</active>
     <description>validate_non_negative_revenue</description>
-    <errorConditionFormula>Gross_Revenue__c < 0</errorConditionFormula>
+    <errorConditionFormula>Gross_Revenue__c &lt; 0</errorConditionFormula>
     <errorMessage>Gross Revenue cannot be negative</errorMessage>
 </ValidationRule>

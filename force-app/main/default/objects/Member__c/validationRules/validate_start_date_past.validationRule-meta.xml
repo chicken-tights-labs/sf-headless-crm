@@ -3,6 +3,6 @@
     <fullName>validate_start_date_past</fullName>
     <active>true</active>
     <description>validate_start_date_past</description>
-    <errorConditionFormula>Start_Date__c > TODAY()</errorConditionFormula>
+    <errorConditionFormula>Start_Date__c &gt; TODAY()</errorConditionFormula>
     <errorMessage>Start Date cannot be in the future</errorMessage>
 </ValidationRule>

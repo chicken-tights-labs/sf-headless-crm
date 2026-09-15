@@ -3,6 +3,6 @@
     <fullName>validate_unit_price_positive</fullName>
     <active>true</active>
     <description>validate_unit_price_positive</description>
-    <errorConditionFormula>Unit_Price_At_Time_of_Sale__c < 0</errorConditionFormula>
+    <errorConditionFormula>Unit_Price_At_Time_of_Sale__c &lt; 0</errorConditionFormula>
     <errorMessage>Unit price cannot be negative</errorMessage>
 </ValidationRule>

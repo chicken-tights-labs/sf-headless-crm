@@ -3,6 +3,6 @@
     <fullName>validate_franchise_owner_required</fullName>
     <active>true</active>
     <description>validate_franchise_owner_required</description>
-    <errorConditionFormula>NOT(Is_Corporate__c) && ISBLANK(Franchise_Owner__c)</errorConditionFormula>
+    <errorConditionFormula>NOT(Is_Corporate__c) &amp;&amp; ISBLANK(Franchise_Owner__c)</errorConditionFormula>
     <errorMessage>Franchise Owner must be specified for franchise-owned locations</errorMessage>
 </ValidationRule>

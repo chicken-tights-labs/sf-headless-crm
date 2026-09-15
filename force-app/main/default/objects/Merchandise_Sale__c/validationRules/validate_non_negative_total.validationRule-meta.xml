@@ -3,6 +3,6 @@
     <fullName>validate_non_negative_total</fullName>
     <active>true</active>
     <description>validate_non_negative_total</description>
-    <errorConditionFormula>Total_Amount__c < 0</errorConditionFormula>
+    <errorConditionFormula>Total_Amount__c &lt; 0</errorConditionFormula>
     <errorMessage>Total amount cannot be negative</errorMessage>
 </ValidationRule>

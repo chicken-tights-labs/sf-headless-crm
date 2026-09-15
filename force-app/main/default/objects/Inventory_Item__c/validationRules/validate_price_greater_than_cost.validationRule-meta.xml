@@ -3,6 +3,6 @@
     <fullName>validate_price_greater_than_cost</fullName>
     <active>true</active>
     <description>validate_price_greater_than_cost</description>
-    <errorConditionFormula>Unit_Price__c < Cost__c</errorConditionFormula>
+    <errorConditionFormula>Unit_Price__c &lt; Cost__c</errorConditionFormula>
     <errorMessage>Unit price must be greater than or equal to cost</errorMessage>
 </ValidationRule>

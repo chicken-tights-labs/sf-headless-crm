@@ -3,6 +3,6 @@
     <fullName>validate_past_session_no_booking</fullName>
     <active>true</active>
     <description>validate_past_session_no_booking</description>
-    <errorConditionFormula>Scheduled_Session__r.End_Time__c < NOW()</errorConditionFormula>
+    <errorConditionFormula>Scheduled_Session__r.End_Time__c &lt; NOW()</errorConditionFormula>
     <errorMessage>Cannot book past sessions</errorMessage>
 </ValidationRule>

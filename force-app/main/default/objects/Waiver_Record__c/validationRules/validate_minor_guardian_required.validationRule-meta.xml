@@ -3,6 +3,6 @@
     <fullName>validate_minor_guardian_required</fullName>
     <active>true</active>
     <description>validate_minor_guardian_required</description>
-    <errorConditionFormula>Is_Minor__c = TRUE && ISBLANK(Parent_Guardian_Signature_Link__c)</errorConditionFormula>
+    <errorConditionFormula>Is_Minor__c = TRUE &amp;&amp; ISBLANK(Parent_Guardian_Signature_Link__c)</errorConditionFormula>
     <errorMessage>Guardian signature required for minors</errorMessage>
 </ValidationRule>

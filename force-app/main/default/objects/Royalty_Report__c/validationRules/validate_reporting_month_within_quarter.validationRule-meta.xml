@@ -3,6 +3,6 @@
     <fullName>validate_reporting_month_within_quarter</fullName>
     <active>true</active>
     <description>validate_reporting_month_within_quarter</description>
-    <errorConditionFormula>Reporting_Month__c < TODAY() - 90</errorConditionFormula>
+    <errorConditionFormula>Reporting_Month__c &lt; TODAY() - 90</errorConditionFormula>
     <errorMessage>Reporting month must be within last quarter</errorMessage>
 </ValidationRule>

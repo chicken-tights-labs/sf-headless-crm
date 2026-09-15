@@ -3,6 +3,6 @@
     <fullName>validate_quantity_positive</fullName>
     <active>true</active>
     <description>validate_quantity_positive</description>
-    <errorConditionFormula>Quantity__c < 1</errorConditionFormula>
+    <errorConditionFormula>Quantity__c &lt; 1</errorConditionFormula>
     <errorMessage>Quantity must be at least 1</errorMessage>
 </ValidationRule>

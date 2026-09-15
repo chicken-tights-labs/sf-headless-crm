@@ -3,6 +3,6 @@
     <fullName>validate_max_capacity_positive</fullName>
     <active>true</active>
     <description>validate_max_capacity_positive</description>
-    <errorConditionFormula>Max_Capacity__c <= 0</errorConditionFormula>
+    <errorConditionFormula>Max_Capacity__c &lt;= 0</errorConditionFormula>
     <errorMessage>Maximum capacity must be greater than 0</errorMessage>
 </ValidationRule>

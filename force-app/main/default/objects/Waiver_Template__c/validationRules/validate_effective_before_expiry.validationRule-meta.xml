@@ -3,6 +3,6 @@
     <fullName>validate_effective_before_expiry</fullName>
     <active>true</active>
     <description>validate_effective_before_expiry</description>
-    <errorConditionFormula>Effective_Date__c > Expiry_Date__c</errorConditionFormula>
+    <errorConditionFormula>Effective_Date__c &gt; Expiry_Date__c</errorConditionFormula>
     <errorMessage>Effective date must be before expiry date</errorMessage>
 </ValidationRule>
