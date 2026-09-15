@@ -1,0 +1,50 @@
+name: CI — PR Validation
+
+on:
+  pull_request:
+    branches: [main, master, qa]
+
+env:
+  SF_PACKAGE_DIR: force-app
+
+jobs:
+  validate-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Salesforce CLI
+        run: npm install -g @salesforce/cli
+
+      - name: Validate metadata (check-only deploy)
+        run: |
+          sf project deploy start \
+            --source-dir ${{ env.SF_PACKAGE_DIR }} \
+            --target-org ${{ secrets.SF_TARGET_ORG || 'devhub' }} \
+            --check-only \
+            --test-level RunLocalTests \
+            --json
+
+      - name: Run Apex tests
+        run: |
+          sf apex run test --target-org ${{ secrets.SF_TARGET_ORG || 'devhub' }} --test-level RunLocalTests --result-format human --json
+
+      - name: Deploy to scratch org (full integration)
+        if: github.event.pull_request.draft == false
+        run: |
+          sf org create scratch -f config/project-scratch-def.json -a ci-org -d 7
+          sf project deploy start --target-org ci-org --source-dir ${{ env.SF_PACKAGE_DIR }}
+          sf apex run test --target-org ci-org --test-level RunLocalTests --code-coverage --json
+          sf org delete scratch --target-org ci-org --no-prompt -u ci-org -p
+        env:
+          SFDX_AUTH_JWT_KEY: ${{ secrets.SF_JWT_KEY }}
+          SFDX_AUTH_JWT_ISSUER: ${{ secrets.SF_JWT_ISSUER }}
+          SFDX_AUTH_JWT_SUBJECT: ${{ secrets.SF_JWT_SUBJECT }}
+          SFDX_DEFAULT_USERNAME: ${{ secrets.SF_DEFAULT_USERNAME }}
+

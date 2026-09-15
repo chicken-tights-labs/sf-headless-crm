@@ -1,0 +1,55 @@
+name: CD — Deploy to Partner Dev Org
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+env:
+  SF_PACKAGE_DIR: force-app
+
+jobs:
+  deploy-to-sandbox:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Salesforce CLI
+        run: npm install -g @salesforce/cli
+
+      - name: Authenticate to Salesforce (Partner Dev Org)
+        uses: sfdxgithub/salesforce-cli-action@v2
+        with:
+          alias: partner-dev
+          username: ${{ secrets.SF_USERNAME }}
+          password: ${{ secrets.SF_PASSWORD }}
+          security-token: ${{ secrets.SF_SECURITY_TOKEN }}
+          instance-url: https://test.salesforce.com
+          set-default: true
+
+      - name: Deploy metadata to Partner Dev Org
+        run: |
+          sf project deploy start \
+            --source-dir ${{ env.SF_PACKAGE_DIR }} \
+            --target-org partner-dev \
+            --test-level RunLocalTests \
+            --json
+
+      - name: Run post-deploy validation (SOQL checks)
+        run: |
+          sf data query --target-org partner-dev \
+            -q "SELECT Id, DeveloperName, NamespacePrefix FROM Tooling.TableEnumDef" \
+            --json
+
+      - name: Run Apex tests with coverage
+        run: |
+          sf apex run test --target-org partner-dev \
+            --test-level RunLocalTests \
+            --code-coverage \
+            --result-format human --json

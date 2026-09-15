@@ -1,0 +1,24 @@
+{
+  "editor.formatOnSave": true,
+  "files.associations": {
+    "*.object-meta.xml": "xml",
+    "*.field-meta.xml": "xml",
+    "*.validationRule-meta.xml": "xml",
+    "*.recordType-meta.xml": "xml",
+    "*.layout-meta.xml": "xml",
+    "*.profile-meta.xml": "xml",
+    "*.permissionset-meta.xml": "xml"
+  },
+  "files.exclude": {
+    "**/__tests__": false,
+    "**/.git": true,
+    "**/.hg": true,
+    "**/.DS_Store": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/force-app": false
+  },
+  "salesforcedx-vscode.useISVTemplateComposer": false,
+  "salesforcedx-vscode.defaultProject": "sf-headless-practice"
+}
