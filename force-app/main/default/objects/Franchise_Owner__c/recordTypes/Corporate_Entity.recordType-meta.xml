@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomObjectType xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Corporate_Entity</fullName>
-    <label>Corporate_Entity</label>
-    <description>Company or LLC owning the franchise</description>
-    <active>true</active>
-    <deploy>true</deploy>
-</CustomObjectType>

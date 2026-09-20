@@ -3,30 +3,34 @@
   <fullName>Status__c</fullName>
   <label>Report Status</label>
   <type>Picklist</type>
-  <required>true</required>
   <valueSet>
     <restricted>true</restricted>
     <valueSetDefinition>
       <value>
+        <fullName>Status__c</fullName>
+        <label>Status__c</label>
+      </value>
+      <value>
         <fullName>Draft</fullName>
-        <default>false</default>
+        <label>Draft</label>
       </value>
       <value>
         <fullName>Calculated</fullName>
-        <default>false</default>
+        <label>Calculated</label>
       </value>
       <value>
         <fullName>Sent</fullName>
-        <default>false</default>
+        <label>Sent</label>
       </value>
       <value>
         <fullName>Paid</fullName>
-        <default>false</default>
+        <label>Paid</label>
       </value>
       <value>
         <fullName>Disputed</fullName>
-        <default>false</default>
+        <label>Disputed</label>
       </value>
     </valueSetDefinition>
   </valueSet>
+  <required>true</required>
 </CustomField>

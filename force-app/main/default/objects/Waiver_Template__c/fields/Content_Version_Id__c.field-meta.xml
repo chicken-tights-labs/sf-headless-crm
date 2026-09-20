@@ -2,9 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
   <fullName>Content_Version_Id__c</fullName>
   <label>Content Document</label>
-  <type>Lookup</type>
+  <type>Text</type>
+  <length>255</length>
   <required>true</required>
-  <referenceTo>ContentVersion</referenceTo>
-  <relationshipField>Content_Version_Id__r</relationshipField>
-  <relationshipName>Content_Version_Id_ref</relationshipName>
 </CustomField>

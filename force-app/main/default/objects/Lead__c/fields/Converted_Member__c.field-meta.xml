@@ -4,6 +4,6 @@
   <label>Converted Member</label>
   <type>Lookup</type>
   <referenceTo>Member__c</referenceTo>
-  <relationshipField>Converted_Member__r</relationshipField>
-  <relationshipName>Converted_Member_ref</relationshipName>
+  <relationshipName>Converted_Member</relationshipName>
+  <deleteConstraint>Restrict</deleteConstraint>
 </CustomField>

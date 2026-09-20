@@ -3,5 +3,4 @@
   <fullName>Start_Time__c</fullName>
   <label>Start Time</label>
   <type>DateTime</type>
-  <required>true</required>
 </CustomField>

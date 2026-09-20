@@ -3,30 +3,34 @@
   <fullName>Status__c</fullName>
   <label>Status</label>
   <type>Picklist</type>
-  <required>true</required>
   <valueSet>
     <restricted>true</restricted>
     <valueSetDefinition>
       <value>
+        <fullName>Status__c</fullName>
+        <label>Status__c</label>
+      </value>
+      <value>
         <fullName>Draft</fullName>
-        <default>false</default>
+        <label>Draft</label>
       </value>
       <value>
         <fullName>Pending Signature</fullName>
-        <default>false</default>
+        <label>Pending Signature</label>
       </value>
       <value>
         <fullName>Signed</fullName>
-        <default>false</default>
+        <label>Signed</label>
       </value>
       <value>
         <fullName>Expired</fullName>
-        <default>false</default>
+        <label>Expired</label>
       </value>
       <value>
         <fullName>Revoked</fullName>
-        <default>false</default>
+        <label>Revoked</label>
       </value>
     </valueSetDefinition>
   </valueSet>
+  <required>true</required>
 </CustomField>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomObjectType xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Walk_In</fullName>
-    <label>Walk_In</label>
-    <description>Prospect who visited gym in person</description>
-    <active>true</active>
-    <deploy>true</deploy>
-</CustomObjectType>

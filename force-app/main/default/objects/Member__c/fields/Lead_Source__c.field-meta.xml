@@ -7,24 +7,28 @@
     <restricted>true</restricted>
     <valueSetDefinition>
       <value>
+        <fullName>Lead_Source__c</fullName>
+        <label>Lead_Source__c</label>
+      </value>
+      <value>
         <fullName>Walk-in</fullName>
-        <default>false</default>
+        <label>Walk-in</label>
       </value>
       <value>
         <fullName>Online</fullName>
-        <default>false</default>
+        <label>Online</label>
       </value>
       <value>
         <fullName>Referral</fullName>
-        <default>false</default>
+        <label>Referral</label>
       </value>
       <value>
         <fullName>Social Media</fullName>
-        <default>false</default>
+        <label>Social Media</label>
       </value>
       <value>
         <fullName>Community Event</fullName>
-        <default>false</default>
+        <label>Community Event</label>
       </value>
     </valueSetDefinition>
   </valueSet>

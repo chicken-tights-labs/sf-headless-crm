@@ -3,22 +3,26 @@
   <fullName>Status__c</fullName>
   <label>Status</label>
   <type>Picklist</type>
-  <required>true</required>
   <valueSet>
     <restricted>true</restricted>
     <valueSetDefinition>
       <value>
+        <fullName>Status__c</fullName>
+        <label>Status__c</label>
+      </value>
+      <value>
         <fullName>Active</fullName>
-        <default>false</default>
+        <label>Active</label>
       </value>
       <value>
         <fullName>Inactive</fullName>
-        <default>false</default>
+        <label>Inactive</label>
       </value>
       <value>
         <fullName>Coming Soon</fullName>
-        <default>false</default>
+        <label>Coming Soon</label>
       </value>
     </valueSetDefinition>
   </valueSet>
+  <required>true</required>
 </CustomField>

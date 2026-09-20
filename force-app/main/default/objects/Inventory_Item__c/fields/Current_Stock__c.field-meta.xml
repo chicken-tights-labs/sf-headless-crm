@@ -3,7 +3,7 @@
   <fullName>Current_Stock__c</fullName>
   <label>Current Stock</label>
   <type>Number</type>
-  <required>true</required>
   <precision>10</precision>
   <scale>0</scale>
+  <required>true</required>
 </CustomField>

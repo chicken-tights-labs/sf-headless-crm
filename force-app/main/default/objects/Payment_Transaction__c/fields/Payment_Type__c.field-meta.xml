@@ -3,42 +3,46 @@
   <fullName>Payment_Type__c</fullName>
   <label>Payment Type</label>
   <type>Picklist</type>
-  <required>true</required>
   <valueSet>
     <restricted>true</restricted>
     <valueSetDefinition>
       <value>
+        <fullName>Payment_Type__c</fullName>
+        <label>Payment_Type__c</label>
+      </value>
+      <value>
         <fullName>Monthly Fee</fullName>
-        <default>false</default>
+        <label>Monthly Fee</label>
       </value>
       <value>
         <fullName>Annual Prepayment</fullName>
-        <default>false</default>
+        <label>Annual Prepayment</label>
       </value>
       <value>
         <fullName>Drop-In Fee</fullName>
-        <default>false</default>
+        <label>Drop-In Fee</label>
       </value>
       <value>
         <fullName>Punch Card Top-Up</fullName>
-        <default>false</default>
+        <label>Punch Card Top-Up</label>
       </value>
       <value>
         <fullName>Merchandise Purchase</fullName>
-        <default>false</default>
+        <label>Merchandise Purchase</label>
       </value>
       <value>
         <fullName>Late Fee</fullName>
-        <default>false</default>
+        <label>Late Fee</label>
       </value>
       <value>
         <fullName>Refund</fullName>
-        <default>false</default>
+        <label>Refund</label>
       </value>
       <value>
         <fullName>Other</fullName>
-        <default>false</default>
+        <label>Other</label>
       </value>
     </valueSetDefinition>
   </valueSet>
+  <required>true</required>
 </CustomField>

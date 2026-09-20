@@ -3,5 +3,5 @@
   <fullName>Is_Current__c</fullName>
   <label>Is Current</label>
   <type>Checkbox</type>
-  <defaultValue>true</defaultValue>
+  <defaultValue>false</defaultValue>
 </CustomField>

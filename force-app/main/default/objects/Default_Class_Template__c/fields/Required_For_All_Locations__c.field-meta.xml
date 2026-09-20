@@ -3,5 +3,5 @@
   <fullName>Required_For_All_Locations__c</fullName>
   <label>Required For All Locations</label>
   <type>Checkbox</type>
-  <defaultValue>true</defaultValue>
+  <defaultValue>false</defaultValue>
 </CustomField>

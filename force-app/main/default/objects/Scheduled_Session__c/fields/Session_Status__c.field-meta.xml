@@ -3,22 +3,26 @@
   <fullName>Session_Status__c</fullName>
   <label>Session Status</label>
   <type>Picklist</type>
-  <required>true</required>
   <valueSet>
     <restricted>true</restricted>
     <valueSetDefinition>
       <value>
+        <fullName>Session_Status__c</fullName>
+        <label>Session_Status__c</label>
+      </value>
+      <value>
         <fullName>Scheduled</fullName>
-        <default>false</default>
+        <label>Scheduled</label>
       </value>
       <value>
         <fullName>Cancelled</fullName>
-        <default>false</default>
+        <label>Cancelled</label>
       </value>
       <value>
         <fullName>Completed</fullName>
-        <default>false</default>
+        <label>Completed</label>
       </value>
     </valueSetDefinition>
   </valueSet>
+  <required>true</required>
 </CustomField>

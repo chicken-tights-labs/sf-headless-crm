@@ -4,6 +4,6 @@
   <label>Member</label>
   <type>Lookup</type>
   <referenceTo>Member__c</referenceTo>
-  <relationshipField>Member__r</relationshipField>
-  <relationshipName>Member_ref</relationshipName>
+  <relationshipName>WavMember</relationshipName>
+  <deleteConstraint>Restrict</deleteConstraint>
 </CustomField>

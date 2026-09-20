@@ -3,6 +3,6 @@
   <fullName>Legal_Name__c</fullName>
   <label>Legal Name</label>
   <type>Text</type>
-  <required>true</required>
   <length>100</length>
+  <required>true</required>
 </CustomField>

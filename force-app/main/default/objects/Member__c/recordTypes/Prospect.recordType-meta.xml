@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomObjectType xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Prospect</fullName>
-    <label>Prospect</label>
-    <description>Lead who hasn't converted to member yet</description>
-    <active>true</active>
-    <deploy>true</deploy>
-</CustomObjectType>

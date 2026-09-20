@@ -3,8 +3,8 @@
   <fullName>Member__c</fullName>
   <label>Member</label>
   <type>Lookup</type>
-  <required>true</required>
   <referenceTo>Member__c</referenceTo>
-  <relationshipField>Member__r</relationshipField>
-  <relationshipName>Member_ref</relationshipName>
+  <relationshipName>Member</relationshipName>
+  <deleteConstraint>Restrict</deleteConstraint>
+  <required>true</required>
 </CustomField>

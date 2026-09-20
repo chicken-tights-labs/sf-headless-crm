@@ -4,6 +4,6 @@
   <label>Lead</label>
   <type>Lookup</type>
   <referenceTo>Lead__c</referenceTo>
-  <relationshipField>Lead__r</relationshipField>
-  <relationshipName>Lead_ref</relationshipName>
+  <relationshipName>Lead</relationshipName>
+  <deleteConstraint>Restrict</deleteConstraint>
 </CustomField>

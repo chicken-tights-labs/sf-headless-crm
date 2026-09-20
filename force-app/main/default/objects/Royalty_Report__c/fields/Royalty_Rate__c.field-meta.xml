@@ -3,5 +3,7 @@
   <fullName>Royalty_Rate__c</fullName>
   <label>Royalty Rate %</label>
   <type>Percent</type>
+  <precision>2</precision>
+  <scale>0</scale>
   <required>true</required>
 </CustomField>

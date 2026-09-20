@@ -3,11 +3,6 @@
   <fullName>Merchandise_Sale__c</fullName>
   <label>Merchandise Sale</label>
   <type>MasterDetail</type>
-  <required>true</required>
   <referenceTo>Merchandise_Sale__c</referenceTo>
-  <relationshipField>Merchandise_Sale__r</relationshipField>
-  <relationshipName>Merchandise_Sale_ref</relationshipName>
-  <referenceTo>Merchandise_Sale__c</referenceTo>
-  <relationshipField>Merchandise_Sale__r</relationshipField>
-  <relationshipName>Merchandise_Sale_ref</relationshipName>
+  <relationshipName>Merchandise_Sale</relationshipName>
 </CustomField>

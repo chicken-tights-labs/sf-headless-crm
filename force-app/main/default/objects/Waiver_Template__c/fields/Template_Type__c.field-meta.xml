@@ -3,22 +3,26 @@
   <fullName>Template_Type__c</fullName>
   <label>Template Type</label>
   <type>Picklist</type>
-  <required>true</required>
   <valueSet>
     <restricted>true</restricted>
     <valueSetDefinition>
       <value>
+        <fullName>Template_Type__c</fullName>
+        <label>Template_Type__c</label>
+      </value>
+      <value>
         <fullName>Adult</fullName>
-        <default>false</default>
+        <label>Adult</label>
       </value>
       <value>
         <fullName>Minor</fullName>
-        <default>false</default>
+        <label>Minor</label>
       </value>
       <value>
         <fullName>Visitor</fullName>
-        <default>false</default>
+        <label>Visitor</label>
       </value>
     </valueSetDefinition>
   </valueSet>
+  <required>true</required>
 </CustomField>

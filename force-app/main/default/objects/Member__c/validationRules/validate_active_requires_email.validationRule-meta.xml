@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>validate_active_requires_email</fullName>
-    <active>true</active>
-    <description>validate_active_requires_email</description>
-    <errorConditionFormula>Status__c = 'Active' AND ISBLANK(Email__c)</errorConditionFormula>
-    <errorMessage>Email is required for active members</errorMessage>
-</ValidationRule>

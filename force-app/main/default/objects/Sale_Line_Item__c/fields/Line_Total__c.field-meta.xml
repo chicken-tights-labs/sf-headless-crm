@@ -5,5 +5,4 @@
   <type>Currency</type>
   <precision>16</precision>
   <scale>2</scale>
-  <formula>Quantity__c * Unit_Price_At_Time_of_Sale__c</formula>
 </CustomField>

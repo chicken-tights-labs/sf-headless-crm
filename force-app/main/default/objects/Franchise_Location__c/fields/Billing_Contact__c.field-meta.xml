@@ -4,6 +4,6 @@
   <label>Billing Contact</label>
   <type>Lookup</type>
   <referenceTo>Contact</referenceTo>
-  <relationshipField>Billing_Contact__r</relationshipField>
-  <relationshipName>Billing_Contact_ref</relationshipName>
+  <relationshipName>Billing_Contact</relationshipName>
+  <deleteConstraint>Restrict</deleteConstraint>
 </CustomField>

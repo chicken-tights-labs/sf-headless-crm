@@ -3,26 +3,30 @@
   <fullName>Status__c</fullName>
   <label>Payment Status</label>
   <type>Picklist</type>
-  <required>true</required>
   <valueSet>
     <restricted>true</restricted>
     <valueSetDefinition>
       <value>
+        <fullName>Status__c</fullName>
+        <label>Status__c</label>
+      </value>
+      <value>
         <fullName>Success</fullName>
-        <default>false</default>
+        <label>Success</label>
       </value>
       <value>
         <fullName>Failed</fullName>
-        <default>false</default>
+        <label>Failed</label>
       </value>
       <value>
         <fullName>Refunded</fullName>
-        <default>false</default>
+        <label>Refunded</label>
       </value>
       <value>
         <fullName>Pending</fullName>
-        <default>false</default>
+        <label>Pending</label>
       </value>
     </valueSetDefinition>
   </valueSet>
+  <required>true</required>
 </CustomField>

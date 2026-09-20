@@ -3,7 +3,7 @@
   <fullName>Quantity__c</fullName>
   <label>Quantity</label>
   <type>Number</type>
-  <required>true</required>
   <precision>10</precision>
   <scale>0</scale>
+  <required>true</required>
 </CustomField>

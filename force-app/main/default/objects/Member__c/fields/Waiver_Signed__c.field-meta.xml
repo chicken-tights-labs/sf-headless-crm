@@ -4,6 +4,6 @@
   <label>Waiver Signed</label>
   <type>Lookup</type>
   <referenceTo>Waiver_Record__c</referenceTo>
-  <relationshipField>Waiver_Signed__r</relationshipField>
-  <relationshipName>Waiver_Signed_ref</relationshipName>
+  <relationshipName>Waiver_Signed</relationshipName>
+  <deleteConstraint>Restrict</deleteConstraint>
 </CustomField>

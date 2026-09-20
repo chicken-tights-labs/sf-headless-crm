@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>validate_unit_price_positive</fullName>
-    <active>true</active>
-    <description>validate_unit_price_positive</description>
-    <errorConditionFormula>Unit_Price_At_Time_of_Sale__c &lt; 0</errorConditionFormula>
-    <errorMessage>Unit price cannot be negative</errorMessage>
-</ValidationRule>

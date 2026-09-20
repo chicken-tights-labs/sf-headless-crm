@@ -3,7 +3,7 @@
   <fullName>Amount__c</fullName>
   <label>Amount</label>
   <type>Currency</type>
-  <required>true</required>
   <precision>16</precision>
   <scale>2</scale>
+  <required>true</required>
 </CustomField>

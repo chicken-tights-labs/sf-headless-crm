@@ -4,6 +4,6 @@
   <label>Based On Template</label>
   <type>Lookup</type>
   <referenceTo>Default_Class_Template__c</referenceTo>
-  <relationshipField>Based_On_Template__r</relationshipField>
-  <relationshipName>Based_On_Template_ref</relationshipName>
+  <relationshipName>Based_On_Template</relationshipName>
+  <deleteConstraint>Restrict</deleteConstraint>
 </CustomField>

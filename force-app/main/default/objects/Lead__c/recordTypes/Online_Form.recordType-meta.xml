@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomObjectType xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Online_Form</fullName>
-    <label>Online_Form</label>
-    <description>Prospect who filled out web form</description>
-    <active>true</active>
-    <deploy>true</deploy>
-</CustomObjectType>
