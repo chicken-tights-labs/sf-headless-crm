@@ -1,33 +1,47 @@
-# CI/CD Secrets Setup — Salesforce Partner Dev Org
+# CI/CD Secrets Setup — Dev Org
 
-## Required GitHub Secrets
+## Required GitHub Secret (just one)
 
-Set these in your GitHub repo → Settings → Secrets and variables → Actions:
+Set in your GitHub repo → Settings → Secrets and variables → Actions:
 
 | Secret Name | Value | How to Get |
 |---|---|---|
-| `SF_USERNAME` | Your Partner Dev Org username | From the org signup email |
-| `SF_PASSWORD` | Your org password | Set during org creation or reset in Setup → Users |
-| `SF_SECURITY_TOKEN` | Security token for API access | Reset in Setup → My Personal Information → Reset My Security Token (emailed after reset) |
-| `SF_JWT_KEY` | Private key for JWT flow (optional) | Create a Connected App in Setup → App Manager |
-| `SF_JWT_ISSUER` | Connected App consumer key (optional) | From the Connected App |
-| `SF_JWT_SUBJECT` | Username for JWT flow (optional) | Your Partner Dev username |
-| `SF_DEFAULT_USERNAME` | Alias for default org | Just set to `partner-dev` |
+| `SFDX_AUTH_URL` | The `force://` auth URL for the Dev Org | On the VM: `SF_TEMP_SHOW_SECRETS=true sf org display --target-org chickentightslabs --verbose` (the `sfdxAuthUrl` field) |
 
-## How to Set Secrets
+**Why one secret instead of three?** The VM already holds a working OAuth refresh token for the org (`force://...`). CI re-uses it via `sf org login sfdx-url`. No password in GitHub, no security-token reset, no Connected App needed. If the token ever expires or is revoked, regenerate it on the VM and update this one secret.
+
+## How to Set It
 
 ```bash
-gh secret set SF_USERNAME --body "your_username@example.com"
-gh secret set SF_PASSWORD --body "your_password"
-gh secret set SF_SECURITY_TOKEN --body "your_security_token"
+# On the VM (auth URL never appears in chat or logs)
+gh secret set SFDX_AUTH_URL < <(SF_TEMP_SHOW_SECRETS=true sf org display --target-org chickentightslabs --verbose --json | python3 -c "import sys,json; print(json.load(sys.stdin)['result']['sfdxAuthUrl'])")
 ```
 
 ## Workflow Overview
 
-1. **`ci.yml`** — Runs on every PR: validates metadata, runs Apex tests, creates a scratch org for full integration tests
-2. **`deploy.yml`** — Runs on push to `main`: deploys all metadata to the Partner Dev Org and runs Apex tests with coverage
+1. **`ci.yml`** — Runs on every PR: authenticates with `SFDX_AUTH_URL`, check-only validates metadata against the Dev Org, runs Apex tests (informational only while org coverage is 64% and `DataManager_QuotaTest` is flaky)
+2. **`deploy.yml`** — Manual trigger (`workflow_dispatch`) after PR review sign-off: deploys to the Dev Org with `RunRelevantTests`, then a post-deploy SOQL sanity check
 
-## Important Notes
+## What We Chose (and why) — Option C
 
-- The devHub scratch org approach requires a Dev Hub-enabled org. If your Partner Dev Org doesn't have Dev Hub, the CI workflow will skip scratch org creation and only do check-only deploy validation.
-- The `deploy.yml` workflow uses username/password auth which is simpler but less secure. For production, consider switching to JWT bearer flow.
+- **CI auth:** single `SFDX_AUTH_URL` secret (OAuth refresh token) instead of username/password/token. Less secrets sprawl, no password rotation coupling, no security token reset needed.
+- **Scratch org stage: removed for now.** Dev Hub isn't enabled in the Dev Org, and the JWT flow (connected app + cert) is a separate setup session. The scratch-org commands are preserved as comments in `ci.yml` for when that's ready.
+- **Test level:** `RunRelevantTests` for deploys/validations (org has pre-existing 64% coverage + flaky `DataManager_QuotaTest`; full-suite runs trip on old noise, not new code).
+- **Deploy trigger:** manual (`workflow_dispatch`) — deploys stay gated behind your PR review sign-off, consistent with the review-first workflow. Auto-deploy on merge can be enabled by uncommenting the `push:` trigger.
+
+## Restoring the Scratch Org Stage (later)
+
+1. Enable Dev Hub: Setup → Dev Hub (toggle, free, ~2 min)
+2. Set up JWT auth for CI: create a Connected App + certificate, set `SF_JWT_KEY`/`SF_JWT_ISSUER`/`SF_JWT_SUBJECT` secrets
+3. Uncomment the scratch-org block in `ci.yml`
+4. Delete the `SFDX_AUTH_URL` secret if you want pure JWT auth
+
+## Old Three-Secret Setup (superseded, kept for reference)
+
+| Secret Name | Value |
+|---|---|
+| `SF_USERNAME` | Dev Org username |
+| `SF_PASSWORD` | Dev Org password |
+| `SF_SECURITY_TOKEN` | Security token (reset in Setup → My Personal Information → Reset My Security Token) |
+
+The old `deploy.yml` used username/password auth via `sfdxgithub/salesforce-cli-action` (which doesn't exist — it was never a real GitHub Action) and pointed at `https://test.salesforce.com` (sandbox login URL; the Dev Org uses `login.salesforce.com`). Fixed in PR #2.
