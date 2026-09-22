@@ -6,6 +6,8 @@ on:
 
 env:
   SF_PACKAGE_DIR: force-app
+  # secrets context is not allowed in step-level `if:` — map it to env first
+  SF_AUTH_CONFIGURED: ${{ secrets.SFDX_AUTH_URL != '' }}
 
 jobs:
   validate-and-test:
@@ -15,27 +17,30 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Skip if secrets not configured
-        if: ${{ secrets.SFDX_AUTH_URL == '' }}
+        if: env.SF_AUTH_CONFIGURED != 'true'
         run: |
           echo "⚠️ SFDX_AUTH_URL secret not set. CI validation is skipped until org auth is configured."
           echo "See docs/CI_CD_SECRETS.md for setup instructions."
-          exit 0
 
       - name: Setup Node.js
+        if: env.SF_AUTH_CONFIGURED == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Install Salesforce CLI
+        if: env.SF_AUTH_CONFIGURED == 'true'
         run: npm install -g @salesforce/cli
 
       - name: Authenticate to Dev Org
+        if: env.SF_AUTH_CONFIGURED == 'true'
         run: |
           echo "${{ secrets.SFDX_AUTH_URL }}" > ./auth.txt
           sf org login sfdx-url -f ./auth.txt -a ci-org -s
           rm -f ./auth.txt
 
       - name: Validate metadata (check-only deploy)
+        if: env.SF_AUTH_CONFIGURED == 'true'
         run: |
           sf project deploy start \
             --source-dir ${{ env.SF_PACKAGE_DIR }} \
@@ -47,6 +52,7 @@ jobs:
       # Informational only for now: org has 64% coverage + 1 flaky test
       # (DataManager_QuotaTest). Flip continue-on-error to false once fixed.
       - name: Run Apex tests (informational)
+        if: env.SF_AUTH_CONFIGURED == 'true'
         continue-on-error: true
         run: |
           sf apex run test --target-org ci-org \
