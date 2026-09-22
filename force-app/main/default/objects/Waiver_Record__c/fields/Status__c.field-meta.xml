@@ -7,16 +7,12 @@
     <restricted>true</restricted>
     <valueSetDefinition>
       <value>
-        <fullName>Status__c</fullName>
-        <label>Status__c</label>
-      </value>
-      <value>
         <fullName>Draft</fullName>
         <label>Draft</label>
       </value>
       <value>
-        <fullName>Pending Signature</fullName>
-        <label>Pending Signature</label>
+        <fullName>Pending</fullName>
+        <label>Pending</label>
       </value>
       <value>
         <fullName>Signed</fullName>
