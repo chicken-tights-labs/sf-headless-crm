@@ -45,7 +45,7 @@ jobs:
           sf project deploy start \
             --source-dir ${{ env.SF_PACKAGE_DIR }} \
             --target-org ci-org \
-            --check-only \
+            --dry-run \
             --test-level RunRelevantTests \
             --json
 
