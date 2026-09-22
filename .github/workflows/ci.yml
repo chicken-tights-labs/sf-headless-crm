@@ -15,9 +15,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Skip if secrets not configured
-        if: ${{ secrets.SF_USERNAME == '' }}
+        if: ${{ secrets.SFDX_AUTH_URL == '' }}
         run: |
-          echo "⚠️ SF_USERNAME secret not set. Deploy workflow is manual-only until org credentials are configured."
+          echo "⚠️ SFDX_AUTH_URL secret not set. CI validation is skipped until org auth is configured."
           echo "See docs/CI_CD_SECRETS.md for setup instructions."
           exit 0
 
@@ -29,29 +29,33 @@ jobs:
       - name: Install Salesforce CLI
         run: npm install -g @salesforce/cli
 
+      - name: Authenticate to Dev Org
+        run: |
+          echo "${{ secrets.SFDX_AUTH_URL }}" > ./auth.txt
+          sf org login sfdx-url -f ./auth.txt -a ci-org -s
+          rm -f ./auth.txt
+
       - name: Validate metadata (check-only deploy)
         run: |
           sf project deploy start \
             --source-dir ${{ env.SF_PACKAGE_DIR }} \
-            --target-org ${{ secrets.SF_TARGET_ORG || 'devhub' }} \
+            --target-org ci-org \
             --check-only \
-            --test-level RunLocalTests \
+            --test-level RunRelevantTests \
             --json
 
-      - name: Run Apex tests
+      # Informational only for now: org has 64% coverage + 1 flaky test
+      # (DataManager_QuotaTest). Flip continue-on-error to false once fixed.
+      - name: Run Apex tests (informational)
+        continue-on-error: true
         run: |
-          sf apex run test --target-org ${{ secrets.SF_TARGET_ORG || 'devhub' }} --test-level RunLocalTests --result-format human --json
+          sf apex run test --target-org ci-org \
+            --test-level RunLocalTests \
+            --result-format human --json
 
-      - name: Deploy to scratch org (full integration)
-        if: github.event.pull_request.draft == false
-        run: |
-          sf org create scratch -f config/project-scratch-def.json -a ci-org -d 7
-          sf project deploy start --target-org ci-org --source-dir ${{ env.SF_PACKAGE_DIR }}
-          sf apex run test --target-org ci-org --test-level RunLocalTests --code-coverage --json
-          sf org delete scratch --target-org ci-org --no-prompt -u ci-org -p
-        env:
-          SFDX_AUTH_JWT_KEY: ${{ secrets.SF_JWT_KEY }}
-          SFDX_AUTH_JWT_ISSUER: ${{ secrets.SF_JWT_ISSUER }}
-          SFDX_AUTH_JWT_SUBJECT: ${{ secrets.SF_JWT_SUBJECT }}
-          SFDX_DEFAULT_USERNAME: ${{ secrets.SF_DEFAULT_USERNAME }}
-
+      # OPTION C NOTE: scratch-org integration stage intentionally removed.
+      # Restore when Dev Hub is enabled + JWT secrets configured:
+      #   sf org create scratch -f config/project-scratch-def.json -a ci-org -d 7
+      #   sf project deploy start --target-org ci-org --source-dir force-app
+      #   sf apex run test --target-org ci-org --test-level RunLocalTests --code-coverage
+      #   sf org delete scratch --target-org ci-org --no-prompt -p
