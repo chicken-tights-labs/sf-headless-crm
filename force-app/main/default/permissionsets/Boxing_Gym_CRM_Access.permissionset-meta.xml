@@ -445,11 +445,6 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Sale_Line_Item__c.Merchandise_Sale__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Merchandise_Sale__c.Discount_Approved_By__c</field>
     <editable>true</editable>
     <readable>true</readable>
