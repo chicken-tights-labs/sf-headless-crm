@@ -3,6 +3,67 @@
   <hasActivationRequired>false</hasActivationRequired>
   <label>Boxing Gym CRM Access</label>
   <description>Provides access to all Boxing Gym CRM objects, tabs, and fields. Field permissions added 2026-09-22: deployed fields receive NO FLS by default (not even System Administrator) — without these entries fields are invisible to the data API.</description>
+
+  <tabSettings>
+    <tab>Booking__c</tab>
+    <visibility>Visible</visibility>
+  </tabSettings>
+  <tabSettings>
+    <tab>Default_Class_Template__c</tab>
+    <visibility>Visible</visibility>
+  </tabSettings>
+  <tabSettings>
+    <tab>Franchise_Location__c</tab>
+    <visibility>Visible</visibility>
+  </tabSettings>
+  <tabSettings>
+    <tab>Franchise_Owner__c</tab>
+    <visibility>Visible</visibility>
+  </tabSettings>
+  <tabSettings>
+    <tab>Inventory_Item__c</tab>
+    <visibility>Visible</visibility>
+  </tabSettings>
+  <tabSettings>
+    <tab>Lead__c</tab>
+    <visibility>Visible</visibility>
+  </tabSettings>
+  <tabSettings>
+    <tab>Member__c</tab>
+    <visibility>Visible</visibility>
+  </tabSettings>
+  <tabSettings>
+    <tab>Merchandise_Sale__c</tab>
+    <visibility>Visible</visibility>
+  </tabSettings>
+  <tabSettings>
+    <tab>Payment_Transaction__c</tab>
+    <visibility>Visible</visibility>
+  </tabSettings>
+  <tabSettings>
+    <tab>Product_Category__c</tab>
+    <visibility>Visible</visibility>
+  </tabSettings>
+  <tabSettings>
+    <tab>Royalty_Report__c</tab>
+    <visibility>Visible</visibility>
+  </tabSettings>
+  <tabSettings>
+    <tab>Sale_Line_Item__c</tab>
+    <visibility>Visible</visibility>
+  </tabSettings>
+  <tabSettings>
+    <tab>Scheduled_Session__c</tab>
+    <visibility>Visible</visibility>
+  </tabSettings>
+  <tabSettings>
+    <tab>Waiver_Record__c</tab>
+    <visibility>Visible</visibility>
+  </tabSettings>
+  <tabSettings>
+    <tab>Waiver_Template__c</tab>
+    <visibility>Visible</visibility>
+  </tabSettings>
   <objectPermissions>
     <object>Franchise_Owner__c</object>
     <allowCreate>true</allowCreate>
