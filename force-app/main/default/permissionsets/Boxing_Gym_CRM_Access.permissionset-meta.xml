@@ -200,32 +200,12 @@
     <viewAllRecords>true</viewAllRecords>
   </objectPermissions>
   <fieldPermissions>
-    <field>Franchise_Owner__c.Contact_First_Name__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Franchise_Owner__c.Contact_Last_Name__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Franchise_Owner__c.Email__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Franchise_Owner__c.Franchise_Agreement_End__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
     <field>Franchise_Owner__c.Franchise_Agreement_Start__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Franchise_Owner__c.Legal_Name__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
@@ -260,11 +240,6 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Franchise_Location__c.Franchise_Owner__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Franchise_Location__c.Hours_Mon_FRI__c</field>
     <editable>true</editable>
     <readable>true</readable>
@@ -295,22 +270,7 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Franchise_Location__c.Status__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Franchise_Location__c.Website__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Waiver_Template__c.Content_Version_Id__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Waiver_Template__c.Effective_Date__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
@@ -330,11 +290,6 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Waiver_Template__c.Template_Type__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Lead__c.Converted_Member__c</field>
     <editable>true</editable>
     <readable>true</readable>
@@ -345,32 +300,12 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Lead__c.First_Name__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Lead__c.Franchise_Location__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Lead__c.Interested_In_Membership__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Lead__c.Last_Name__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Lead__c.Lead_Source__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Lead__c.Lead_Status__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
@@ -395,11 +330,6 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Member__c.Email__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Member__c.Emergency_Contact_Name__c</field>
     <editable>true</editable>
     <readable>true</readable>
@@ -415,22 +345,7 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Member__c.First_Name__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Member__c.Home_Location__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Member__c.Last_Attended_Date__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Member__c.Last_Name__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
@@ -441,11 +356,6 @@
   </fieldPermissions>
   <fieldPermissions>
     <field>Member__c.Medical_Notes__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Member__c.Membership_Tier__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
@@ -461,11 +371,6 @@
   </fieldPermissions>
   <fieldPermissions>
     <field>Member__c.Start_Date__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Member__c.Status__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
@@ -490,37 +395,12 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Booking__c.Franchise_Location__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Booking__c.Member__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Booking__c.Scheduled_Session__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Booking__c.Status__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Default_Class_Template__c.Description__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
     <field>Default_Class_Template__c.Difficulty_Level__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Default_Class_Template__c.Duration_Minutes__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
@@ -550,37 +430,12 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Scheduled_Session__c.Franchise_Location__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Scheduled_Session__c.Is_Location_Custom__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Scheduled_Session__c.Max_Capacity__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Scheduled_Session__c.Program_Type__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Scheduled_Session__c.Session_Status__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Scheduled_Session__c.Start_Time__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Sale_Line_Item__c.Inventory_Item__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
@@ -595,27 +450,12 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Sale_Line_Item__c.Quantity__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Sale_Line_Item__c.Unit_Price_At_Time_of_Sale__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Merchandise_Sale__c.Discount_Approved_By__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
     <field>Merchandise_Sale__c.Discount_Percentage__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Merchandise_Sale__c.Franchise_Location__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
@@ -630,42 +470,12 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Merchandise_Sale__c.Payment_Method__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Merchandise_Sale__c.Sale_Date__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
     <field>Merchandise_Sale__c.Total_Amount__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Payment_Transaction__c.Amount__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Payment_Transaction__c.Franchise_Location__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Payment_Transaction__c.Member__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Payment_Transaction__c.Payment_Type__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Payment_Transaction__c.Status__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
@@ -695,11 +505,6 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Royalty_Report__c.Franchise_Location__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Royalty_Report__c.Gross_Revenue__c</field>
     <editable>true</editable>
     <readable>true</readable>
@@ -710,22 +515,7 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Royalty_Report__c.Reporting_Month__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Royalty_Report__c.Royalty_Amount_Due__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Royalty_Report__c.Royalty_Rate__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Royalty_Report__c.Status__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
@@ -740,22 +530,7 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Inventory_Item__c.Current_Stock__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Inventory_Item__c.Franchise_Location__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Inventory_Item__c.Is_Active__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Inventory_Item__c.Product_Category__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
@@ -765,17 +540,7 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Inventory_Item__c.SKU__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Inventory_Item__c.Supplier__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Inventory_Item__c.Unit_Price__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
@@ -795,22 +560,12 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Waiver_Record__c.Franchise_Location__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Waiver_Record__c.Is_Minor__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
     <field>Waiver_Record__c.Lead__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Waiver_Record__c.Member__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
@@ -840,11 +595,6 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Waiver_Record__c.Signature_Method__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Waiver_Record__c.Signature_Timestamp__c</field>
     <editable>true</editable>
     <readable>true</readable>
@@ -855,27 +605,7 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
-    <field>Waiver_Record__c.Signer_Email__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
     <field>Waiver_Record__c.Signer_Name__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Waiver_Record__c.Signer_Role__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Waiver_Record__c.Status__c</field>
-    <editable>true</editable>
-    <readable>true</readable>
-  </fieldPermissions>
-  <fieldPermissions>
-    <field>Waiver_Record__c.Waiver_Template__c</field>
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions></PermissionSet>
