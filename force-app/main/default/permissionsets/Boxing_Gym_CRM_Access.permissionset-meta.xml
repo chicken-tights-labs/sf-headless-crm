@@ -12,6 +12,132 @@
     <modifyAllRecords>true</modifyAllRecords>
     <viewAllRecords>true</viewAllRecords>
   </objectPermissions>
+  <objectPermissions>
+    <object>Franchise_Location__c</object>
+    <allowCreate>true</allowCreate>
+    <allowDelete>true</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <object>Waiver_Template__c</object>
+    <allowCreate>true</allowCreate>
+    <allowDelete>true</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <object>Lead__c</object>
+    <allowCreate>true</allowCreate>
+    <allowDelete>true</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <object>Member__c</object>
+    <allowCreate>true</allowCreate>
+    <allowDelete>true</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <object>Booking__c</object>
+    <allowCreate>true</allowCreate>
+    <allowDelete>true</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <object>Default_Class_Template__c</object>
+    <allowCreate>true</allowCreate>
+    <allowDelete>true</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <object>Scheduled_Session__c</object>
+    <allowCreate>true</allowCreate>
+    <allowDelete>true</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <object>Sale_Line_Item__c</object>
+    <allowCreate>true</allowCreate>
+    <allowDelete>true</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <object>Merchandise_Sale__c</object>
+    <allowCreate>true</allowCreate>
+    <allowDelete>true</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <object>Payment_Transaction__c</object>
+    <allowCreate>true</allowCreate>
+    <allowDelete>true</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <object>Product_Category__c</object>
+    <allowCreate>true</allowCreate>
+    <allowDelete>true</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <object>Royalty_Report__c</object>
+    <allowCreate>true</allowCreate>
+    <allowDelete>true</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <object>Inventory_Item__c</object>
+    <allowCreate>true</allowCreate>
+    <allowDelete>true</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <object>Waiver_Record__c</object>
+    <allowCreate>true</allowCreate>
+    <allowDelete>true</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <modifyAllRecords>true</modifyAllRecords>
+    <viewAllRecords>true</viewAllRecords>
+  </objectPermissions>
   <fieldPermissions>
     <field>Franchise_Owner__c.Contact_First_Name__c</field>
     <editable>true</editable>
@@ -62,15 +188,6 @@
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
-  <objectPermissions>
-    <object>Franchise_Location__c</object>
-    <allowCreate>true</allowCreate>
-    <allowDelete>true</allowDelete>
-    <allowEdit>true</allowEdit>
-    <allowRead>true</allowRead>
-    <modifyAllRecords>true</modifyAllRecords>
-    <viewAllRecords>true</viewAllRecords>
-  </objectPermissions>
   <fieldPermissions>
     <field>Franchise_Location__c.Billing_Contact__c</field>
     <editable>true</editable>
@@ -126,15 +243,6 @@
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
-  <objectPermissions>
-    <object>Waiver_Template__c</object>
-    <allowCreate>true</allowCreate>
-    <allowDelete>true</allowDelete>
-    <allowEdit>true</allowEdit>
-    <allowRead>true</allowRead>
-    <modifyAllRecords>true</modifyAllRecords>
-    <viewAllRecords>true</viewAllRecords>
-  </objectPermissions>
   <fieldPermissions>
     <field>Waiver_Template__c.Content_Version_Id__c</field>
     <editable>true</editable>
@@ -165,15 +273,6 @@
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
-  <objectPermissions>
-    <object>Lead__c</object>
-    <allowCreate>true</allowCreate>
-    <allowDelete>true</allowDelete>
-    <allowEdit>true</allowEdit>
-    <allowRead>true</allowRead>
-    <modifyAllRecords>true</modifyAllRecords>
-    <viewAllRecords>true</viewAllRecords>
-  </objectPermissions>
   <fieldPermissions>
     <field>Lead__c.Converted_Member__c</field>
     <editable>true</editable>
@@ -229,15 +328,6 @@
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
-  <objectPermissions>
-    <object>Member__c</object>
-    <allowCreate>true</allowCreate>
-    <allowDelete>true</allowDelete>
-    <allowEdit>true</allowEdit>
-    <allowRead>true</allowRead>
-    <modifyAllRecords>true</modifyAllRecords>
-    <viewAllRecords>true</viewAllRecords>
-  </objectPermissions>
   <fieldPermissions>
     <field>Member__c.Date_of_Birth__c</field>
     <editable>true</editable>
@@ -328,15 +418,6 @@
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
-  <objectPermissions>
-    <object>Booking__c</object>
-    <allowCreate>true</allowCreate>
-    <allowDelete>true</allowDelete>
-    <allowEdit>true</allowEdit>
-    <allowRead>true</allowRead>
-    <modifyAllRecords>true</modifyAllRecords>
-    <viewAllRecords>true</viewAllRecords>
-  </objectPermissions>
   <fieldPermissions>
     <field>Booking__c.Booking_Date__c</field>
     <editable>true</editable>
@@ -367,15 +448,6 @@
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
-  <objectPermissions>
-    <object>Default_Class_Template__c</object>
-    <allowCreate>true</allowCreate>
-    <allowDelete>true</allowDelete>
-    <allowEdit>true</allowEdit>
-    <allowRead>true</allowRead>
-    <modifyAllRecords>true</modifyAllRecords>
-    <viewAllRecords>true</viewAllRecords>
-  </objectPermissions>
   <fieldPermissions>
     <field>Default_Class_Template__c.Description__c</field>
     <editable>true</editable>
@@ -401,15 +473,6 @@
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
-  <objectPermissions>
-    <object>Scheduled_Session__c</object>
-    <allowCreate>true</allowCreate>
-    <allowDelete>true</allowDelete>
-    <allowEdit>true</allowEdit>
-    <allowRead>true</allowRead>
-    <modifyAllRecords>true</modifyAllRecords>
-    <viewAllRecords>true</viewAllRecords>
-  </objectPermissions>
   <fieldPermissions>
     <field>Scheduled_Session__c.Assigned_Trainer__c</field>
     <editable>true</editable>
@@ -455,15 +518,6 @@
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
-  <objectPermissions>
-    <object>Sale_Line_Item__c</object>
-    <allowCreate>true</allowCreate>
-    <allowDelete>true</allowDelete>
-    <allowEdit>true</allowEdit>
-    <allowRead>true</allowRead>
-    <modifyAllRecords>true</modifyAllRecords>
-    <viewAllRecords>true</viewAllRecords>
-  </objectPermissions>
   <fieldPermissions>
     <field>Sale_Line_Item__c.Inventory_Item__c</field>
     <editable>true</editable>
@@ -489,15 +543,6 @@
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
-  <objectPermissions>
-    <object>Merchandise_Sale__c</object>
-    <allowCreate>true</allowCreate>
-    <allowDelete>true</allowDelete>
-    <allowEdit>true</allowEdit>
-    <allowRead>true</allowRead>
-    <modifyAllRecords>true</modifyAllRecords>
-    <viewAllRecords>true</viewAllRecords>
-  </objectPermissions>
   <fieldPermissions>
     <field>Merchandise_Sale__c.Discount_Approved_By__c</field>
     <editable>true</editable>
@@ -538,15 +583,6 @@
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
-  <objectPermissions>
-    <object>Payment_Transaction__c</object>
-    <allowCreate>true</allowCreate>
-    <allowDelete>true</allowDelete>
-    <allowEdit>true</allowEdit>
-    <allowRead>true</allowRead>
-    <modifyAllRecords>true</modifyAllRecords>
-    <viewAllRecords>true</viewAllRecords>
-  </objectPermissions>
   <fieldPermissions>
     <field>Payment_Transaction__c.Amount__c</field>
     <editable>true</editable>
@@ -582,15 +618,6 @@
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
-  <objectPermissions>
-    <object>Product_Category__c</object>
-    <allowCreate>true</allowCreate>
-    <allowDelete>true</allowDelete>
-    <allowEdit>true</allowEdit>
-    <allowRead>true</allowRead>
-    <modifyAllRecords>true</modifyAllRecords>
-    <viewAllRecords>true</viewAllRecords>
-  </objectPermissions>
   <fieldPermissions>
     <field>Product_Category__c.Default_Margin_Percentage__c</field>
     <editable>true</editable>
@@ -606,15 +633,6 @@
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
-  <objectPermissions>
-    <object>Royalty_Report__c</object>
-    <allowCreate>true</allowCreate>
-    <allowDelete>true</allowDelete>
-    <allowEdit>true</allowEdit>
-    <allowRead>true</allowRead>
-    <modifyAllRecords>true</modifyAllRecords>
-    <viewAllRecords>true</viewAllRecords>
-  </objectPermissions>
   <fieldPermissions>
     <field>Royalty_Report__c.Franchise_Location__c</field>
     <editable>true</editable>
@@ -650,15 +668,6 @@
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
-  <objectPermissions>
-    <object>Inventory_Item__c</object>
-    <allowCreate>true</allowCreate>
-    <allowDelete>true</allowDelete>
-    <allowEdit>true</allowEdit>
-    <allowRead>true</allowRead>
-    <modifyAllRecords>true</modifyAllRecords>
-    <viewAllRecords>true</viewAllRecords>
-  </objectPermissions>
   <fieldPermissions>
     <field>Inventory_Item__c.Barcode__c</field>
     <editable>true</editable>
@@ -709,15 +718,6 @@
     <editable>true</editable>
     <readable>true</readable>
   </fieldPermissions>
-  <objectPermissions>
-    <object>Waiver_Record__c</object>
-    <allowCreate>true</allowCreate>
-    <allowDelete>true</allowDelete>
-    <allowEdit>true</allowEdit>
-    <allowRead>true</allowRead>
-    <modifyAllRecords>true</modifyAllRecords>
-    <viewAllRecords>true</viewAllRecords>
-  </objectPermissions>
   <fieldPermissions>
     <field>Waiver_Record__c.Document_Link__c</field>
     <editable>true</editable>
@@ -817,5 +817,4 @@
     <field>Waiver_Record__c.Waiver_Template__c</field>
     <editable>true</editable>
     <readable>true</readable>
-  </fieldPermissions>
-</PermissionSet>
+  </fieldPermissions></PermissionSet>
