@@ -1,10 +1,14 @@
 {
   "orgName": "BoxingGymDev",
   "edition": "Developer",
-  "features": ["LightningExperience", "Communities", "EinsteinAnalytics"],
-  "adminEmail": "dev@boxinggym.test",
-  "orgPreferences": {
-    "enabled": ["S1DesktopEnabled", "ChatterEnabled"]
+  "features": ["Communities"],
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+    "chatterSettings": {
+      "enableChatter": true
+    }
   },
   "language": "en_US"
 }
