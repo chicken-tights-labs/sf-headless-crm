@@ -1,6 +1,6 @@
 # Boxing Gym Franchise CRM — Salesforce DX Project
 
-Headless Salesforce CRM for Title Boxing Club franchise management.
+Headless Salesforce CRM for Boxing Club franchise management.
 
 ## Project Structure
 
@@ -97,7 +97,16 @@ sf apex run test --target-org my-gym --testlevel RunLocalTests
 ## Related Notes
 - [[Salesforce Headless Orchestration Setup]]
 - [[HAL 9000 - Persona Specification]]
-<<<<<<< Updated upstream
+## Learning the toolchain
+
+New to Cursor + Hermes + GitHub + Salesforce DX? Start with the visual, hands-on pack:
+
+**[docs/learning/00-overview.md](docs/learning/00-overview.md)** → then [PRACTICE.md](docs/learning/PRACTICE.md)
+
+No Skills or Automations required — docs and drills only.
+
+---
+
 ## Review Workflow
 
 All changes go through PRs. Human sign-off is documented as a PR comment before merge (solo-account setup — GitHub blocks self-approval). Deploys to the Dev Org are manual-trigger, post sign-off.
