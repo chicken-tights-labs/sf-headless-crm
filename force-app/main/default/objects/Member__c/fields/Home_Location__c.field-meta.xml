@@ -3,8 +3,8 @@
   <fullName>Home_Location__c</fullName>
   <label>Home Location</label>
   <type>Lookup</type>
-  <required>true</required>
   <referenceTo>Franchise_Location__c</referenceTo>
-  <relationshipField>Home_Location__r</relationshipField>
-  <relationshipName>Home_Location_ref</relationshipName>
+  <relationshipName>Home_Location</relationshipName>
+  <deleteConstraint>Restrict</deleteConstraint>
+  <required>true</required>
 </CustomField>

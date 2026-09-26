@@ -3,8 +3,8 @@
   <fullName>Waiver_Template__c</fullName>
   <label>Waiver Template</label>
   <type>Lookup</type>
-  <required>true</required>
   <referenceTo>Waiver_Template__c</referenceTo>
-  <relationshipField>Waiver_Template__r</relationshipField>
-  <relationshipName>Waiver_Template_ref</relationshipName>
+  <relationshipName>Waiver_Template</relationshipName>
+  <deleteConstraint>Restrict</deleteConstraint>
+  <required>true</required>
 </CustomField>

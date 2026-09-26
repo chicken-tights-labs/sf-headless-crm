@@ -3,22 +3,26 @@
   <fullName>Signature_Method__c</fullName>
   <label>Signature Method</label>
   <type>Picklist</type>
-  <required>true</required>
   <valueSet>
     <restricted>true</restricted>
     <valueSetDefinition>
       <value>
+        <fullName>Signature_Method__c</fullName>
+        <label>Signature_Method__c</label>
+      </value>
+      <value>
         <fullName>Digital In-Person</fullName>
-        <default>false</default>
+        <label>Digital In-Person</label>
       </value>
       <value>
         <fullName>Digital Remote</fullName>
-        <default>false</default>
+        <label>Digital Remote</label>
       </value>
       <value>
         <fullName>Paper Scanned</fullName>
-        <default>false</default>
+        <label>Paper Scanned</label>
       </value>
     </valueSetDefinition>
   </valueSet>
+  <required>true</required>
 </CustomField>

@@ -3,22 +3,26 @@
   <fullName>Signer_Role__c</fullName>
   <label>Signer Role</label>
   <type>Picklist</type>
-  <required>true</required>
   <valueSet>
     <restricted>true</restricted>
     <valueSetDefinition>
       <value>
+        <fullName>Signer_Role__c</fullName>
+        <label>Signer_Role__c</label>
+      </value>
+      <value>
         <fullName>Participant</fullName>
-        <default>false</default>
+        <label>Participant</label>
       </value>
       <value>
         <fullName>Parent/Guardian</fullName>
-        <default>false</default>
+        <label>Parent/Guardian</label>
       </value>
       <value>
         <fullName>Authorized Representative</fullName>
-        <default>false</default>
+        <label>Authorized Representative</label>
       </value>
     </valueSetDefinition>
   </valueSet>
+  <required>true</required>
 </CustomField>

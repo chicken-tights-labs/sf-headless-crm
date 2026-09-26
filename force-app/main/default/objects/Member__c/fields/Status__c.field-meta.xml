@@ -3,34 +3,38 @@
   <fullName>Status__c</fullName>
   <label>Status</label>
   <type>Picklist</type>
-  <required>true</required>
   <valueSet>
     <restricted>true</restricted>
     <valueSetDefinition>
       <value>
+        <fullName>Status__c</fullName>
+        <label>Status__c</label>
+      </value>
+      <value>
         <fullName>Trial Visitor</fullName>
-        <default>false</default>
+        <label>Trial Visitor</label>
       </value>
       <value>
         <fullName>Active</fullName>
-        <default>false</default>
+        <label>Active</label>
       </value>
       <value>
         <fullName>Suspended</fullName>
-        <default>false</default>
+        <label>Suspended</label>
       </value>
       <value>
         <fullName>Cancelled</fullName>
-        <default>false</default>
+        <label>Cancelled</label>
       </value>
       <value>
         <fullName>Lapsed</fullName>
-        <default>false</default>
+        <label>Lapsed</label>
       </value>
       <value>
         <fullName>Rejoined</fullName>
-        <default>false</default>
+        <label>Rejoined</label>
       </value>
     </valueSetDefinition>
   </valueSet>
+  <required>true</required>
 </CustomField>

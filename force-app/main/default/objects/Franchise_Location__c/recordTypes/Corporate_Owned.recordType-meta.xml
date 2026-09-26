@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomObjectType xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Corporate_Owned</fullName>
-    <label>Corporate_Owned</label>
-    <description>Gym owned and operated by corporate</description>
-    <active>true</active>
-    <deploy>true</deploy>
-</CustomObjectType>

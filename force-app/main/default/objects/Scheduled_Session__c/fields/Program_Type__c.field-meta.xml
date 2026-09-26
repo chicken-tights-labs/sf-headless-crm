@@ -3,34 +3,38 @@
   <fullName>Program_Type__c</fullName>
   <label>Program Type</label>
   <type>Picklist</type>
-  <required>true</required>
   <valueSet>
     <restricted>true</restricted>
     <valueSetDefinition>
       <value>
+        <fullName>Program_Type__c</fullName>
+        <label>Program_Type__c</label>
+      </value>
+      <value>
         <fullName>Boxing Fundamentals</fullName>
-        <default>false</default>
+        <label>Boxing Fundamentals</label>
       </value>
       <value>
         <fullName>Kickboxing Basics</fullName>
-        <default>false</default>
+        <label>Kickboxing Basics</label>
       </value>
       <value>
         <fullName>BoxFit</fullName>
-        <default>false</default>
+        <label>BoxFit</label>
       </value>
       <value>
         <fullName>1-on-1 Training</fullName>
-        <default>false</default>
+        <label>1-on-1 Training</label>
       </value>
       <value>
         <fullName>Kids Boxing</fullName>
-        <default>false</default>
+        <label>Kids Boxing</label>
       </value>
       <value>
         <fullName>HIIT Boxing</fullName>
-        <default>false</default>
+        <label>HIIT Boxing</label>
       </value>
     </valueSetDefinition>
   </valueSet>
+  <required>true</required>
 </CustomField>

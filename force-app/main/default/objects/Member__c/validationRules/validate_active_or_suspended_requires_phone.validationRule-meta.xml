@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>validate_active_or_suspended_requires_phone</fullName>
-    <active>true</active>
-    <description>validate_active_or_suspended_requires_phone</description>
-    <errorConditionFormula>(Status__c = 'Active' OR Status__c = 'Suspended') AND ISBLANK(Phone__c)</errorConditionFormula>
-    <errorMessage>Phone number is required for active or suspended members</errorMessage>
-</ValidationRule>

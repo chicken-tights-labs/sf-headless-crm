@@ -4,6 +4,5 @@
   <label>Discount Approved By</label>
   <type>Lookup</type>
   <referenceTo>User</referenceTo>
-  <relationshipField>Discount_Approved_By__r</relationshipField>
-  <relationshipName>Discount_Approved_By_ref</relationshipName>
+  <relationshipName>Discount_Approved_By</relationshipName>
 </CustomField>

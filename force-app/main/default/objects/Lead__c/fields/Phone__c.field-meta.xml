@@ -3,5 +3,4 @@
   <fullName>Phone__c</fullName>
   <label>Phone</label>
   <type>Phone</type>
-  <required>true</required>
 </CustomField>

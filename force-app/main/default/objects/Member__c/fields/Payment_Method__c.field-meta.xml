@@ -7,16 +7,20 @@
     <restricted>true</restricted>
     <valueSetDefinition>
       <value>
+        <fullName>Payment_Method__c</fullName>
+        <label>Payment_Method__c</label>
+      </value>
+      <value>
         <fullName>Credit Card on File</fullName>
-        <default>false</default>
+        <label>Credit Card on File</label>
       </value>
       <value>
         <fullName>Cash/Check</fullName>
-        <default>false</default>
+        <label>Cash/Check</label>
       </value>
       <value>
         <fullName>ACH Direct Debit</fullName>
-        <default>false</default>
+        <label>ACH Direct Debit</label>
       </value>
     </valueSetDefinition>
   </valueSet>

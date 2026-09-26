@@ -3,7 +3,6 @@
   <fullName>Total_Workout_History__c</fullName>
   <label>Total Bookings</label>
   <type>Number</type>
-  <defaultValue>0</defaultValue>
   <precision>10</precision>
   <scale>0</scale>
 </CustomField>

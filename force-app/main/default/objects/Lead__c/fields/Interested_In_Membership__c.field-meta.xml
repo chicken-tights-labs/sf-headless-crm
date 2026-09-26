@@ -3,5 +3,5 @@
   <fullName>Interested_In_Membership__c</fullName>
   <label>Interested In Membership</label>
   <type>Checkbox</type>
-  <defaultValue>true</defaultValue>
+  <defaultValue>false</defaultValue>
 </CustomField>

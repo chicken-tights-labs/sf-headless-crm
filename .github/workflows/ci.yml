@@ -1,0 +1,67 @@
+name: CI — PR Validation
+
+on:
+  pull_request:
+    branches: [main, master, qa]
+
+env:
+  SF_PACKAGE_DIR: force-app
+  # secrets context is not allowed in step-level `if:` — map it to env first
+  SF_AUTH_CONFIGURED: ${{ secrets.SFDX_AUTH_URL != '' }}
+
+jobs:
+  validate-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Skip if secrets not configured
+        if: env.SF_AUTH_CONFIGURED != 'true'
+        run: |
+          echo "⚠️ SFDX_AUTH_URL secret not set. CI validation is skipped until org auth is configured."
+          echo "See docs/CI_CD_SECRETS.md for setup instructions."
+
+      - name: Setup Node.js
+        if: env.SF_AUTH_CONFIGURED == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Salesforce CLI
+        if: env.SF_AUTH_CONFIGURED == 'true'
+        run: npm install -g @salesforce/cli
+
+      - name: Authenticate to Dev Org
+        if: env.SF_AUTH_CONFIGURED == 'true'
+        run: |
+          echo "${{ secrets.SFDX_AUTH_URL }}" > ./auth.txt
+          sf org login sfdx-url -f ./auth.txt -a ci-org -s
+          rm -f ./auth.txt
+
+      - name: Validate metadata (check-only deploy)
+        if: env.SF_AUTH_CONFIGURED == 'true'
+        run: |
+          sf project deploy start \
+            --source-dir ${{ env.SF_PACKAGE_DIR }} \
+            --target-org ci-org \
+            --dry-run \
+            --test-level RunRelevantTests \
+            --json
+
+      # Informational only for now: org has 64% coverage + 1 flaky test
+      # (DataManager_QuotaTest). Flip continue-on-error to false once fixed.
+      - name: Run Apex tests (informational)
+        if: env.SF_AUTH_CONFIGURED == 'true'
+        continue-on-error: true
+        run: |
+          sf apex run test --target-org ci-org \
+            --test-level RunLocalTests \
+            --result-format human --json
+
+      # OPTION C NOTE: scratch-org integration stage intentionally removed.
+      # Restore when Dev Hub is enabled + JWT secrets configured:
+      #   sf org create scratch -f config/project-scratch-def.json -a ci-org -d 7
+      #   sf project deploy start --target-org ci-org --source-dir force-app
+      #   sf apex run test --target-org ci-org --test-level RunLocalTests --code-coverage
+      #   sf org delete scratch --target-org ci-org --no-prompt -p

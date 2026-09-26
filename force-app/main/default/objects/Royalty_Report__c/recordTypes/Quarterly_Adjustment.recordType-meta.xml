@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomObjectType xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Quarterly_Adjustment</fullName>
-    <label>Quarterly_Adjustment</label>
-    <description>End-of-quarter reconciliation</description>
-    <active>true</active>
-    <deploy>true</deploy>
-</CustomObjectType>

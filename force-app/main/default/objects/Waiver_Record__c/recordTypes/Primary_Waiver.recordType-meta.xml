@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomObjectType xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Primary_Waiver</fullName>
-    <label>Primary_Waiver</label>
-    <description>Main liability waiver signed by participant or guardian</description>
-    <active>true</active>
-    <deploy>true</deploy>
-</CustomObjectType>

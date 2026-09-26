@@ -3,8 +3,8 @@
   <fullName>Scheduled_Session__c</fullName>
   <label>Session</label>
   <type>Lookup</type>
-  <required>true</required>
   <referenceTo>Scheduled_Session__c</referenceTo>
-  <relationshipField>Scheduled_Session__r</relationshipField>
-  <relationshipName>Scheduled_Session_ref</relationshipName>
+  <relationshipName>Scheduled_Session</relationshipName>
+  <deleteConstraint>Restrict</deleteConstraint>
+  <required>true</required>
 </CustomField>

@@ -3,26 +3,30 @@
   <fullName>Membership_Tier__c</fullName>
   <label>Membership Tier</label>
   <type>Picklist</type>
-  <required>true</required>
   <valueSet>
     <restricted>true</restricted>
     <valueSetDefinition>
       <value>
+        <fullName>Membership_Tier__c</fullName>
+        <label>Membership_Tier__c</label>
+      </value>
+      <value>
         <fullName>Monthly Unlimited ($129)</fullName>
-        <default>false</default>
+        <label>Monthly Unlimited ($129)</label>
       </value>
       <value>
         <fullName>Annual Prepaid ($99/mo)</fullName>
-        <default>false</default>
+        <label>Annual Prepaid ($99/mo)</label>
       </value>
       <value>
         <fullName>Drop-In ($20/class)</fullName>
-        <default>false</default>
+        <label>Drop-In ($20/class)</label>
       </value>
       <value>
         <fullName>Punch Card (10 classes - $150)</fullName>
-        <default>false</default>
+        <label>Punch Card (10 classes - $150)</label>
       </value>
     </valueSetDefinition>
   </valueSet>
+  <required>true</required>
 </CustomField>

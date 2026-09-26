@@ -3,7 +3,7 @@
   <fullName>Max_Capacity__c</fullName>
   <label>Max Capacity</label>
   <type>Number</type>
-  <required>true</required>
   <precision>3</precision>
   <scale>0</scale>
+  <required>true</required>
 </CustomField>

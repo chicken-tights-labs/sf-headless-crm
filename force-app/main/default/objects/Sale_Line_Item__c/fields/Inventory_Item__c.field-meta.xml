@@ -3,8 +3,8 @@
   <fullName>Inventory_Item__c</fullName>
   <label>Inventory Item</label>
   <type>Lookup</type>
-  <required>true</required>
   <referenceTo>Inventory_Item__c</referenceTo>
-  <relationshipField>Inventory_Item__r</relationshipField>
-  <relationshipName>Inventory_Item_ref</relationshipName>
+  <relationshipName>Inventory_Item</relationshipName>
+  <deleteConstraint>Restrict</deleteConstraint>
+  <required>true</required>
 </CustomField>

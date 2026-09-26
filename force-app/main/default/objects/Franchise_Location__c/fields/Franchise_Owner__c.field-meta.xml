@@ -3,8 +3,8 @@
   <fullName>Franchise_Owner__c</fullName>
   <label>Franchise Owner</label>
   <type>Lookup</type>
-  <required>true</required>
   <referenceTo>Franchise_Owner__c</referenceTo>
-  <relationshipField>Franchise_Owner__r</relationshipField>
-  <relationshipName>Franchise_Owner_ref</relationshipName>
+  <relationshipName>Franchise_Owner</relationshipName>
+  <deleteConstraint>Restrict</deleteConstraint>
+  <required>true</required>
 </CustomField>

@@ -97,3 +97,6 @@ sf apex run test --target-org my-gym --testlevel RunLocalTests
 ## Related Notes
 - [[Salesforce Headless Orchestration Setup]]
 - [[HAL 9000 - Persona Specification]]
+## Review Workflow
+
+All changes go through PRs. Human sign-off is documented as a PR comment before merge (solo-account setup — GitHub blocks self-approval). Deploys to the Dev Org are manual-trigger, post sign-off.

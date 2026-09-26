@@ -3,6 +3,6 @@
   <fullName>Last_Name__c</fullName>
   <label>Last Name</label>
   <type>Text</type>
-  <required>true</required>
   <length>50</length>
+  <required>true</required>
 </CustomField>

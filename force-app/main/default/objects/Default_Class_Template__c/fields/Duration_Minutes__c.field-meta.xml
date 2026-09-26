@@ -3,7 +3,7 @@
   <fullName>Duration_Minutes__c</fullName>
   <label>Duration (Minutes)</label>
   <type>Number</type>
-  <required>true</required>
   <precision>4</precision>
   <scale>0</scale>
+  <required>true</required>
 </CustomField>

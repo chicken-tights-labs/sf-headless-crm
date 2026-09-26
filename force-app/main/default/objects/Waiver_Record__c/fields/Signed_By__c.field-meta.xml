@@ -4,6 +4,5 @@
   <label>Signed By</label>
   <type>Lookup</type>
   <referenceTo>User</referenceTo>
-  <relationshipField>Signed_By__r</relationshipField>
-  <relationshipName>Signed_By_ref</relationshipName>
+  <relationshipName>Signed_By</relationshipName>
 </CustomField>

@@ -4,6 +4,5 @@
   <label>Assigned Trainer</label>
   <type>Lookup</type>
   <referenceTo>User</referenceTo>
-  <relationshipField>Assigned_Trainer__r</relationshipField>
-  <relationshipName>Assigned_Trainer_ref</relationshipName>
+  <relationshipName>Assigned_Trainer</relationshipName>
 </CustomField>

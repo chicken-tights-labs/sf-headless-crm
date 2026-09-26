@@ -3,5 +3,5 @@
   <fullName>Taxable__c</fullName>
   <label>Taxable</label>
   <type>Checkbox</type>
-  <defaultValue>true</defaultValue>
+  <defaultValue>false</defaultValue>
 </CustomField>

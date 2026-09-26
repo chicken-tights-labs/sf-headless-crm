@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>validate_sku_unique</fullName>
-    <active>true</active>
-    <description>validate_sku_unique</description>
-    <errorConditionFormula>EXISTS([SELECT Id FROM Inventory_Item__c WHERE SKU__c = :SKU__c AND Id != :Id])</errorConditionFormula>
-    <errorMessage>SKU must be unique</errorMessage>
-</ValidationRule>

@@ -7,16 +7,20 @@
     <restricted>true</restricted>
     <valueSetDefinition>
       <value>
+        <fullName>Difficulty_Level__c</fullName>
+        <label>Difficulty_Level__c</label>
+      </value>
+      <value>
         <fullName>Beginner</fullName>
-        <default>false</default>
+        <label>Beginner</label>
       </value>
       <value>
         <fullName>Intermediate</fullName>
-        <default>false</default>
+        <label>Intermediate</label>
       </value>
       <value>
         <fullName>Advanced</fullName>
-        <default>false</default>
+        <label>Advanced</label>
       </value>
     </valueSetDefinition>
   </valueSet>

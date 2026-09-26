@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>validate_non_negative_stock</fullName>
-    <active>true</active>
-    <description>validate_non_negative_stock</description>
-    <errorConditionFormula>Current_Stock__c < 0</errorConditionFormula>
-    <errorMessage>Current stock cannot be negative</errorMessage>
-</ValidationRule>

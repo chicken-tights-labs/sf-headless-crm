@@ -3,5 +3,4 @@
   <fullName>End_Time__c</fullName>
   <label>End Time</label>
   <type>DateTime</type>
-  <required>true</required>
 </CustomField>

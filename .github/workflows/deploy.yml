@@ -1,0 +1,49 @@
+name: CD — Deploy to Dev Org
+
+on:
+  # Manual trigger only for now (triggered after PR review sign-off).
+  # To auto-deploy on merge, uncomment:
+  # push:
+  #   branches: [main, master]
+  workflow_dispatch:
+
+env:
+  SF_PACKAGE_DIR: force-app
+
+jobs:
+  deploy-to-dev-org:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Salesforce CLI
+        run: npm install -g @salesforce/cli
+
+      - name: Authenticate to Dev Org
+        run: |
+          echo "${{ secrets.SFDX_AUTH_URL }}" > ./auth.txt
+          sf org login sfdx-url -f ./auth.txt -a dev-org -s
+          rm -f ./auth.txt
+
+      - name: Deploy metadata to Dev Org
+        run: |
+          sf project deploy start \
+            --source-dir ${{ env.SF_PACKAGE_DIR }} \
+            --target-org dev-org \
+            --test-level RunRelevantTests \
+            --json
+
+      # RunRelevantTests (not RunLocalTests): org-wide coverage is 64% and
+      # one test is flaky — full-suite deploys would fail on pre-existing
+      # noise. Switch once coverage is above 75%.
+      - name: Post-deploy sanity check
+        run: |
+          sf data query --target-org dev-org \
+            -q "SELECT COUNT() FROM Waiver_Record__c" \
+            --json

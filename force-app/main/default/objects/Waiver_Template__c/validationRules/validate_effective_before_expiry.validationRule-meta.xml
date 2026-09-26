@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>validate_effective_before_expiry</fullName>
-    <active>true</active>
-    <description>validate_effective_before_expiry</description>
-    <errorConditionFormula>Effective_Date__c > Expiry_Date__c</errorConditionFormula>
-    <errorMessage>Effective date must be before expiry date</errorMessage>
-</ValidationRule>

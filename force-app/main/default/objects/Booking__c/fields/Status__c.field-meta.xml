@@ -3,26 +3,30 @@
   <fullName>Status__c</fullName>
   <label>Booking Status</label>
   <type>Picklist</type>
-  <required>true</required>
   <valueSet>
     <restricted>true</restricted>
     <valueSetDefinition>
       <value>
+        <fullName>Status__c</fullName>
+        <label>Status__c</label>
+      </value>
+      <value>
         <fullName>Confirmed</fullName>
-        <default>false</default>
+        <label>Confirmed</label>
       </value>
       <value>
         <fullName>Completed</fullName>
-        <default>false</default>
+        <label>Completed</label>
       </value>
       <value>
         <fullName>No-Show</fullName>
-        <default>false</default>
+        <label>No-Show</label>
       </value>
       <value>
         <fullName>Cancelled</fullName>
-        <default>false</default>
+        <label>Cancelled</label>
       </value>
     </valueSetDefinition>
   </valueSet>
+  <required>true</required>
 </CustomField>

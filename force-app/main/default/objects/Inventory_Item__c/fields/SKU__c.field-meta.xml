@@ -3,8 +3,6 @@
   <fullName>SKU__c</fullName>
   <label>SKU</label>
   <type>Text</type>
-  <required>true</required>
   <length>50</length>
-  <unique>true</unique>
-  <externalId>true</externalId>
+  <required>true</required>
 </CustomField>

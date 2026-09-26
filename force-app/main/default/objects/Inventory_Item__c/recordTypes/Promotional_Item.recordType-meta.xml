@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomObjectType xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Promotional_Item</fullName>
-    <label>Promotional_Item</label>
-    <description>Item used for promotions or giveaways</description>
-    <active>true</active>
-    <deploy>true</deploy>
-</CustomObjectType>
