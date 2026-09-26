@@ -15,6 +15,10 @@
         <label>Trial Visitor</label>
       </value>
       <value>
+        <fullName>Prospect</fullName>
+        <label>Prospect</label>
+      </value>
+      <value>
         <fullName>Active</fullName>
         <label>Active</label>
       </value>

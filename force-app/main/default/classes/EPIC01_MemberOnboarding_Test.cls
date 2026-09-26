@@ -16,26 +16,37 @@ private class EPIC01_MemberOnboarding_Test {
 
     @testSetup
     static void setupData() {
+        // Create Franchise Owner (required parent for Franchise_Location)
+        Franchise_Owner__c owner = new Franchise_Owner__c(
+            Name                = 'Test Owner',
+            Contact_First_Name__c = 'Jane',
+            Contact_Last_Name__c  = 'Smith',
+            Legal_Name__c       = 'Test Owner Legal',
+            Email__c            = 'owner@test.com'
+        );
+        insert owner;
+
         // Create Franchise Location
         Franchise_Location__c loc = new Franchise_Location__c(
-            Name = 'Lexington HQ',
-            Status__c   = 'Active'
+            Name             = 'Lexington HQ',
+            Status__c        = 'Active',
+            Franchise_Owner__c = owner.Id
         );
         insert loc;
 
         // Create Waiver Template
         Waiver_Template__c tmpl = new Waiver_Template__c(
-            Name           = 'General Liability Waiver - Fencing & Boxing',
-            Template_Type__c = 'Liability',
-            Status__c       = 'Active'
+            Name                 = 'General Liability Waiver - Fencing & Boxing',
+            Template_Type__c     = 'Adult',
+            Content_Version_Id__c = '068000000000001',
+            Effective_Date__c     = Date.today()
         );
         insert tmpl;
 
         // Create Default Class Template
         Default_Class_Template__c dct = new Default_Class_Template__c(
             Name              = 'Boxing Fundamentals',
-            Duration_Minutes__c = 60,
-            Program_Type__c    = 'Boxing'
+            Duration_Minutes__c = 60
         );
         insert dct;
 
@@ -44,8 +55,8 @@ private class EPIC01_MemberOnboarding_Test {
             Name                = 'Boxing 101 - Mon 6PM',
             Franchise_Location__c = loc.Id,
             Max_Capacity__c      = 20,
-            Program_Type__c      = 'Boxing',
-            Session_Status__c    = 'Open'
+            Program_Type__c      = 'Boxing Fundamentals',
+            Session_Status__c    = 'Scheduled'
         );
         insert session;
 
@@ -92,20 +103,23 @@ private class EPIC01_MemberOnboarding_Test {
             Phone__c                = '336-555-0199',
             Franchise_Location__c   = loc.Id,
             Lead_Source__c          = 'Walk-In',
-            Lead_Status__c          = 'Trial Completed',
+            Lead_Status__c          = 'Qualified',
             Program_Interest__c    = 'Boxing'
         );
         insert lead;
 
         // Create waiver linked to Lead (trial class)
         Waiver_Record__c trialWaiver = new Waiver_Record__c(
-            Name                 = 'WR-Maya-Rodriguez',
-            Franchise_Location__c = loc.Id,
-            Lead__c               = lead.Id,
-            Waiver_Template__c    = tmpl.Id,
-            Status__c             = 'Signed',
-            Expiration_Date__c    = Date.today().addDays(180),
-            Signature_Timestamp__c = DateTime.now()
+            Name                  = 'WR-Maya-Rodriguez',
+            Franchise_Location__c  = loc.Id,
+            Lead__c                = lead.Id,
+            Waiver_Template__c     = tmpl.Id,
+            Status__c              = 'Signed',
+            Expiration_Date__c     = Date.today().addDays(180),
+            Signature_Timestamp__c = DateTime.now(),
+            Signature_Method__c    = 'Digital In-Person',
+            Signer_Email__c        = 'maya.r@email.com',
+            Signer_Role__c         = 'Participant'
         );
         insert trialWaiver;
 
@@ -154,9 +168,10 @@ private class EPIC01_MemberOnboarding_Test {
             Name              = 'Jordan_Smith',
             First_Name__c     = 'Jordan',
             Last_Name__c      = 'Smith',
+            Email__c          = 'jordan.s@email.com',
             Phone__c          = '336-555-0177',
             Franchise_Location__c = loc.Id,
-            Lead_Source__c    = 'Web Form',
+            Lead_Source__c    = 'Online',
             Lead_Status__c    = 'Qualified'
         );
         insert lead;
@@ -206,7 +221,7 @@ private class EPIC01_MemberOnboarding_Test {
             Phone__c          = '336-555-0155',
             Home_Location__c  = loc.Id,
             Status__c         = 'Prospect',
-            Membership_Tier__c = '8-Class Pack'
+            Membership_Tier__c = 'Punch Card (10 classes - $150)'
         );
         insert member;
 
@@ -235,18 +250,25 @@ private class EPIC01_MemberOnboarding_Test {
             Phone__c            = '336-555-0144',
             Home_Location__c    = loc.Id,
             Status__c           = 'Prospect',
-            Membership_Tier__c  = '8-Class Pack'
+            Membership_Tier__c  = 'Punch Card (10 classes - $150)'
         );
         insert member;
 
         // Create valid waiver for the member
+        Waiver_Template__c tmpl = [
+            SELECT Id FROM Waiver_Template__c LIMIT 1
+        ];
         Waiver_Record__c waiver = new Waiver_Record__c(
             Name                  = 'WR-Taylor-Kim',
             Franchise_Location__c  = loc.Id,
+            Waiver_Template__c     = tmpl.Id,
             Member__c              = member.Id,
             Status__c              = 'Signed',
             Expiration_Date__c     = Date.today().addDays(365),
-            Signature_Timestamp__c = DateTime.now()
+            Signature_Timestamp__c = DateTime.now(),
+            Signature_Method__c    = 'Digital In-Person',
+            Signer_Email__c        = 'taylor.k@email.com',
+            Signer_Role__c         = 'Participant'
         );
         insert waiver;
 
@@ -266,22 +288,31 @@ private class EPIC01_MemberOnboarding_Test {
         Franchise_Location__c loc = [
             SELECT Id FROM Franchise_Location__c WHERE Name = 'Lexington HQ' LIMIT 1
         ];
+        Waiver_Template__c tmpl = [
+            SELECT Id FROM Waiver_Template__c LIMIT 1
+        ];
 
         Member__c member = new Member__c(
             Name                = 'Jamie_Chen',
             First_Name__c       = 'Jamie',
             Last_Name__c        = 'Chen',
+            Email__c            = 'jamie.chen@email.com',
+            Home_Location__c    = loc.Id,
             Status__c           = 'Prospect',
-            Membership_Tier__c  = '4-Class Pack'
+            Membership_Tier__c  = 'Punch Card (10 classes - $150)'
         );
         insert member;
 
         Waiver_Record__c expiredWaiver = new Waiver_Record__c(
-            Name                 = 'WR-Jamie-Chen',
-            Franchise_Location__c = loc.Id,
-            Member__c             = member.Id,
-            Status__c             = 'Signed',
-            Expiration_Date__c    = Date.today().addDays(-1) // expired yesterday
+            Name                  = 'WR-Jamie-Chen',
+            Franchise_Location__c  = loc.Id,
+            Waiver_Template__c     = tmpl.Id,
+            Member__c              = member.Id,
+            Status__c              = 'Signed',
+            Expiration_Date__c     = Date.today().addDays(-1),
+            Signature_Method__c    = 'Digital In-Person',
+            Signer_Email__c        = 'jamie.chen@email.com',
+            Signer_Role__c         = 'Participant'
         );
         insert expiredWaiver;
 
@@ -300,21 +331,30 @@ private class EPIC01_MemberOnboarding_Test {
         Franchise_Location__c loc = [
             SELECT Id FROM Franchise_Location__c WHERE Name = 'Lexington HQ' LIMIT 1
         ];
+        Waiver_Template__c tmpl = [
+            SELECT Id FROM Waiver_Template__c LIMIT 1
+        ];
 
         Member__c member = new Member__c(
             Name                = 'Morgan_Lee',
             First_Name__c       = 'Morgan',
             Last_Name__c        = 'Lee',
+            Email__c            = 'morgan.lee@email.com',
+            Home_Location__c    = loc.Id,
             Status__c           = 'Prospect',
             Membership_Tier__c  = 'Monthly Unlimited ($129)'
         );
         insert member;
 
         Waiver_Record__c pendingWaiver = new Waiver_Record__c(
-            Name                 = 'WR-Morgan-Lee',
-            Franchise_Location__c = loc.Id,
-            Member__c             = member.Id,
-            Status__c             = 'Pending'
+            Name                  = 'WR-Morgan-Lee',
+            Franchise_Location__c  = loc.Id,
+            Waiver_Template__c     = tmpl.Id,
+            Member__c              = member.Id,
+            Status__c              = 'Pending',
+            Signature_Method__c    = 'Digital In-Person',
+            Signer_Email__c        = 'morgan.lee@email.com',
+            Signer_Role__c         = 'Participant'
         );
         insert pendingWaiver;
 
@@ -330,10 +370,16 @@ private class EPIC01_MemberOnboarding_Test {
         // Scenario: Selecting a tier does not set membership dates
         // Gherkin: @no-premature-dates
 
+        Franchise_Location__c loc = [
+            SELECT Id FROM Franchise_Location__c WHERE Name = 'Lexington HQ' LIMIT 1
+        ];
         Member__c member = new Member__c(
-            Name = 'Riley_Patel',
-            First_Name__c = 'Riley',
-            Last_Name__c  = 'Patel'
+            Name             = 'Riley_Patel',
+            First_Name__c    = 'Riley',
+            Last_Name__c     = 'Patel',
+            Email__c         = 'riley.patel@email.com',
+            Home_Location__c = loc.Id,
+            Status__c        = 'Prospect'
         );
         insert member;
 
@@ -347,8 +393,8 @@ private class EPIC01_MemberOnboarding_Test {
         ];
 
         System.assertEquals('Monthly Unlimited ($129)', check.Membership_Tier__c);
-        System.assertNull(check.Start_Date__c, 'Start date should not be set before payment');
-        System.assertNull(check.Expiry_Date__c, 'Expiry date should not be set before payment');
+        System.assertEquals(null, check.Start_Date__c, 'Start date should not be set before payment');
+        System.assertEquals(null, check.Expiry_Date__c, 'Expiry date should not be set before payment');
     }
 
     @isTest
@@ -356,16 +402,22 @@ private class EPIC01_MemberOnboarding_Test {
         // Scenario: Member changes tier before payment — price updates but no dates set
         // Gherkin: @tier-change
 
+        Franchise_Location__c loc = [
+            SELECT Id FROM Franchise_Location__c WHERE Name = 'Lexington HQ' LIMIT 1
+        ];
         Member__c member = new Member__c(
-            Name = 'Casey_Brooks',
-            First_Name__c = 'Casey',
-            Last_Name__c  = 'Brooks',
+            Name             = 'Casey_Brooks',
+            First_Name__c    = 'Casey',
+            Last_Name__c     = 'Brooks',
+            Email__c         = 'casey.brooks@email.com',
+            Home_Location__c = loc.Id,
+            Status__c        = 'Prospect',
             Membership_Tier__c = 'Drop-In ($20/class)'
         );
         insert member;
 
         // Change tier
-        member.Membership_Tier__c = '8-Class Pack';
+        member.Membership_Tier__c = 'Punch Card (10 classes - $150)';
         update member;
 
         Member__c check = [
@@ -373,9 +425,9 @@ private class EPIC01_MemberOnboarding_Test {
             FROM Member__c WHERE Id = :member.Id
         ];
 
-        System.assertEquals('8-Class Pack', check.Membership_Tier__c);
-        System.assertNull(check.Start_Date__c);
-        System.assertNull(check.Expiry_Date__c);
+        System.assertEquals('Punch Card (10 classes - $150)', check.Membership_Tier__c);
+        System.assertEquals(null, check.Start_Date__c);
+        System.assertEquals(null, check.Expiry_Date__c);
     }
 
     // =====================================================
@@ -395,6 +447,7 @@ private class EPIC01_MemberOnboarding_Test {
             Name                = 'Drew_Thompson',
             First_Name__c       = 'Drew',
             Last_Name__c        = 'Thompson',
+            Email__c            = 'drew.t@email.com',
             Home_Location__c    = loc.Id,
             Status__c           = 'Prospect',
             Membership_Tier__c  = 'Punch Card (10 classes - $150)',
@@ -403,13 +456,20 @@ private class EPIC01_MemberOnboarding_Test {
         insert member;
 
         // Create valid waiver
+        Waiver_Template__c tmpl = [
+            SELECT Id FROM Waiver_Template__c LIMIT 1
+        ];
         Waiver_Record__c waiver = new Waiver_Record__c(
             Name                  = 'WR-Drew-Thompson',
             Franchise_Location__c  = loc.Id,
+            Waiver_Template__c     = tmpl.Id,
             Member__c              = member.Id,
             Status__c              = 'Signed',
             Expiration_Date__c     = Date.today().addDays(365),
-            Signature_Timestamp__c = DateTime.now()
+            Signature_Timestamp__c = DateTime.now(),
+            Signature_Method__c    = 'Digital In-Person',
+            Signer_Email__c        = 'drew.t@email.com',
+            Signer_Role__c         = 'Participant'
         );
         insert waiver;
 
@@ -433,7 +493,7 @@ private class EPIC01_MemberOnboarding_Test {
             WHERE Member__c = :member.Id
         ];
         System.assertEquals(1, txns.size(), 'Exactly 1 payment transaction should be created');
-        System.assertEquals(Status__c, 'Completed');
+        System.assertEquals(txns[0].Status__c, 'Completed');
         System.assertEquals(false, txns[0].Is_Recurring__c, 'Punch card is not recurring');
     }
 
@@ -442,19 +502,26 @@ private class EPIC01_MemberOnboarding_Test {
         // Scenario: Card payment fails — member stays in Prospect status
         // Gherkin: @failure @card-declined
 
+        Franchise_Location__c loc = [
+            SELECT Id FROM Franchise_Location__c WHERE Name = 'Lexington HQ' LIMIT 1
+        ];
         Member__c member = new Member__c(
-            Name = 'Avery_Johnson',
-            First_Name__c = 'Avery',
-            Last_Name__c  = 'Johnson',
-            Status__c     = 'Prospect',
+            Name             = 'Avery_Johnson',
+            First_Name__c    = 'Avery',
+            Last_Name__c     = 'Johnson',
+            Email__c         = 'avery.j@email.com',
+            Home_Location__c = loc.Id,
+            Status__c        = 'Prospect',
             Membership_Tier__c = 'Monthly Unlimited ($129)'
         );
         insert member;
 
         // Simulate failed payment (mock)
+        EPIC01_MemberOnboarding_Service.simulatePaymentFailure = true;
         Boolean paymentSuccess = EPIC01_MemberOnboarding_Service.processPayment(
             member.Id, '129.00', 'Credit Card'
         );
+        EPIC01_MemberOnboarding_Service.simulatePaymentFailure = false;
 
         System.assertEquals(false, paymentSuccess, 'Payment should fail in test mock');
 
@@ -502,12 +569,19 @@ private class EPIC01_MemberOnboarding_Test {
         member.Membership_Tier__c = 'Punch Card (10 classes - $150)';
 
         // Sign waiver (pre-existing from trial)
+        Waiver_Template__c tmpl = [
+            SELECT Id FROM Waiver_Template__c LIMIT 1
+        ];
         Waiver_Record__c waiver = new Waiver_Record__c(
             Name                  = 'WR-Quinn-Foster',
             Franchise_Location__c  = loc.Id,
+            Waiver_Template__c     = tmpl.Id,
             Member__c              = member.Id,
             Status__c              = 'Signed',
-            Expiration_Date__c     = Date.today().addDays(365)
+            Expiration_Date__c     = Date.today().addDays(365),
+            Signature_Method__c    = 'Digital In-Person',
+            Signer_Email__c        = 'quinn.f@email.com',
+            Signer_Role__c         = 'Participant'
         );
         insert waiver;
         update member;
@@ -543,6 +617,7 @@ private class EPIC01_MemberOnboarding_Test {
             Name = 'Morgan_Reyes',
             First_Name__c = 'Morgan',
             Last_Name__c  = 'Reyes',
+            Email__c      = 'morgan.r@email.com',
             Home_Location__c = loc.Id,
             Status__c     = 'Active',
             Membership_Tier__c = 'Monthly Unlimited ($129)'
@@ -573,7 +648,8 @@ private class EPIC01_MemberOnboarding_Test {
             First_Name__c = 'Test',
             Last_Name__c  = 'User',
             Franchise_Location__c = loc.Id,
-            Lead_Source__c = 'Web Form'
+            Lead_Source__c = 'Online',
+            Lead_Status__c = 'New'
         );
         insert lead;
 
@@ -613,7 +689,9 @@ private class EPIC01_MemberOnboarding_Test {
             Last_Name__c  = 'Test',
             Email__c      = 'dup.test@email.com',
             Referred_By__c = referrer.Id,
-            Franchise_Location__c = loc.Id
+            Franchise_Location__c = loc.Id,
+            Lead_Source__c = 'Referral',
+            Lead_Status__c = 'Qualified'
         );
         insert lead1;
 
@@ -648,13 +726,20 @@ private class EPIC01_MemberOnboarding_Test {
         insert member;
 
         // Process payment (triggers activation)
+        Waiver_Template__c tmpl = [
+            SELECT Id FROM Waiver_Template__c LIMIT 1
+        ];
         Waiver_Record__c waiver = new Waiver_Record__c(
             Name = 'WR-Casey-Brooks',
             Franchise_Location__c = loc.Id,
+            Waiver_Template__c = tmpl.Id,
             Member__c = member.Id,
             Status__c = 'Signed',
             Expiration_Date__c = Date.today().addDays(365),
-            Signature_Timestamp__c = DateTime.now()
+            Signature_Timestamp__c = DateTime.now(),
+            Signature_Method__c = 'Digital In-Person',
+            Signer_Email__c = 'casey.b@email.com',
+            Signer_Role__c = 'Participant'
         );
         insert waiver;
 
@@ -689,7 +774,7 @@ private class EPIC01_MemberOnboarding_Test {
             Last_Name__c  = 'Johnson',
             Email__c      = 'avery.j@email.com',
             Franchise_Location__c = loc.Id,
-            Lead_Source__c = 'Web Form',
+            Lead_Source__c = 'Online',
             Lead_Status__c = 'Qualified'
         );
         insert lead;
@@ -720,8 +805,10 @@ private class EPIC01_MemberOnboarding_Test {
             Name = 'Riley_Patel',
             First_Name__c = 'Riley',
             Last_Name__c  = 'Patel',
+            Email__c = 'riley.patel@email.com',
             Home_Location__c = loc.Id,
             Status__c = 'Active',
+            Membership_Tier__c = 'Monthly Unlimited ($129)',
             Welcome_Email_Sent__c = true
         );
         insert member;

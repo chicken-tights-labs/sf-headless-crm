@@ -4,6 +4,6 @@
   <label>Referred By</label>
   <type>Lookup</type>
   <referenceTo>Member__c</referenceTo>
-  <relationshipName>Lead_refs</relationshipName>
+  <relationshipName>Referred_By_Members</relationshipName>
   <required>false</required>
 </CustomField>

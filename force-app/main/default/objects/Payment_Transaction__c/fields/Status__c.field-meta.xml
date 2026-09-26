@@ -19,6 +19,10 @@
         <label>Failed</label>
       </value>
       <value>
+        <fullName>Completed</fullName>
+        <label>Completed</label>
+      </value>
+      <value>
         <fullName>Refunded</fullName>
         <label>Refunded</label>
       </value>

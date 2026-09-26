@@ -6,5 +6,4 @@
   <referenceTo>Member__c</referenceTo>
   <relationshipName>WavMember</relationshipName>
   <deleteConstraint>Restrict</deleteConstraint>
-  <required>true</required>
 </CustomField>
