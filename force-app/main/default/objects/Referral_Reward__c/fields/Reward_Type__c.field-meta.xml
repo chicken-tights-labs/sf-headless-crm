@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fullName>Reward_Type__c</fullName>
+  <label>Reward Type</label>
+  <type>Picklist</type>
+  <valueSet>
+    <restricted>true</restricted>
+    <valueSetDefinition>
+    <value>
+      <fullName>Class Credit</fullName>
+      <default>false</default>
+      </value>
+    <value>
+      <fullName>Account Credit</fullName>
+      <default>false</default>
+      </value>
+    <value>
+      <fullName>Merch Discount</fullName>
+      <default>false</default>
+      </value>
+    </valueSetDefinition>
+  </valueSet>
+  <required>false</required>
+</CustomField>

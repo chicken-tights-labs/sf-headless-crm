@@ -97,6 +97,51 @@ sf apex run test --target-org my-gym --testlevel RunLocalTests
 ## Related Notes
 - [[Salesforce Headless Orchestration Setup]]
 - [[HAL 9000 - Persona Specification]]
+<<<<<<< Updated upstream
 ## Review Workflow
 
 All changes go through PRs. Human sign-off is documented as a PR comment before merge (solo-account setup — GitHub blocks self-approval). Deploys to the Dev Org are manual-trigger, post sign-off.
+
+---
+
+## 🎯 EPIC-01: Member Onboarding — Source Map
+
+This project implements EPIC-01. The requirements docs live in the Obsidian vault at `~/Documents/Obsidian Vault/CRM-Documentation/`. Use this table to jump between docs and source.
+
+| User Story | Key Source Files | Tests | Status |
+|---|---|---|---|
+| **US-001: Lead Capture** | `objects/Lead__c/fields/` (Phone__c, Lead_Source__c already exist; Program_Interest__c, Referred_By__c newly added) | — | Schema ✅ |
+| **US-002: Lead Conversion** | `objects/Lead__c/fields/Converted_Member__c.field-meta.xml` (exists), `objects/Member__c/fields/Original_Lead__c.field-meta.xml` (new), `classes/EPIC01_MemberOnboarding_Service.cls` | `classes/EPIC01_MemberOnboarding_Test.cls` | Logic ⏳ |
+| **US-003: Tier + Waiver Gate** | `objects/Waiver_Record__c/fields/Expiration_Date__c.field-meta.xml` (from GitHub), `objects/Member__c/fields/Waiver_Needed__c.field-meta.xml` (new) | `classes/EPIC01_MemberOnboarding_Test.cls` | Gate ⏳ |
+| **US-004: Payment** | `objects/Payment_Transaction__c/fields/Is_Recurring__c.field-meta.xml` (new), `objects/Member__c/fields` (Start_Date__c, Expiry_Date__c already exist) | `classes/EPIC01_MemberOnboarding_Test.cls` | Logic ⏳ |
+| **US-005: Welcome Workflow** | `objects/Member__c/fields/Welcome_Email_Sent__c.field-meta.xml` (new) | `classes/EPIC01_MemberOnboarding_Test.cls` | Logic ⏳ |
+| **US-006: Referral Program** | `objects/Referral_Reward__c/` (new object + 9 fields), `objects/Member__c/fields/Referral_Code__c.field-meta.xml` (new) | `classes/EPIC01_MemberOnboarding_Test.cls` | Logic ⏳ |
+
+### ⚠️ Schema Status: Existing vs. New
+
+| Field | Object | Status | Notes |
+|---|---|---|---|
+| `Phone__c` | Lead__c | ✅ Already exists | Source + GitHub |
+| `Lead_Source__c` | Lead__c | ✅ Already exists | Values: Walk-in, Online, Referral, Social Media, Community Event |
+| `Program_Interest__c` | Lead__c | 🆕 Newly added | Values: Boxing, Fencing, MMA, Multi, Not Sure |
+| `Referred_By__c` | Lead__c | 🆕 Newly added | Lookup to Member |
+| `Converted_Member__c` | Lead__c | ✅ Already exists | |
+| `Original_Lead__c` | Member__c | 🆕 Newly added | Lookup to Lead |
+| `Start_Date__c` | Member__c | ✅ Already exists | Use instead of Membership_Start_Date__c |
+| `Expiry_Date__c` | Member__c | ✅ Already exists | Use instead of Membership_Expiry_Date__c |
+| `Membership_Tier__c` | Member__c | ✅ Already exists | Values: Monthly Unlimited $129, Annual Prepaid $99/mo, Drop-In $20/class, Punch Card 10 classes $150 |
+| `Member__c` | Waiver_Record__c | ✅ Already exists | EPIC-02 gap already resolved in source |
+| `Lead__c` | Waiver_Record__c | ✅ Already exists | For trial class waivers |
+| `Expiration_Date__c` | Waiver_Record__c | ✅ Already exists | From GitHub commit 625faa0 (EPIC-02) |
+| `Effective_Date__c` | Waiver_Record__c | ✅ Already exists | From GitHub commit 625faa0 (EPIC-02) |
+| `Is_Recurring__c` | Payment_Transaction__c | 🆕 Newly added | |
+| `Referral_Code__c` | Member__c | 🆕 Newly added | Unique, externalId |
+| `Classes_Remaining__c` | Member__c | 🆕 Newly added | |
+| `Referral_Reward__c` | (new object) | 🆕 Newly added | 9 fields |
+
+### 🛠️ Next Steps for Development
+
+1. Deploy new schema + Apex classes to scratch org: `sf project deploy start --target-org my-gym`
+2. Implement `EPIC01_MemberOnboarding_Service.cls` method bodies (skeleton is ready)
+3. Run the test class: `sf apex run test --target-org my-gym -n EPIC01_MemberOnboarding_Test`
+4. Note: Tier values in CRM-Documentation Gherkin scenarios differ from source — see table above

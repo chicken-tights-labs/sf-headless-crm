@@ -16,6 +16,7 @@
     <members>Default_Class_Template__c</members>
     <members>Waiver_Template__c</members>
     <members>Waiver_Record__c</members>
+    <members>Referral_Reward__c</members>
     <name>CustomObject</name>
   </types>
   <types>
@@ -37,6 +38,14 @@
   <types>
     <members>*</members>
     <name>ValidationRule</name>
+  </types>
+  <types>
+    <members>*</members>
+    <name>ApexClass</name>
+  </types>
+  <types>
+    <members>*</members>
+    <name>ApexTrigger</name>
   </types>
   <version>58.0</version>
 </Package>

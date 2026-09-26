@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fullName>Status__c</fullName>
+  <label>Status</label>
+  <type>Picklist</type>
+  <valueSet>
+    <restricted>true</restricted>
+    <valueSetDefinition>
+    <value>
+      <fullName>Code Used</fullName>
+      <default>false</default>
+      </value>
+    <value>
+      <fullName>Member Created</fullName>
+      <default>false</default>
+      </value>
+    <value>
+      <fullName>Payment Completed</fullName>
+      <default>false</default>
+      </value>
+    <value>
+      <fullName>Reward Claimed</fullName>
+      <default>false</default>
+      </value>
+    <value>
+      <fullName>Cancelled</fullName>
+      <default>false</default>
+      </value>
+    </valueSetDefinition>
+  </valueSet>
+  <required>true</required>
+</CustomField>
