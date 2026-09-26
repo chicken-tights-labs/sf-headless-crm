@@ -1,6 +1,6 @@
 # Boxing Gym Franchise CRM — Salesforce DX Project
 
-Headless Salesforce CRM for Title Boxing Club franchise management.
+Headless Salesforce CRM for Boxing Club franchise management.
 
 ## Project Structure
 
