@@ -19,14 +19,14 @@ gh secret set SFDX_AUTH_URL < <(SF_TEMP_SHOW_SECRETS=true sf org display --targe
 
 ## Workflow Overview
 
-1. **`ci.yml`** — Runs on every PR: authenticates with `SFDX_AUTH_URL`, check-only validates metadata against the Dev Org, runs Apex tests (informational only while org coverage is 64% and `DataManager_QuotaTest` is flaky)
+1. **`ci.yml`** — Runs on every PR: authenticates with `SFDX_AUTH_URL`, performs a check-only deploy with `RunRelevantTests` to validate metadata and run only tests relevant to the deployed code. This avoids tripping on pre-existing org-only test classes (e.g., `DataManager_QuotaTest`) that depend on org-specific Documents not in the source repo. Failing tests or deployment errors will block the PR.
 2. **`deploy.yml`** — Manual trigger (`workflow_dispatch`) after PR review sign-off: deploys to the Dev Org with `RunRelevantTests`, then a post-deploy SOQL sanity check
 
 ## What We Chose (and why) — Option C
 
 - **CI auth:** single `SFDX_AUTH_URL` secret (OAuth refresh token) instead of username/password/token. Less secrets sprawl, no password rotation coupling, no security token reset needed.
 - **Scratch org stage: removed for now.** Dev Hub isn't enabled in the Dev Org, and the JWT flow (connected app + cert) is a separate setup session. The scratch-org commands are preserved as comments in `ci.yml` for when that's ready.
-- **Test level:** `RunRelevantTests` for deploys/validations (org has pre-existing 64% coverage + flaky `DataManager_QuotaTest`; full-suite runs trip on old noise, not new code).
+- **Test level:** `RunRelevantTests` for both CI validation and CD deploys. The Dev Org contains pre-existing test classes (`DataManager_QuotaTest`, etc.) not in the sf-headless-crm source — `RunRelevantTests` runs only tests related to the deployed code, avoiding false failures from unrelated org-only tests.
 - **Deploy trigger:** manual (`workflow_dispatch`) — deploys stay gated behind your PR review sign-off, consistent with the review-first workflow. Auto-deploy on merge can be enabled by uncommenting the `push:` trigger.
 
 ## Restoring the Scratch Org Stage (later)

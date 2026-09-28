@@ -39,25 +39,21 @@ jobs:
           sf org login sfdx-url -f ./auth.txt -a ci-org -s
           rm -f ./auth.txt
 
-      - name: Validate metadata (check-only deploy)
+      - name: Validate metadata + run relevant tests
         if: env.SF_AUTH_CONFIGURED == 'true'
         run: |
           sf project deploy start \
             --source-dir ${{ env.SF_PACKAGE_DIR }} \
             --target-org ci-org \
             --dry-run \
-            --test-level RunRelevantTests \
-            --json
+            --test-level RunRelevantTests
 
-      # Informational only for now: org has 64% coverage + 1 flaky test
-      # (DataManager_QuotaTest). Flip continue-on-error to false once fixed.
-      - name: Run Apex tests (informational)
-        if: env.SF_AUTH_CONFIGURED == 'true'
-        continue-on-error: true
-        run: |
-          sf apex run test --target-org ci-org \
-            --test-level RunLocalTests \
-            --result-format human --json
+      # NOTE: No separate "RunLocalTests" step — the dry-run deploy above
+      # already runs RunRelevantTests (tests for the deployed code only).
+      # The org has pre-existing unrelated test classes (e.g.,
+      # DataManager_QuotaTest) that depend on org-specific Documents.
+      # RunRelevantTests avoids tripping on those while still blocking
+      # PRs that fail to deploy or break relevant tests.
 
       # OPTION C NOTE: scratch-org integration stage intentionally removed.
       # Restore when Dev Hub is enabled + JWT secrets configured:
