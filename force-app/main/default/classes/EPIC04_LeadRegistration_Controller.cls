@@ -7,7 +7,7 @@ public with sharing class EPIC04_LeadRegistration_Controller {
             Last_Name__c  = lastName,
             Phone__c      = phone,
             Email__c      = email,
-            Status__c     = 'Walk-In',
+            Lead_Status__c = 'Walk-In',
             Lead_Source__c = 'In Person'
         );
         insert newLead;
