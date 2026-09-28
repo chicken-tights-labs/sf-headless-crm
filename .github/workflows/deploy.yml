@@ -1,10 +1,8 @@
 name: CD — Deploy to Dev Org
 
 on:
-  # Manual trigger only for now (triggered after PR review sign-off).
-  # To auto-deploy on merge, uncomment:
-  # push:
-  #   branches: [main, master]
+  push:
+    branches: [main, master]
   workflow_dispatch:
 
 env:
@@ -39,9 +37,6 @@ jobs:
             --test-level RunRelevantTests \
             --json
 
-      # RunRelevantTests (not RunLocalTests): org-wide coverage is 64% and
-      # one test is flaky — full-suite deploys would fail on pre-existing
-      # noise. Switch once coverage is above 75%.
       - name: Post-deploy sanity check
         run: |
           sf data query --target-org dev-org \
