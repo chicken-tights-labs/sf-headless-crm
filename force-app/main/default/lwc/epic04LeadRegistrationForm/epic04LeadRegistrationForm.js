@@ -6,6 +6,7 @@ export default class Epic04LeadRegistrationForm extends LightningElement {
     @track lastName = '';
     @track phone = '';
     @track email = '';
+    @track franchiseLocationId = '';
     @track message = '';
     @track error;
 
@@ -25,6 +26,10 @@ export default class Epic04LeadRegistrationForm extends LightningElement {
         this.email = event.target.value;
     }
 
+    handleFranchiseLocationChange(event) {
+        this.franchiseLocationId = event.target.value;
+    }
+
     handleRegisterLead() {
         this.error = undefined;
         this.message = '';
@@ -33,7 +38,8 @@ export default class Epic04LeadRegistrationForm extends LightningElement {
             firstName: this.firstName,
             lastName: this.lastName,
             phone: this.phone,
-            email: this.email
+            email: this.email,
+            franchiseLocationId: this.franchiseLocationId
         })
         .then(result => {
             this.message = 'Lead registered successfully! Lead ID: ' + result;

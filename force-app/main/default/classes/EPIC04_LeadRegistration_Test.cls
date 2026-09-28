@@ -3,18 +3,26 @@ private class EPIC04_LeadRegistration_Test {
 
     @testSetup
     static void setupData() {
-        // No specific setup data needed for this simple lead creation test
+        // Create a Franchise_Location__c record (required lookup on Lead__c)
+        Franchise_Location__c location = new Franchise_Location__c(
+            Name = 'NBS Gym - Lexington'
+        );
+        insert location;
     }
 
     @isTest
     static void testSuccessfulLeadRegistration() {
         // Test a successful lead registration
+        // Get the Franchise_Location__c created in testSetup
+        Franchise_Location__c location = [SELECT Id FROM Franchise_Location__c LIMIT 1];
+
         Test.startTest();
         Id leadId = EPIC04_LeadRegistration_Controller.createLead(
             'John',
             'Smith',
             '555-123-4567',
-            'john@example.com'
+            'john@example.com',
+            location.Id
         );
         Test.stopTest();
 
