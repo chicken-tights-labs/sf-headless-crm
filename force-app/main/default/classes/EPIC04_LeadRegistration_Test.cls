@@ -3,9 +3,21 @@ private class EPIC04_LeadRegistration_Test {
 
     @testSetup
     static void setupData() {
-        // Create a Franchise_Location__c record (required lookup on Lead__c)
+        // Create Franchise Owner (required parent for Franchise Location)
+        Franchise_Owner__c owner = new Franchise_Owner__c(
+            Name                = 'Test Owner',
+            Contact_First_Name__c = 'Jane',
+            Contact_Last_Name__c  = 'Smith',
+            Legal_Name__c       = 'Test Owner Legal',
+            Email__c            = 'owner@test.com'
+        );
+        insert owner;
+
+        // Create Franchise Location
         Franchise_Location__c location = new Franchise_Location__c(
-            Name = 'NBS Gym - Lexington'
+            Name                = 'NBS Gym - Lexington',
+            Status__c           = 'Active',
+            Franchise_Owner__c  = owner.Id
         );
         insert location;
     }
