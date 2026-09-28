@@ -1,47 +1,43 @@
-# CI/CD Secrets Setup — Dev Org
+# CI/CD Secrets Setup
 
-## Required GitHub Secret (just one)
+This document outlines the GitHub Secrets required for the automated CI/CD workflows.
+These secrets must be configured in your GitHub repository under `Settings → Secrets and variables → Actions`.
 
-Set in your GitHub repo → Settings → Secrets and variables → Actions:
+## Required GitHub Secrets for CI/CD
+
+### 1. `SFDX_AUTH_URL` (for `deploy.yml` - Main Branch Deployment)
 
 | Secret Name | Value | How to Get |
 |---|---|---|
-| `SFDX_AUTH_URL` | The `force://` auth URL for the Dev Org | On the VM: `SF_TEMP_SHOW_SECRETS=true sf org display --target-org chickentightslabs --verbose` (the `sfdxAuthUrl` field) |
+| `SFDX_AUTH_URL` | The `force://` auth URL for your persistent Dev Sandbox (e.g., `demo-scratch`) | On your VM: `SF_TEMP_SHOW_SECRETS=true sf org display --target-org <YOUR_DEV_ORG_ALIAS> --verbose` (look for the `sfdxAuthUrl` field) |
 
-**Why one secret instead of three?** The VM already holds a working OAuth refresh token for the org (`force://...`). CI re-uses it via `sf org login sfdx-url`. No password in GitHub, no security-token reset, no Connected App needed. If the token ever expires or is revoked, regenerate it on the VM and update this one secret.
+**Purpose:** This secret is used by the `deploy.yml` workflow to authenticate and deploy the `main` branch code to your designated Dev Sandbox. This ensures your integration environment is always up-to-date with the latest `main` branch.
 
-## How to Set It
+### 2. JWT Authentication Secrets (for `ci.yml` - PR Validation with Ephemeral Scratch Orgs)
 
-```bash
-# On the VM (auth URL never appears in chat or logs)
-gh secret set SFDX_AUTH_URL < <(SF_TEMP_SHOW_SECRETS=true sf org display --target-org chickentightslabs --verbose --json | python3 -c "import sys,json; print(json.load(sys.stdin)['result']['sfdxAuthUrl'])")
-```
+To enable the `ci.yml` workflow to create and manage ephemeral scratch orgs, you need to set up JWT-based authentication for your Dev Hub.
+
+| Secret Name | Value | How to Get |
+|---|---|---|
+| `SF_JWT_CLIENT_ID` | The Consumer Key from your Connected App in Salesforce | Create a Connected App in your Dev Hub org. |
+| `SF_JWT_KEY` | The private key content from your JWT server key file (.pem file) | Generate a self-signed certificate and key. |
+| `SF_DEV_HUB_USERNAME` | The username of your Salesforce Dev Hub org | Your Dev Hub username (e.g., `maria.robbins@chickentightslabs.com.crmsfdevorg`) |
+
+**Prerequisites:**
+*   **Enable Dev Hub:** In your Salesforce Dev Hub org (`chickentightslabs`), navigate to `Setup -> Dev Hub` and ensure it is enabled.
+*   **Create Connected App:** Follow Salesforce documentation to create a Connected App that allows JWT bearer flow. Ensure it's configured for `oauth_connection_type=jwt-bearer` and the user specified in `SF_DEV_HUB_USERNAME` has access.
+*   **Generate Certificate and Key:** Create a self-signed certificate and key pair. The `.pem` file content goes into `SF_JWT_KEY`.
 
 ## Workflow Overview
 
-1. **`ci.yml`** — Runs on every PR: authenticates with `SFDX_AUTH_URL`, check-only validates metadata against the Dev Org, runs Apex tests (informational only while org coverage is 64% and `DataManager_QuotaTest` is flaky)
-2. **`deploy.yml`** — Manual trigger (`workflow_dispatch`) after PR review sign-off: deploys to the Dev Org with `RunRelevantTests`, then a post-deploy SOQL sanity check
+1.  **`ci.yml` (PR Validation):**
+    *   **Trigger:** `pull_request` events to `main` or `master` branches.
+    *   **Action:** Creates a new, ephemeral scratch org for each PR, deploys the feature branch code, runs *all* Apex tests (`RunAllTests`), and then deletes the scratch org. The status is reported back to the GitHub PR.
+    *   **Requires:** `SF_JWT_CLIENT_ID`, `SF_JWT_KEY`, `SF_DEV_HUB_USERNAME` secrets.
 
-## What We Chose (and why) — Option C
+2.  **`deploy.yml` (Main Branch Deployment):**
+    *   **Trigger:** `push` events to `main` or `master` branches, or `workflow_dispatch` (manual trigger).
+    *   **Action:** Deploys the latest `main` branch code to your designated persistent Dev Sandbox (e.g., `demo-scratch`), and runs `RunRelevantTests`.
+    *   **Requires:** `SFDX_AUTH_URL` secret.
 
-- **CI auth:** single `SFDX_AUTH_URL` secret (OAuth refresh token) instead of username/password/token. Less secrets sprawl, no password rotation coupling, no security token reset needed.
-- **Scratch org stage: removed for now.** Dev Hub isn't enabled in the Dev Org, and the JWT flow (connected app + cert) is a separate setup session. The scratch-org commands are preserved as comments in `ci.yml` for when that's ready.
-- **Test level:** `RunRelevantTests` for deploys/validations (org has pre-existing 64% coverage + flaky `DataManager_QuotaTest`; full-suite runs trip on old noise, not new code).
-- **Deploy trigger:** manual (`workflow_dispatch`) — deploys stay gated behind your PR review sign-off, consistent with the review-first workflow. Auto-deploy on merge can be enabled by uncommenting the `push:` trigger.
-
-## Restoring the Scratch Org Stage (later)
-
-1. Enable Dev Hub: Setup → Dev Hub (toggle, free, ~2 min)
-2. Set up JWT auth for CI: create a Connected App + certificate, set `SF_JWT_KEY`/`SF_JWT_ISSUER`/`SF_JWT_SUBJECT` secrets
-3. Uncomment the scratch-org block in `ci.yml`
-4. Delete the `SFDX_AUTH_URL` secret if you want pure JWT auth
-
-## Old Three-Secret Setup (superseded, kept for reference)
-
-| Secret Name | Value |
-|---|---|
-| `SF_USERNAME` | Dev Org username |
-| `SF_PASSWORD` | Dev Org password |
-| `SF_SECURITY_TOKEN` | Security token (reset in Setup → My Personal Information → Reset My Security Token) |
-
-The old `deploy.yml` used username/password auth via `sfdxgithub/salesforce-cli-action` (which doesn't exist — it was never a real GitHub Action) and pointed at `https://test.salesforce.com` (sandbox login URL; the Dev Org uses `login.salesforce.com`). Fixed in PR #2.
+This setup ensures isolated validation for feature work and continuous integration for the main development line.
