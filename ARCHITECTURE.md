@@ -60,7 +60,7 @@
 |---|---|---|
 | 10 new fields (Lead__c, Member__c, Payment_Transaction__c) | `force-app/main/default/objects/*/fields/` | ✅ Deployed on VM, pushed to GitHub |
 | Referral_Reward__c object + 9 fields | `force-app/main/default/objects/Referral_Reward__c/` | ✅ Deployed on VM, pushed to GitHub |
-| EPIC01_MemberOnboarding_Service.cls | `force-app/main/default/classes/` | ✅ Skeleton on VM, pushed to GitHub |
+| EPIC01_MemberOnboarding_Service.cls | `force-app/main/default/classes/` | ✅ Implemented on VM, pushed to GitHub |
 | EPIC01_MemberOnboarding_Test.cls | `force-app/main/default/classes/` | ✅ 13 tests on VM, pushed to GitHub |
 | Expired/Effective dates on Waiver_Record__c | `force-app/main/default/objects/Waiver_Record__c/fields/` | ✅ Already existed in GitHub (625faa0) |
 | Schema docs | `~/Documents/Obsidian Vault/CRM-Documentation/` | ✅ Updated (13 fields already existed, 10 deployed) |
@@ -69,7 +69,6 @@
 
 1. **Pull the latest:** `git pull origin main`
 2. **Deploy to scratch org:** `sf project deploy start --target-org my-gym`
-3. **Implement service logic:** Fill in TODO stubs in `EPIC01_MemberOnboarding_Service.cls`
 4. **Run tests:** `sf apex run test --target-org my-gym -n EPIC01_MemberOnboarding_Test`
 
 > Note: Your Cursor workspace is at the old commit (ec763fe). After pulling, you'll have all 26+ objects, Apex classes, and the EPIC-01 schema. Salesforce auth is on the VM — you'll need to use the VM for `sf` CLI operations, or use password-based auth from a local `sf` install.

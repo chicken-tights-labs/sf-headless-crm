@@ -1,0 +1,19 @@
+<template>
+    <lightning-card title="Walk-In Lead Registration" icon-name="standard:lead">
+        <div class="slds-m-around_medium">
+            <lightning-input label="First Name" onchange={handleFirstNameChange}></lightning-input>
+            <lightning-input label="Last Name" onchange={handleLastNameChange}></lightning-input>
+            <lightning-input type="tel" label="Phone" onchange={handlePhoneChange}></lightning-input>
+            <lightning-input type="email" label="Email" onchange={handleEmailChange}></lightning-input>
+            <div class="slds-m-top_medium">
+                <lightning-button variant="brand" label="Register Walk-In" onclick={handleRegisterLead}></lightning-button>
+            </div>
+            <template if:true={message}>
+                <p class="slds-text-heading_small slds-m-top_small">{message}</p>
+            </template>
+            <template if:true={error}>
+                <p class="slds-text-color_error slds-m-top_small">{error}</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>
