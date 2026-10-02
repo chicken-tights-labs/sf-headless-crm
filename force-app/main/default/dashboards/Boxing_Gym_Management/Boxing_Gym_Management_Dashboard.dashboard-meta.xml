@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Dashboard xmlns="http://soap.sforce.com/2006/04/metadata">
+    <backgroundEndColor>#FFFFFF</backgroundEndColor>
+    <backgroundFadeDirection>Diagonal</backgroundFadeDirection>
+    <backgroundStartColor>#FFFFFF</backgroundStartColor>
+    <chartTheme>LightBlue</chartTheme>
+    <colorPalette>ColorBlind</colorPalette>
+    <dashboardType>LoggedInUser</dashboardType>
+    <leftSection>
+        <columnSize>Medium</columnSize>
+        <components>
+            <componentType>Metric</componentType>
+            <report>Boxing_Gym_Management/Active_Members_by_Location</report>
+            <title>Total Active Members</title>
+        </components>
+        <components>
+            <chart>
+                <backgroundColor1>#FFFFFF</backgroundColor1>
+                <backgroundColor2>#FFFFFF</backgroundColor2>
+                <backgroundFadeDir>Diagonal</backgroundFadeDir>
+                <chartType>HorizontalBar</chartType>
+                <legendPosition>Right</legendPosition>
+                <location>Chart</location>
+                <size>Medium</size>
+                <summaryAxisRange>Auto</summaryAxisRange>
+                <textColor>#000000</textColor>
+                <titleColor>#000000</titleColor>
+            </chart>
+            <componentType>Chart</componentType>
+            <report>Boxing_Gym_Management/Active_Members_by_Location</report>
+            <title>Active Members by Location</title>
+        </components>
+    </leftSection>
+    <middleSection>
+        <columnSize>Medium</columnSize>
+        <components>
+            <chart>
+                <backgroundColor1>#FFFFFF</backgroundColor1>
+                <backgroundColor2>#FFFFFF</backgroundColor2>
+                <backgroundFadeDir>Diagonal</backgroundFadeDir>
+                <chartType>VerticalColumnStacked</chartType>
+                <legendPosition>Right</legendPosition>
+                <location>Chart</location>
+                <size>Medium</size>
+                <summaryAxisRange>Auto</summaryAxisRange>
+                <textColor>#000000</textColor>
+                <titleColor>#000000</titleColor>
+            </chart>
+            <componentType>Chart</componentType>
+            <report>Boxing_Gym_Management/Class_Attendance</report>
+            <title>Class Attendance by Program</title>
+        </components>
+        <components>
+            <chart>
+                <backgroundColor1>#FFFFFF</backgroundColor1>
+                <backgroundColor2>#FFFFFF</backgroundColor2>
+                <backgroundFadeDir>Diagonal</backgroundFadeDir>
+                <chartType>HorizontalBar</chartType>
+                <legendPosition>Right</legendPosition>
+                <location>Chart</location>
+                <size>Medium</size>
+                <summaryAxisRange>Auto</summaryAxisRange>
+                <textColor>#000000</textColor>
+                <titleColor>#000000</titleColor>
+            </chart>
+            <componentType>Chart</componentType>
+            <report>Boxing_Gym_Management/Staff_Utilisation</report>
+            <title>Staff Utilisation (by Trainer)</title>
+        </components>
+    </middleSection>
+    <rightSection>
+        <columnSize>Medium</columnSize>
+        <components>
+            <componentType>Table</componentType>
+            <report
+      >Boxing_Gym_Management/Upcoming_Sessions_and_Capacity</report>
+            <title>Upcoming Sessions and Capacity</title>
+        </components>
+    </rightSection>
+    <title>Boxing Gym Management Dashboard</title>
+    <titleColor>#000000</titleColor>
+    <titleSize>14</titleSize>
+</Dashboard>
