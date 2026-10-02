@@ -26,7 +26,7 @@ jobs:
         if: env.SF_AUTH_CONFIGURED == 'true'
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
 
       - name: Install Salesforce CLI
         if: env.SF_AUTH_CONFIGURED == 'true'
@@ -61,3 +61,26 @@ jobs:
       #   sf project deploy start --target-org ci-org --source-dir force-app
       #   sf apex run test --target-org ci-org --test-level RunLocalTests --code-coverage
       #   sf org delete scratch --target-org ci-org --no-prompt -p
+
+      - name: Install npm dependencies
+        if: env.SF_AUTH_CONFIGURED == 'true'
+        run: npm ci
+
+      # Playwright smoke suite — gate 2's E2E check. Authenticates via the
+      # ci-org session already established above (frontdoor session derived
+      # from SFDX_AUTH_URL); no Salesforce password or security token is ever
+      # read here. See playwright/global-setup.ts and
+      # playwright/support/salesforceSession.ts.
+      - name: Run Playwright E2E smoke suite
+        if: env.SF_AUTH_CONFIGURED == 'true'
+        env:
+          SF_TARGET_ORG: ci-org
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: always() && env.SF_AUTH_CONFIGURED == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright/playwright-report/
+          retention-days: 14

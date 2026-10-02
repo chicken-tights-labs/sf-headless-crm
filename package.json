@@ -13,15 +13,21 @@
     "prettier": "prettier --write \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
     "prettier:verify": "prettier --check \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
     "prepare": "husky || true",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "pretest:e2e": "playwright install --with-deps chromium",
+    "test:e2e": "playwright test --config=playwright/playwright.config.ts",
+    "test:e2e:headed": "playwright test --config=playwright/playwright.config.ts --headed",
+    "test:e2e:report": "playwright show-report playwright/playwright-report"
   },
   "devDependencies": {
     "@lwc/eslint-plugin-lwc": "^3.1.0",
+    "@playwright/test": "^1.49.0",
     "@prettier/plugin-xml": "^3.4.1",
     "@salesforce/eslint-config-lwc": "^4.0.0",
     "@salesforce/eslint-plugin-aura": "^3.0.0",
     "@salesforce/eslint-plugin-lightning": "^2.0.0",
     "@salesforce/sfdx-lwc-jest": "^7.0.2",
+    "dotenv": "^16.4.5",
     "eslint": "^9.29.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.14.0",
@@ -38,7 +44,7 @@
       "eslint"
     ],
     "**/lwc/**": [
-        "sfdx-lwc-jest -- --bail --findRelatedTests --passWithNoTests"
+      "sfdx-lwc-jest -- --bail --findRelatedTests --passWithNoTests"
     ]
   }
 }
