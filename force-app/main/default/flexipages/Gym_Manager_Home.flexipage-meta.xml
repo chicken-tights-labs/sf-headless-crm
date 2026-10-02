@@ -27,12 +27,18 @@
                     <name>entityNames</name>
                     <value>Member__c</value>
                 </componentInstanceProperties>
+                <componentName>flexipage:recentItems</componentName>
+                <identifier>recentItems_members</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
                 <componentInstanceProperties>
                     <name>entityNames</name>
                     <value>Lead__c</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:recentItems</componentName>
-                <identifier>recentItems_members</identifier>
+                <identifier>recentItems_leads</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>
@@ -46,12 +52,18 @@
                     <name>entityNames</name>
                     <value>Scheduled_Session__c</value>
                 </componentInstanceProperties>
+                <componentName>flexipage:recentItems</componentName>
+                <identifier>recentItems_classes</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
                 <componentInstanceProperties>
                     <name>entityNames</name>
                     <value>Booking__c</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:recentItems</componentName>
-                <identifier>recentItems_classes</identifier>
+                <identifier>recentItems_bookings</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>
