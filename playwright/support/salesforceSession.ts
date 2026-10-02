@@ -19,14 +19,22 @@ export interface SalesforceSession {
 
 export function resolveSalesforceSession(): SalesforceSession {
   const targetOrg = process.env.SF_TARGET_ORG;
-  const args = ['org', 'display', '--json'];
+  // --verbose + SF_TEMP_SHOW_SECRETS are both required, or recent `sf` CLI
+  // versions redact accessToken/sfdxAuthUrl from the JSON output (see
+  // docs/CI_CD_SECRETS.md), and the redacted placeholder fails auth with
+  // INVALID_AUTH_HEADER instead of a helpful "no token" error.
+  const args = ['org', 'display', '--json', '--verbose'];
   if (targetOrg) {
     args.push('--target-org', targetOrg);
   }
 
   let raw: string;
   try {
-    raw = execFileSync('sf', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+    raw = execFileSync('sf', args, {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+      env: { ...process.env, SF_TEMP_SHOW_SECRETS: 'true' },
+    });
   } catch (err) {
     throw new Error(
       `Could not resolve a Salesforce session via the "sf" CLI (${targetOrg ?? 'default org'}). ` +
