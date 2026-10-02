@@ -41,6 +41,12 @@ $RECYCLE.BIN/
 
 # Local environment variables
 .env
+playwright/.env
+
+# Playwright E2E — session artifacts and run output, never commit a session
+playwright/.auth/
+playwright/test-results/
+playwright/playwright-report/
 
 # Python Salesforce Functions
 **/__pycache__/

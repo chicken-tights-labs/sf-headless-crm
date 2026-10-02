@@ -20,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
 
       - name: Install Salesforce CLI
         run: npm install -g @salesforce/cli
@@ -47,3 +47,23 @@ jobs:
           sf data query --target-org dev-org \
             -q "SELECT COUNT() FROM Waiver_Record__c" \
             --json
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      # Full Playwright regression suite — runs after every deploy, not just
+      # on PRs, so a deploy that breaks a previously-merged story is caught
+      # even though gate 2 already passed on its own PR. Same frontdoor-session
+      # auth as ci.yml; no password or security token involved.
+      - name: Run Playwright E2E regression suite
+        env:
+          SF_TARGET_ORG: dev-org
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-post-deploy
+          path: playwright/playwright-report/
+          retention-days: 14
