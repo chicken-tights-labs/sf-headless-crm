@@ -9,13 +9,13 @@
   <formFactors>Large</formFactors>
   <label>Boxing Gym CRM</label>
   <navType>Standard</navType>
-  <profileActionOverrides>
+  <actionOverrides>
     <actionName>Tab</actionName>
     <content>Gym_Manager_Home</content>
     <formFactor>Large</formFactor>
     <pageOrSobjectType>standard-home</pageOrSobjectType>
     <type>Flexipage</type>
-  </profileActionOverrides>
+  </actionOverrides>
   <tabs>standard-Home</tabs>
   <tabs>Member__c</tabs>
   <tabs>Scheduled_Session__c</tabs>
