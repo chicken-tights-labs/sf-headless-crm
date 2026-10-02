@@ -25,7 +25,11 @@
             <componentInstance>
                 <componentInstanceProperties>
                     <name>entityNames</name>
-                    <value>Member__c,Lead__c</value>
+                    <value>Member__c</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>entityNames</name>
+                    <value>Lead__c</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:recentItems</componentName>
                 <identifier>recentItems_members</identifier>
@@ -40,7 +44,11 @@
             <componentInstance>
                 <componentInstanceProperties>
                     <name>entityNames</name>
-                    <value>Scheduled_Session__c,Booking__c</value>
+                    <value>Scheduled_Session__c</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>entityNames</name>
+                    <value>Booking__c</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:recentItems</componentName>
                 <identifier>recentItems_classes</identifier>
