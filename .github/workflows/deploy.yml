@@ -1,11 +1,20 @@
 name: CD — Deploy to Dev Org
 
 on:
-  # Manual trigger only for now (triggered after PR review sign-off).
-  # To auto-deploy on merge, uncomment:
-  # push:
-  #   branches: [main, master]
+  # Auto-deploy on every merge to main. workflow_dispatch kept for a manual
+  # re-run (e.g. retrying a transient org-side failure without a new commit).
+  push:
+    branches: [main]
   workflow_dispatch:
+
+# Only one deploy to the dev org at a time; queue instead of cancelling a
+# running deploy so a fast second merge can't race the first one's rollout.
+concurrency:
+  group: deploy-dev-org
+  cancel-in-progress: false
+
+permissions:
+  contents: read
 
 env:
   SF_PACKAGE_DIR: force-app
@@ -16,6 +25,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Require SFDX_AUTH_URL
+        run: |
+          if [ -z "${{ secrets.SFDX_AUTH_URL }}" ]; then
+            echo "::error::SFDX_AUTH_URL secret is not set. Cannot authenticate to the dev org, so this deploy cannot proceed. Configure the SFDX_AUTH_URL repository secret (see docs/CI_CD_SECRETS.md) and re-run."
+            exit 1
+          fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -42,8 +58,24 @@ jobs:
       # RunRelevantTests (not RunLocalTests): org-wide coverage is 64% and
       # one test is flaky — full-suite deploys would fail on pre-existing
       # noise. Switch once coverage is above 75%.
-      - name: Post-deploy sanity check
+      - name: Post-deploy smoke check
         run: |
+          set -euo pipefail
+
+          echo "Verifying dev org is reachable post-deploy..."
+          sf org display --target-org dev-org --json > org-display.json
+          jq -e '.status == 0' org-display.json > /dev/null || {
+            echo "::error::Smoke check failed: dev-org is not reachable after deploy ${{ github.sha }}. The deploy may have left the org in a bad auth/connection state."
+            exit 1
+          }
+
+          echo "Verifying a core custom object is queryable post-deploy..."
           sf data query --target-org dev-org \
             -q "SELECT COUNT() FROM Waiver_Record__c" \
-            --json
+            --json > waiver-query.json
+          jq -e '.status == 0' waiver-query.json > /dev/null || {
+            echo "::error::Smoke check failed: Waiver_Record__c is not queryable after deploy ${{ github.sha }}. Treat this deploy as broken and investigate before trusting the dev org."
+            exit 1
+          }
+
+          echo "Smoke check passed for ${{ github.sha }}."
