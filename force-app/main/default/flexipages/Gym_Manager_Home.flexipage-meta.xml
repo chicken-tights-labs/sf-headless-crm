@@ -1,59 +1,71 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
     <flexiPageRegions>
-        <componentInstances>
-            <componentInstanceProperties>
-                <name>decorate</name>
-                <value>true</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>richTextValue</name>
-                <value
-        >&lt;p&gt;&lt;strong&gt;Boxing Gym CRM&lt;/strong&gt; &amp;mdash; members, classes and bookings for your location.&lt;/p&gt;&lt;p&gt;Looking for &lt;strong&gt;active members at a location&lt;/strong&gt;? Open &lt;strong&gt;Member &amp;rarr; Active Members&lt;/strong&gt; and filter by Home Location.&lt;br/&gt;Looking for &lt;strong&gt;this week&amp;rsquo;s classes&lt;/strong&gt;? Open &lt;strong&gt;Scheduled Session &amp;rarr; This Week&amp;rsquo;s Classes&lt;/strong&gt;.&lt;/p&gt;</value>
-            </componentInstanceProperties>
-            <componentName>flexipage:richText</componentName>
-        </componentInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>decorate</name>
+                    <value>true</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>richTextValue</name>
+                    <value
+          >&lt;p&gt;&lt;strong&gt;Boxing Gym CRM&lt;/strong&gt; &amp;mdash; members, classes and bookings for your location.&lt;/p&gt;&lt;p&gt;Looking for &lt;strong&gt;active members at a location&lt;/strong&gt;? Open &lt;strong&gt;Member &amp;rarr; Active Members&lt;/strong&gt; and filter by Home Location.&lt;br/&gt;Looking for &lt;strong&gt;this week&amp;rsquo;s classes&lt;/strong&gt;? Open &lt;strong&gt;Scheduled Session &amp;rarr; This Week&amp;rsquo;s Classes&lt;/strong&gt;.&lt;/p&gt;</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:richText</componentName>
+                <identifier>richText_welcome</identifier>
+            </componentInstance>
+        </itemInstances>
         <mode>Replace</mode>
         <name>top</name>
         <type>Region</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <componentInstances>
-            <componentInstanceProperties>
-                <name>entityNames</name>
-                <value>Member__c,Lead__c</value>
-            </componentInstanceProperties>
-            <componentName>flexipage:recentItems</componentName>
-        </componentInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>entityNames</name>
+                    <value>Member__c,Lead__c</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:recentItems</componentName>
+                <identifier>recentItems_members</identifier>
+            </componentInstance>
+        </itemInstances>
         <mode>Replace</mode>
         <name>bottomLeft</name>
         <type>Region</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <componentInstances>
-            <componentInstanceProperties>
-                <name>entityNames</name>
-                <value>Scheduled_Session__c,Booking__c</value>
-            </componentInstanceProperties>
-            <componentName>flexipage:recentItems</componentName>
-        </componentInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>entityNames</name>
+                    <value>Scheduled_Session__c,Booking__c</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:recentItems</componentName>
+                <identifier>recentItems_classes</identifier>
+            </componentInstance>
+        </itemInstances>
         <mode>Replace</mode>
         <name>bottomRight</name>
         <type>Region</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <componentInstances>
-            <componentInstanceProperties>
-                <name>decorate</name>
-                <value>true</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>richTextValue</name>
-                <value
-        >&lt;p&gt;&lt;strong&gt;Quick links&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Member &amp;rarr; Active Members&lt;br/&gt;Scheduled Session &amp;rarr; This Week&amp;rsquo;s Classes&lt;br/&gt;Lead &amp;rarr; All&lt;/p&gt;</value>
-            </componentInstanceProperties>
-            <componentName>flexipage:richText</componentName>
-        </componentInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>decorate</name>
+                    <value>true</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>richTextValue</name>
+                    <value
+          >&lt;p&gt;&lt;strong&gt;Quick links&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Member &amp;rarr; Active Members&lt;br/&gt;Scheduled Session &amp;rarr; This Week&amp;rsquo;s Classes&lt;br/&gt;Lead &amp;rarr; All&lt;/p&gt;</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:richText</componentName>
+                <identifier>richText_quicklinks</identifier>
+            </componentInstance>
+        </itemInstances>
         <mode>Replace</mode>
         <name>sidebar</name>
         <type>Region</type>
