@@ -53,4 +53,4 @@ export default class Epic04LeadRegistrationForm extends LightningElement {
             this.error = error.body.message;
         });
     }
-}
+}var unusedDeliberateLintViolation = 1;
