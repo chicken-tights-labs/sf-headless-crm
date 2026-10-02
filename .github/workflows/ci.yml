@@ -6,41 +6,63 @@ on:
 
 env:
   SF_PACKAGE_DIR: force-app
-  # secrets context is not allowed in step-level `if:` — map it to env first
-  SF_AUTH_CONFIGURED: ${{ secrets.SFDX_AUTH_URL != '' }}
 
 jobs:
-  validate-and-test:
+  # Cheapest checks first: lint + LWC unit tests run on every PR, no org
+  # round-trip and no secrets required. This job can never be silently
+  # skipped — a failure here blocks the PR.
+  lint-and-unit-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Skip if secrets not configured
-        if: env.SF_AUTH_CONFIGURED != 'true'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint (ESLint)
+        run: npm run lint
+
+      - name: Unit tests (Jest)
+        run: npm test
+
+  # Org round-trip: only runs after lint/tests pass. A missing SFDX_AUTH_URL
+  # fails this job loudly instead of silently skipping validation.
+  validate-salesforce:
+    needs: lint-and-unit-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Require SFDX_AUTH_URL
         run: |
-          echo "⚠️ SFDX_AUTH_URL secret not set. CI validation is skipped until org auth is configured."
-          echo "See docs/CI_CD_SECRETS.md for setup instructions."
+          if [ -z "${{ secrets.SFDX_AUTH_URL }}" ]; then
+            echo "::error::SFDX_AUTH_URL secret is not set. CI cannot authenticate to the dev org, so this PR cannot be validated. Configure the SFDX_AUTH_URL repository secret (see docs/CI_CD_SECRETS.md) and re-run."
+            exit 1
+          fi
 
       - name: Setup Node.js
-        if: env.SF_AUTH_CONFIGURED == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
       - name: Install Salesforce CLI
-        if: env.SF_AUTH_CONFIGURED == 'true'
         run: npm install -g @salesforce/cli
 
       - name: Authenticate to Dev Org
-        if: env.SF_AUTH_CONFIGURED == 'true'
         run: |
           echo "${{ secrets.SFDX_AUTH_URL }}" > ./auth.txt
           sf org login sfdx-url -f ./auth.txt -a ci-org -s
           rm -f ./auth.txt
 
-      - name: Validate metadata + run relevant tests
-        if: env.SF_AUTH_CONFIGURED == 'true'
+      - name: Validate metadata + run relevant tests (dry run)
         run: |
           sf project deploy start \
             --source-dir ${{ env.SF_PACKAGE_DIR }} \
