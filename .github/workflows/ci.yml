@@ -43,7 +43,11 @@ jobs:
 
       - name: Require SFDX_AUTH_URL
         run: |
-          if [ -z "${{ secrets.SFDX_AUTH_URL }}" ]; then
+          # SCRATCH PROOF ONLY (branch ci/chi4-proof-missing-secret, never merged):
+          # reference a secret name that does not exist in this repo so the
+          # fail-loud path executes for real without touching the production
+          # SFDX_AUTH_URL secret other jobs/branches depend on.
+          if [ -z "${{ secrets.SFDX_AUTH_URL_SCRATCH_PROOF_DOES_NOT_EXIST }}" ]; then
             echo "::error::SFDX_AUTH_URL secret is not set. CI cannot authenticate to the dev org, so this PR cannot be validated. Configure the SFDX_AUTH_URL repository secret (see docs/CI_CD_SECRETS.md) and re-run."
             exit 1
           fi
