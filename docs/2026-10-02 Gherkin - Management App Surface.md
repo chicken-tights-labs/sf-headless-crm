@@ -54,14 +54,9 @@ Feature: Home page
     Then the "Gym Manager Home" page is displayed
     And it shows a welcome panel naming where to find active members by location
       and this week's classes
-    And it shows recently viewed Members and Leads
-    And it shows recently viewed Scheduled Sessions and Bookings
-
-  Scenario: No recent records yet (empty state)
-    Given the manager has not yet viewed any Member, Lead, Scheduled Session, or Booking records
-    When the manager opens the Home page
-    Then the recent-items panels render without error and show their standard
-      Salesforce "no recent records" empty state
+    And it shows a panel pointing to the Member/Lead tabs
+    And it shows a panel pointing to the Scheduled Session/Booking tabs
+    And it shows a "Quick links" panel in the sidebar
 ```
 
 ## Feature: Member record page
