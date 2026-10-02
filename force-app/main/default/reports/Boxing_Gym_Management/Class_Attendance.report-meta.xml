@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Class Attendance</name>
+    <description
+  >For completed classes, how many bookings were attended versus no-showed or cancelled, by program type?</description>
+    <format>Matrix</format>
+    <reportType>Scheduled_Sessions_with_Bookings</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Program_Type__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>Booking__c.Status__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <aggregates>RowCount</aggregates>
+    <filter>
+        <criteriaItems>
+            <column>Session_Status__c</column>
+            <operator>equals</operator>
+            <value>Completed</value>
+        </criteriaItems>
+    </filter>
+</Report>

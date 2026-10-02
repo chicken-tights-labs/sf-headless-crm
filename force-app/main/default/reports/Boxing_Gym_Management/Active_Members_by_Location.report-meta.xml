@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Active Members by Location</name>
+    <description
+  >How many active members does each location have right now?</description>
+    <format>Summary</format>
+    <reportType>Member__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Home_Location__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <aggregates>RowCount</aggregates>
+    <filter>
+        <criteriaItems>
+            <column>Status__c</column>
+            <operator>equals</operator>
+            <value>Active</value>
+        </criteriaItems>
+    </filter>
+</Report>
