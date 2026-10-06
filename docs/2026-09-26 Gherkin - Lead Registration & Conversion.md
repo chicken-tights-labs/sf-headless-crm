@@ -7,7 +7,7 @@
 ```gherkin
 Feature: Lead Capture
   As a front-desk staff member
-    10|  I want to register a walk-in visitor as a lead in the CRM
+  I want to register a walk-in visitor as a lead in the CRM
   So that they appear in the sales pipeline and can be converted later
 
   Background:
@@ -17,7 +17,7 @@ Feature: Lead Capture
 
   Scenario: Successful walk-in lead registration
     When the staff enters "John Smith" as the visitor name
-    20|    And selects visit reason "Tour Request"
+    And selects visit reason "Tour Request"
     And enters phone number "555-123-4567"
     And enters email "john@example.com"
     And clicks "Register Walk-In"
@@ -27,7 +27,7 @@ Feature: Lead Capture
       | Last_Name__c  | Smith             |
       | Phone__c      | 555-123-4567      |
       | Email__c      | john@example.com  |
-    30|      | Status__c     | Walk-In           |
+      | Status__c     | Walk-In           |
       | Source__c     | In Person         |
     And the system displays "Lead registered successfully"
     And the lead appears in the "Recent Walk-Ins" list
@@ -37,7 +37,7 @@ Feature: Lead Capture
 ```gherkin
 Feature: Lead-to-Member Conversion
   As a front-desk staff member
-    40|  I want to convert a walk-in lead into an active member with payment
+  I want to convert a walk-in lead into an active member with payment
   So that the CRM reflects their membership status and payment history
 
   Background:
@@ -47,7 +47,7 @@ Feature: Lead-to-Member Conversion
 
   Scenario: Convert lead to member and process first payment
     When the staff selects the lead from the recent walk-ins list
-    50|    And clicks "Convert to Member"
+    And clicks "Convert to Member"
     And selects membership tier "Monthly Adult ($120)"
     And selects payment method "Card"
     And enters card details
@@ -57,7 +57,7 @@ Feature: Lead-to-Member Conversion
         | Field                  | Value                  |
         | First_Name__c          | John                   |
         | Last_Name__c           | Smith                  |
-    60|        | Phone__c               | 555-123-4567           |
+        | Phone__c               | 555-123-4567           |
         | Email__c               | john@example.com       |
         | Membership_Start_Date__c | <today>             |
         | Membership_Expiration__c | <today + 30 days>   |
@@ -67,7 +67,7 @@ Feature: Lead-to-Member Conversion
         | Field     | Value       |
         | Status__c | Converted   |
       3. Creates an Order__c record with:
-    70|        | Field            | Value                  |
+        | Field            | Value                  |
         | Member__c        | <Member__c.Id>         |
         | Amount__c        | 120.00                 |
         | Status__c        | Paid                   |
@@ -77,7 +77,7 @@ Feature: Lead-to-Member Conversion
         | Member__c          | <Member__c.Id>     |
         | Order__c           | <Order__c.Id>      |
         | Amount__c          | 120.00            |
-    80|        | Payment_Method__c  | Card              |
+        | Payment_Method__c  | Card              |
         | External_Id__c     | <stripe-charge-id>|
         | Status__c          | Completed         |
     And the system prints a membership card with the member's name and barcode
@@ -87,7 +87,7 @@ Feature: Lead-to-Member Conversion
   Scenario: Conversion fails because payment is declined
     When the staff selects the lead from the recent walk-ins list
     And clicks "Convert to Member"
-    90|    And enters card details
+    And enters card details
     And submits payment
     But the payment processor returns a "declined" response
     Then the system does NOT create a Member__c record
@@ -97,7 +97,7 @@ Feature: Lead-to-Member Conversion
 
   Scenario: Staff attempts to convert a lead with missing required fields
     Given a Lead__c record with Email__c = null
-   100|    When the staff attempts to convert the lead to a member
+    When the staff attempts to convert the lead to a member
     Then the system prevents the conversion
     And the system displays "Lead must have an email address to convert"
     And the lead remains unchanged
@@ -107,7 +107,7 @@ Feature: Lead-to-Member Conversion
 ```gherkin
 Feature: Discount Approval Workflow
   As a front-desk staff member
-   110|  I want to apply a discount to a membership payment with manager approval
+  I want to apply a discount to a membership payment with manager approval
   So that revenue protection rules are enforced
 
   Background:
@@ -117,7 +117,7 @@ Feature: Discount Approval Workflow
 
   Scenario: Discount applied with manager approval via PIN
     When the staff clicks "Apply Discount"
-   120|    And selects discount type "10% off first month"
+    And selects discount type "10% off first month"
     And enters manager PIN "1234"
     And clicks "Approve"
     Then the system applies the discount to the Order__c
@@ -127,7 +127,7 @@ Feature: Discount Approval Workflow
       | Discount_Reason__c  | Manager Approval |
       | Manager_Approver__c | <Manager User>   |
     And the final Amount__c on Order__c is reduced to $1,080.00
-   130|    And the system logs the discount event with timestamp
+    And the system logs the discount event with timestamp
 
   Scenario: Discount rejected — no manager PIN
     When the staff clicks "Apply Discount"
@@ -137,7 +137,7 @@ Feature: Discount Approval Workflow
     And the system displays "Manager approval required for this discount tier"
     And no discount is applied to the original amount
 ```
-   140|
+
 ## Field References
 All object schemas verified against:
 - `/home/maria_robbins/sf-project/sf-headless-crm/force-app/main/default/objects/`
