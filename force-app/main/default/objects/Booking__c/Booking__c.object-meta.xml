@@ -6,7 +6,6 @@
   <pluralLabel>Bookings</pluralLabel>
   <nameField>
     <type>Text</type>
-    <enableReports>true</enableReports>
     <label>Booking Name</label>
   </nameField>
   <sharingModel>ReadWrite</sharingModel>

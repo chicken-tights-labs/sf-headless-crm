@@ -7,7 +7,6 @@
   <pluralLabel>Members</pluralLabel>
   <nameField>
     <type>Text</type>
-    <enableReports>true</enableReports>
     <label>Member Name</label>
   </nameField>
   <sharingModel>ReadWrite</sharingModel>

@@ -8,10 +8,6 @@
     <leftSection>
         <columnSize>Medium</columnSize>
         <components>
-            <chartSummary>
-                <axisBinding>y</axisBinding>
-                <column>RowCount</column>
-            </chartSummary>
             <componentType>Metric</componentType>
             <indicatorBreakpoint1>1</indicatorBreakpoint1>
             <indicatorBreakpoint2>2</indicatorBreakpoint2>

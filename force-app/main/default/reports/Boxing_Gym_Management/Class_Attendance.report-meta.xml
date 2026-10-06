@@ -11,17 +11,17 @@
     <showSubTotals>true</showSubTotals>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>
-        <field>Program_Type__c</field>
+        <field>Scheduled_Session__c$Program_Type__c</field>
         <sortOrder>Asc</sortOrder>
     </groupingsDown>
     <groupingsAcross>
         <dateGranularity>Day</dateGranularity>
-        <field>Booking__c.Status__c</field>
+        <field>Scheduled_Session__c.Scheduled_Session__r$Status__c</field>
         <sortOrder>Asc</sortOrder>
     </groupingsAcross>
     <filter>
         <criteriaItems>
-            <column>Session_Status__c</column>
+            <column>Scheduled_Session__c$Session_Status__c</column>
             <operator>equals</operator>
             <value>Completed</value>
         </criteriaItems>

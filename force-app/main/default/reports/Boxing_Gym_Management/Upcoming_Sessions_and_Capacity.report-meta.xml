@@ -11,27 +11,27 @@
     <showSubTotals>true</showSubTotals>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>
-        <field>Franchise_Location__c</field>
+        <field>Scheduled_Session__c$Franchise_Location__c</field>
         <sortOrder>Asc</sortOrder>
     </groupingsDown>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>
-        <field>Program_Type__c</field>
+        <field>Scheduled_Session__c$Program_Type__c</field>
         <sortOrder>Asc</sortOrder>
     </groupingsDown>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>
-        <field>Max_Capacity__c</field>
+        <field>Scheduled_Session__c$Max_Capacity__c</field>
         <sortOrder>Asc</sortOrder>
     </groupingsDown>
     <filter>
         <criteriaItems>
-            <column>Session_Status__c</column>
+            <column>Scheduled_Session__c$Session_Status__c</column>
             <operator>equals</operator>
             <value>Scheduled</value>
         </criteriaItems>
         <criteriaItems>
-            <column>Start_Time__c</column>
+            <column>Scheduled_Session__c$Start_Time__c</column>
             <operator>greaterOrEqual</operator>
             <value>TODAY</value>
         </criteriaItems>
