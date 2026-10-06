@@ -17,7 +17,7 @@ export default defineConfig({
     // (test.salesforce.com), which is wrong for this org and was never
     // reachable from a frontdoor session anyway. Override with SF_BASE_URL
     // if the org's My Domain ever changes.
-    baseURL: process.env.SF_BASE_URL || 'https://chickentightslabs.lightning.force.com',
+    baseURL: process.env.SF_BASE_URL || 'https://chickentightslabs-dev-ed.develop.lightning.force.com',
     storageState: STORAGE_STATE_PATH,
     browserName: 'chromium',
     headless: true,
