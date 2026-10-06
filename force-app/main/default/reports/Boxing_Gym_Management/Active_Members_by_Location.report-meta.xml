@@ -14,7 +14,6 @@
         <field>Home_Location__c</field>
         <sortOrder>Asc</sortOrder>
     </groupingsDown>
-    <aggregates>RowCount</aggregates>
     <filter>
         <criteriaItems>
             <column>Status__c</column>

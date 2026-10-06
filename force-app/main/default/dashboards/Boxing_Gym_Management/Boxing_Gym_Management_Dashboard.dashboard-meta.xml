@@ -3,8 +3,7 @@
     <backgroundEndColor>#FFFFFF</backgroundEndColor>
     <backgroundFadeDirection>Diagonal</backgroundFadeDirection>
     <backgroundStartColor>#FFFFFF</backgroundStartColor>
-    <chartTheme>LightBlue</chartTheme>
-    <colorPalette>ColorBlind</colorPalette>
+    <chartTheme>light</chartTheme>
     <dashboardType>LoggedInUser</dashboardType>
     <leftSection>
         <columnSize>Medium</columnSize>
@@ -77,6 +76,7 @@
             <title>Upcoming Sessions and Capacity</title>
         </components>
     </rightSection>
+    <textColor>#000000</textColor>
     <title>Boxing Gym Management Dashboard</title>
     <titleColor>#000000</titleColor>
     <titleSize>14</titleSize>

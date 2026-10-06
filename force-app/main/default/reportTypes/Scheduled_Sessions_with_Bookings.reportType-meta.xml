@@ -3,11 +3,36 @@
     <baseObject>Scheduled_Session__c</baseObject>
     <category>other</category>
     <deployed>true</deployed>
-    <description
-  >Scheduled classes joined with their bookings. Backs class attendance and upcoming-capacity reporting — Booking__c is a lookup child of Scheduled_Session__c, so this join is the only way to see attendance without an Apex roll-up.</description>
+    <description>Scheduled classes joined with their bookings. Backs class attendance and upcoming-capacity reporting. Booking__c is a lookup child of Scheduled_Session__c, so this join is the only way to see attendance without an Apex roll-up.</description>
     <label>Scheduled Sessions with Bookings</label>
     <join>
         <outerJoin>true</outerJoin>
-        <relationship>Scheduled_Session</relationship>
+        <relationship>Bookings__r</relationship>
     </join>
+    <sections>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <field>Name</field>
+            <table>Scheduled_Session__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <field>Program_Type__c</field>
+            <table>Scheduled_Session__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <field>Session_Status__c</field>
+            <table>Scheduled_Session__c</table>
+        </columns>
+        <masterLabel>Scheduled Session</masterLabel>
+    </sections>
+    <sections>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <field>Name</field>
+            <table>Scheduled_Session__c.Bookings__r</table>
+        </columns>
+        <masterLabel>Bookings</masterLabel>
+    </sections>
 </ReportType>

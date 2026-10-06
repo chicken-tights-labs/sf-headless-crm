@@ -19,8 +19,10 @@
         <field>Franchise_Location__c</field>
         <sortOrder>Asc</sortOrder>
     </groupingsDown>
-    <aggregates>RowCount</aggregates>
-    <aggregates>s!Max_Capacity__c</aggregates>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Max_Capacity__c</field>
+    </columns>
     <filter>
         <criteriaItems>
             <column>Session_Status__c</column>

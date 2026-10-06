@@ -19,7 +19,6 @@
         <field>Booking__c.Status__c</field>
         <sortOrder>Asc</sortOrder>
     </groupingsAcross>
-    <aggregates>RowCount</aggregates>
     <filter>
         <criteriaItems>
             <column>Session_Status__c</column>
