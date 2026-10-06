@@ -13,6 +13,11 @@
                 <column>RowCount</column>
             </chartSummary>
             <componentType>Metric</componentType>
+            <indicatorBreakpoint1>1</indicatorBreakpoint1>
+            <indicatorBreakpoint2>2</indicatorBreakpoint2>
+            <indicatorHighColor>#54C254</indicatorHighColor>
+            <indicatorLowColor>#C25454</indicatorLowColor>
+            <indicatorMiddleColor>#C2C254</indicatorMiddleColor>
             <report>Boxing_Gym_Management/Active_Members_by_Location</report>
             <title>Total Active Members</title>
         </components>
@@ -51,6 +56,11 @@
         <columnSize>Medium</columnSize>
         <components>
             <componentType>Table</componentType>
+            <indicatorBreakpoint1>1</indicatorBreakpoint1>
+            <indicatorBreakpoint2>2</indicatorBreakpoint2>
+            <indicatorHighColor>#54C254</indicatorHighColor>
+            <indicatorLowColor>#C25454</indicatorLowColor>
+            <indicatorMiddleColor>#C2C254</indicatorMiddleColor>
             <report
       >Boxing_Gym_Management/Upcoming_Sessions_and_Capacity</report>
             <title>Upcoming Sessions and Capacity</title>

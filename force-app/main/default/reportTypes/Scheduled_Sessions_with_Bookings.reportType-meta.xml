@@ -7,7 +7,7 @@
     <label>Scheduled Sessions with Bookings</label>
     <join>
         <outerJoin>true</outerJoin>
-        <relationship>Bookings__r</relationship>
+        <relationship>Scheduled_Session__r</relationship>
     </join>
     <sections>
         <columns>
@@ -31,7 +31,7 @@
         <columns>
             <checkedByDefault>true</checkedByDefault>
             <field>Name</field>
-            <table>Scheduled_Session__c.Bookings__r</table>
+            <table>Scheduled_Session__c.Scheduled_Session__r</table>
         </columns>
         <masterLabel>Bookings</masterLabel>
     </sections>
