@@ -4,7 +4,7 @@
     <description
   >For completed classes, how many bookings were attended versus no-showed or cancelled, by program type?</description>
     <format>Matrix</format>
-    <reportType>Scheduled_Sessions_with_Bookings</reportType>
+    <reportType>Scheduled_Sessions_with_Bookings__c</reportType>
     <scope>organization</scope>
     <showDetails>false</showDetails>
     <showGrandTotal>true</showGrandTotal>

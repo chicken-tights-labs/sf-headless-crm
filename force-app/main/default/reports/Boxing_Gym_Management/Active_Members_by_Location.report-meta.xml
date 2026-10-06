@@ -4,7 +4,7 @@
     <description
   >How many active members does each location have right now?</description>
     <format>Summary</format>
-    <reportType>Member__c</reportType>
+    <reportType>CustomEntity$Member__c</reportType>
     <scope>organization</scope>
     <showDetails>false</showDetails>
     <showGrandTotal>true</showGrandTotal>

@@ -4,7 +4,7 @@
     <description
   >Which upcoming sessions are filling up, and which still have open seats, by location and program?</description>
     <format>Summary</format>
-    <reportType>Scheduled_Sessions_with_Bookings</reportType>
+    <reportType>Scheduled_Sessions_with_Bookings__c</reportType>
     <scope>organization</scope>
     <showDetails>false</showDetails>
     <showGrandTotal>true</showGrandTotal>

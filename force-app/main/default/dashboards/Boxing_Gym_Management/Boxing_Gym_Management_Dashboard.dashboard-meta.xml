@@ -8,24 +8,20 @@
     <leftSection>
         <columnSize>Medium</columnSize>
         <components>
+            <chartSummary>
+                <axisBinding>y</axisBinding>
+                <column>RowCount</column>
+            </chartSummary>
             <componentType>Metric</componentType>
             <report>Boxing_Gym_Management/Active_Members_by_Location</report>
             <title>Total Active Members</title>
         </components>
         <components>
-            <chart>
-                <backgroundColor1>#FFFFFF</backgroundColor1>
-                <backgroundColor2>#FFFFFF</backgroundColor2>
-                <backgroundFadeDir>Diagonal</backgroundFadeDir>
-                <chartType>HorizontalBar</chartType>
-                <legendPosition>Right</legendPosition>
-                <location>Chart</location>
-                <size>Medium</size>
-                <summaryAxisRange>Auto</summaryAxisRange>
-                <textColor>#000000</textColor>
-                <titleColor>#000000</titleColor>
-            </chart>
-            <componentType>Chart</componentType>
+            <chartSummary>
+                <axisBinding>y</axisBinding>
+                <column>RowCount</column>
+            </chartSummary>
+            <componentType>Bar</componentType>
             <report>Boxing_Gym_Management/Active_Members_by_Location</report>
             <title>Active Members by Location</title>
         </components>
@@ -33,36 +29,20 @@
     <middleSection>
         <columnSize>Medium</columnSize>
         <components>
-            <chart>
-                <backgroundColor1>#FFFFFF</backgroundColor1>
-                <backgroundColor2>#FFFFFF</backgroundColor2>
-                <backgroundFadeDir>Diagonal</backgroundFadeDir>
-                <chartType>VerticalColumnStacked</chartType>
-                <legendPosition>Right</legendPosition>
-                <location>Chart</location>
-                <size>Medium</size>
-                <summaryAxisRange>Auto</summaryAxisRange>
-                <textColor>#000000</textColor>
-                <titleColor>#000000</titleColor>
-            </chart>
-            <componentType>Chart</componentType>
+            <chartSummary>
+                <axisBinding>y</axisBinding>
+                <column>RowCount</column>
+            </chartSummary>
+            <componentType>ColumnStacked</componentType>
             <report>Boxing_Gym_Management/Class_Attendance</report>
             <title>Class Attendance by Program</title>
         </components>
         <components>
-            <chart>
-                <backgroundColor1>#FFFFFF</backgroundColor1>
-                <backgroundColor2>#FFFFFF</backgroundColor2>
-                <backgroundFadeDir>Diagonal</backgroundFadeDir>
-                <chartType>HorizontalBar</chartType>
-                <legendPosition>Right</legendPosition>
-                <location>Chart</location>
-                <size>Medium</size>
-                <summaryAxisRange>Auto</summaryAxisRange>
-                <textColor>#000000</textColor>
-                <titleColor>#000000</titleColor>
-            </chart>
-            <componentType>Chart</componentType>
+            <chartSummary>
+                <axisBinding>y</axisBinding>
+                <column>RowCount</column>
+            </chartSummary>
+            <componentType>Bar</componentType>
             <report>Boxing_Gym_Management/Staff_Utilisation</report>
             <title>Staff Utilisation (by Trainer)</title>
         </components>

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Staff Utilisation</name>
-    <description
-  >How many classes is each trainer running, where, and how much capacity are they covering? Groups by the Assigned Trainer user lookup on Scheduled_Session__c — there is no Staff__c object yet, so this is trainer utilisation by Salesforce user, not by staff record. Re-point to Staff__c once the staff model decision lands.</description>
+    <description>Classes run, locations and capacity covered per trainer (Assigned Trainer user lookup). There is no Staff__c object yet; re-point once the staff model lands.</description>
     <format>Summary</format>
-    <reportType>Scheduled_Session__c</reportType>
+    <reportType>CustomEntity$Scheduled_Session__c</reportType>
     <scope>organization</scope>
     <showDetails>false</showDetails>
     <showGrandTotal>true</showGrandTotal>
