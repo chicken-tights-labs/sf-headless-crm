@@ -27,6 +27,10 @@
         <label>Unqualified</label>
       </value>
       <value>
+        <fullName>Walk-In</fullName>
+        <label>Walk-In</label>
+      </value>
+      <value>
         <fullName>Converted</fullName>
         <label>Converted</label>
       </value>

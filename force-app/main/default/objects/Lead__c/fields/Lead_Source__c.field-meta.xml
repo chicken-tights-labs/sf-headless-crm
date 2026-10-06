@@ -15,6 +15,10 @@
         <label>Walk-in</label>
       </value>
       <value>
+        <fullName>In Person</fullName>
+        <label>In Person</label>
+      </value>
+      <value>
         <fullName>Online</fullName>
         <label>Online</label>
       </value>
