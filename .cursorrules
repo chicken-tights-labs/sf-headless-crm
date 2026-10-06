@@ -1,0 +1,14 @@
+# SF Headless CRM — Workflow Rules
+
+All workflow rules are defined in: docs/WORKFLOW.md
+This file exists for Cursor Agent mode only — Hermes follows the same rules via its
+sf-headless-crm-workflow skill (loaded on the VM). Both reference docs/WORKFLOW.md as
+the single source of truth.
+
+Key points:
+- No direct pushes to main; always use a feature branch + PR
+- Do not implement @platform:cursor stories
+- Do not close issues/mark cards done before PR merge + org deploy + sanity check
+- Branch naming: feat/EPICxx-USxx-short-name
+- See docs/WORKFLOW.md for full details: roles, state machine, deployment, handoff protocol
+- See docs/environment.md for org/scratch org facts
