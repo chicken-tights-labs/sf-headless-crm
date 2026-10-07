@@ -1,29 +1,43 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
-    <name>Class Attendance</name>
-    <description
-  >For completed classes, how many bookings were attended versus no-showed or cancelled, by program type?</description>
+    <columns>
+        <field>Scheduled_Session__c$Name</field>
+    </columns>
+    <columns>
+        <field>Scheduled_Session__c.Scheduled_Session__r$Name</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>Scheduled_Session__c$Session_Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Completed</value>
+        </criteriaItems>
+    </filter>
     <format>Matrix</format>
-    <reportType>Scheduled_Sessions_with_Bookings__c</reportType>
-    <scope>organization</scope>
-    <showDetails>false</showDetails>
-    <showGrandTotal>true</showGrandTotal>
-    <showSubTotals>true</showSubTotals>
-    <groupingsDown>
-        <dateGranularity>Day</dateGranularity>
-        <field>Scheduled_Session__c$Program_Type__c</field>
-        <sortOrder>Asc</sortOrder>
-    </groupingsDown>
     <groupingsAcross>
         <dateGranularity>Day</dateGranularity>
         <field>Scheduled_Session__c.Scheduled_Session__r$Status__c</field>
         <sortOrder>Asc</sortOrder>
     </groupingsAcross>
-    <filter>
-        <criteriaItems>
-            <column>Scheduled_Session__c$Session_Status__c</column>
-            <operator>equals</operator>
-            <value>Completed</value>
-        </criteriaItems>
-    </filter>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Scheduled_Session__c$Program_Type__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Class Attendance</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Scheduled_Sessions_with_Bookings__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Scheduled_Session__c$Start_Time__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
 </Report>
