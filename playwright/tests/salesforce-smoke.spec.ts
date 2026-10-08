@@ -63,6 +63,12 @@ const OBJECT_LABELS: Record<string, string> = {
 
 test.describe('Salesforce Headless CRM — Smoke Tests', () => {
   test('All 15 custom objects are accessible in Lightning', async ({ page }) => {
+    // 15 sequential cold list-view loads at ~3-4s each do not fit the 60s
+    // default test timeout — this test timed out mid-loop and reported as flaky.
+    // Give it a budget that actually covers the loop, and keep the per-object
+    // wait (45s in gotoObjectHome) below it so a single slow object fails with a
+    // useful "header never appeared" error rather than killing the whole test.
+    test.setTimeout(240000);
     for (const obj of TARGET_OBJECTS) {
       await test.step(`Navigate to ${obj}`, async () => {
         await gotoObjectHome(page, obj);
