@@ -45,7 +45,21 @@ export function resolveSalesforceSession(): SalesforceSession {
     );
   }
 
-  const parsed = JSON.parse(raw);
+  // The `sf` CLI writes ANSI colour codes when it thinks it is talking to a TTY,
+  // and inside Playwright workers it does. Those escapes are interleaved BETWEEN
+  // JSON tokens (e.g. "\u001b[97m{\u001b[39m\n  \u001b[94m\"status\"..."), so the
+  // output is not valid JSON and a bare JSON.parse throws "Expected property name
+  // or '}' in JSON at position 1". Strip the escapes first, then the CLI's
+  // non-JSON chatter ("›   Warning: @salesforce/cli update available..."), then
+  // slice from the first '{'.
+  const stripped = raw.replace(/\u001b\[[0-9;]*m/g, '');
+  const jsonStart = stripped.indexOf('{');
+  if (jsonStart === -1) {
+    throw new Error(
+      `"sf org display" produced no JSON output for ${targetOrg ?? 'the default org'}. Raw output:\n${stripped}`
+    );
+  }
+  const parsed = JSON.parse(stripped.slice(jsonStart));
   const result = parsed?.result;
   if (parsed.status !== 0 || !result?.accessToken || !result?.instanceUrl) {
     throw new Error(
