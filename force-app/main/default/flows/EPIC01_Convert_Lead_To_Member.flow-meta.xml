@@ -33,7 +33,6 @@
             <assignToReference>newMemberId</assignToReference>
             <name>memberId</name>
         </outputParameters>
-        <versionString>1.0.0</versionString>
     </actionCalls>
     <apiVersion>58.0</apiVersion>
     <decisions>

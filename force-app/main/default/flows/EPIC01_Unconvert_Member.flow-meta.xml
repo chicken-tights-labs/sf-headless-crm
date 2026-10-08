@@ -25,7 +25,6 @@
             <assignToReference>resultMessage</assignToReference>
             <name>message</name>
         </outputParameters>
-        <versionString>1.0.0</versionString>
     </actionCalls>
     <apiVersion>58.0</apiVersion>
     <description>EPIC01-US-002: Admin quick action flow on Member__c. Reverses a conversion (Prospect members only) via EPIC01_MemberUnconvert_Action.</description>
