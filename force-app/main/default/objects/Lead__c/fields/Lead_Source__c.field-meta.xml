@@ -34,6 +34,14 @@
         <fullName>Community Event</fullName>
         <label>Community Event</label>
       </value>
+      <value>
+        <fullName>Web Form</fullName>
+        <label>Web Form</label>
+      </value>
+      <value>
+        <fullName>Facebook Ad</fullName>
+        <label>Facebook Ad</label>
+      </value>
     </valueSetDefinition>
   </valueSet>
 </CustomField>

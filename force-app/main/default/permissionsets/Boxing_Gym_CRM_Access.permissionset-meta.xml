@@ -331,6 +331,11 @@
   </fieldPermissions>
   <fieldPermissions>
     <editable>true</editable>
+    <field>Lead__c.Campaign_Metadata__c</field>
+    <readable>true</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>true</editable>
     <field>Lead__c.Converted_Member__c</field>
     <readable>true</readable>
   </fieldPermissions>
@@ -362,6 +367,11 @@
   <fieldPermissions>
     <editable>true</editable>
     <field>Lead__c.Phone__c</field>
+    <readable>true</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>true</editable>
+    <field>Lead__c.Referral_Code_Entered__c</field>
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
