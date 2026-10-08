@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fullName>Valid_Phone_Format</fullName>
+  <active>true</active>
+  <description>EPIC01-US-001: Phone, when provided, must be a 10-digit number.</description>
+  <errorConditionFormula>AND(
+  NOT(ISBLANK(Phone__c)),
+  LEN(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(Phone__c, &quot;-&quot;, &quot;&quot;), &quot; &quot;, &quot;&quot;), &quot;(&quot;, &quot;&quot;), &quot;)&quot;, &quot;&quot;), &quot;.&quot;, &quot;&quot;), &quot;+1&quot;, &quot;&quot;)) &lt;&gt; 10
+  ||
+  NOT(ISNUMBER(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(Phone__c, &quot;-&quot;, &quot;&quot;), &quot; &quot;, &quot;&quot;), &quot;(&quot;, &quot;&quot;), &quot;)&quot;, &quot;&quot;), &quot;.&quot;, &quot;&quot;), &quot;+1&quot;, &quot;&quot;)))
+)</errorConditionFormula>
+  <errorDisplayField>Phone__c</errorDisplayField>
+  <errorMessage>Please enter a valid 10-digit phone number</errorMessage>
+</ValidationRule>

@@ -31,6 +31,10 @@
         <label>Walk-In</label>
       </value>
       <value>
+        <fullName>Trial Completed</fullName>
+        <label>Trial Completed</label>
+      </value>
+      <value>
         <fullName>Converted</fullName>
         <label>Converted</label>
       </value>

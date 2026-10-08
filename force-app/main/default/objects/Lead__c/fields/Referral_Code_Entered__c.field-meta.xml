@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fullName>Referral_Code_Entered__c</fullName>
+  <label>Referral Code Entered</label>
+  <description>Referral code typed by the prospect. Resolved to Referred_By__c by the EPIC01 US-001 flow. EPIC01-US-001.</description>
+  <type>Text</type>
+  <length>20</length>
+  <required>false</required>
+</CustomField>
