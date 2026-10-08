@@ -242,8 +242,9 @@ public with sharing class EPIC01_MemberOnboarding_Service {
 
     /**
      * Single source of truth for "does this member have a valid waiver?".
-     * Looks at each member's most recent Waiver_Record__c and returns one of:
-     * Signed (valid), Expired, Pending, Revoked, Unknown, or Missing (no waiver).
+     * A member is 'Signed' (valid) if ANY of their waivers is Signed and not expired.
+     * Otherwise the status of their most recent waiver is reported:
+     * Expired, Pending, Revoked, Unknown, or Missing (no waiver at all).
      * Bulk-safe: one query for any number of members.
      * Used by the payment gate (US-003) and the Booking__c trigger (US-007).
      */
@@ -253,14 +254,24 @@ public with sharing class EPIC01_MemberOnboarding_Service {
             result.put(memberId, 'Missing');
         }
         Set<Id> seen = new Set<Id>();
+        Set<Id> hasValid = new Set<Id>();
         for (Waiver_Record__c w : [
             SELECT Member__c, Status__c, Expiration_Date__c
             FROM Waiver_Record__c
             WHERE Member__c IN :memberIds
             ORDER BY CreatedDate DESC
         ]) {
+            if (hasValid.contains(w.Member__c)) {
+                continue; // any valid waiver wins
+            }
+            if (w.Status__c == 'Signed'
+                && (w.Expiration_Date__c == null || w.Expiration_Date__c >= Date.today())) {
+                hasValid.add(w.Member__c);
+                result.put(w.Member__c, 'Signed');
+                continue;
+            }
             if (!seen.add(w.Member__c)) {
-                continue; // only the most recent waiver per member counts
+                continue; // otherwise report the most recent (first seen) waiver's status
             }
             String status;
             if (w.Status__c == 'Signed') {

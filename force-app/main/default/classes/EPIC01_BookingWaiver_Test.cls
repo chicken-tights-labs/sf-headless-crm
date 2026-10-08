@@ -86,6 +86,25 @@ private class EPIC01_BookingWaiver_Test {
     }
 
     @isTest
+    static void anyValidWaiverAllowsBookingEvenWithNewerPendingOne() {
+        Member__c m = EPIC01_TestDataFactory.createMemberWithWaiver('Sky', 'Renewal', loc().Id, tmpl().Id);
+        EPIC01_TestDataFactory.createWaiver(m.Id, loc().Id, tmpl().Id, 'Pending', null);
+        System.assertEquals('Signed', EPIC01_MemberOnboarding_Service.waiverStatusByMember(new Set<Id>{ m.Id }).get(m.Id));
+        insert EPIC01_TestDataFactory.newBooking(m.Id, session().Id, loc().Id);
+        System.assertEquals(1, [SELECT COUNT() FROM Booking__c WHERE Member__c = :m.Id]);
+    }
+
+    @isTest
+    static void expiredPlusPendingStillBlocksAndReportsMostRecent() {
+        Member__c m = EPIC01_TestDataFactory.createMember('Old', 'Waiver', loc().Id);
+        EPIC01_TestDataFactory.createWaiver(m.Id, loc().Id, tmpl().Id, 'Signed', Date.newInstance(2025, 1, 1));
+        EPIC01_TestDataFactory.createWaiver(m.Id, loc().Id, tmpl().Id, 'Revoked', null);
+        String status = EPIC01_MemberOnboarding_Service.waiverStatusByMember(new Set<Id>{ m.Id }).get(m.Id);
+        System.assert(status == 'Revoked' || status == 'Expired', 'Unexpected status ' + status);
+        System.assertEquals(false, EPIC01_MemberOnboarding_Service.attemptProceedToPayment(m.Id).canProceed);
+    }
+
+    @isTest
     static void sharedStatusMatchesPaymentGate() {
         Member__c m = EPIC01_TestDataFactory.createMember('Pat', 'Gate', loc().Id);
         System.assertEquals('Missing', EPIC01_MemberOnboarding_Service.waiverStatusByMember(new Set<Id>{ m.Id }).get(m.Id));
