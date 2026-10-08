@@ -219,60 +219,61 @@ public with sharing class EPIC01_MemberOnboarding_Service {
      * it was already transferred to Member__c during conversion (US-002).
      */
     public static PaymentGateResult attemptProceedToPayment(Id memberId) {
-        // 1-2. Query Member__c and their Waiver_Record__c
-        List<Waiver_Record__c> waivers = [
-            SELECT Id, Status__c, Expiration_Date__c
-            FROM Waiver_Record__c
-            WHERE Member__c = :memberId
-            ORDER BY CreatedDate DESC
-            LIMIT 1
-        ];
+        // Shared evaluation (also used by the Booking__c trigger, US-007)
+        String status = waiverStatusByMember(new Set<Id>{ memberId }).get(memberId);
 
-        // 3. Validate based on waiver status
-        if (waivers.isEmpty()) {
-            // 5. No waiver → blocked
-            return new PaymentGateResult(
-                false,
-                'Please sign your waiver first',
-                'Missing'
-            );
-        }
-
-        Waiver_Record__c waiver = waivers[0];
-
-        if (waiver.Status__c == 'Pending') {
-            // 7. Pending waiver → blocked
-            return new PaymentGateResult(
-                false,
-                'Waiver pending signature',
-                'Pending'
-            );
-        }
-
-        if (waiver.Status__c == 'Revoked') {
-            // 8. Revoked waiver → blocked
-            return new PaymentGateResult(
-                false,
-                'Waiver has been revoked',
-                'Revoked'
-            );
-        }
-
-        if (waiver.Status__c == 'Signed') {
-            // 4. Signed waiver → check expiration
-            if (waiver.Expiration_Date__c != null && waiver.Expiration_Date__c < Date.today()) {
-                // 6. Expired → blocked
-                return new PaymentGateResult(
-                    false,
-                    'Your waiver has expired',
-                    'Expired'
-                );
-            }
+        if (status == 'Signed') {
             return new PaymentGateResult(true, null, 'Signed');
         }
-
-        // Unknown status → blocked
+        if (status == 'Missing') {
+            return new PaymentGateResult(false, 'Please sign your waiver first', 'Missing');
+        }
+        if (status == 'Pending') {
+            return new PaymentGateResult(false, 'Waiver pending signature', 'Pending');
+        }
+        if (status == 'Revoked') {
+            return new PaymentGateResult(false, 'Waiver has been revoked', 'Revoked');
+        }
+        if (status == 'Expired') {
+            return new PaymentGateResult(false, 'Your waiver has expired', 'Expired');
+        }
         return new PaymentGateResult(false, 'Unable to determine waiver status', 'Unknown');
+    }
+
+    /**
+     * Single source of truth for "does this member have a valid waiver?".
+     * Looks at each member's most recent Waiver_Record__c and returns one of:
+     * Signed (valid), Expired, Pending, Revoked, Unknown, or Missing (no waiver).
+     * Bulk-safe: one query for any number of members.
+     * Used by the payment gate (US-003) and the Booking__c trigger (US-007).
+     */
+    public static Map<Id, String> waiverStatusByMember(Set<Id> memberIds) {
+        Map<Id, String> result = new Map<Id, String>();
+        for (Id memberId : memberIds) {
+            result.put(memberId, 'Missing');
+        }
+        Set<Id> seen = new Set<Id>();
+        for (Waiver_Record__c w : [
+            SELECT Member__c, Status__c, Expiration_Date__c
+            FROM Waiver_Record__c
+            WHERE Member__c IN :memberIds
+            ORDER BY CreatedDate DESC
+        ]) {
+            if (!seen.add(w.Member__c)) {
+                continue; // only the most recent waiver per member counts
+            }
+            String status;
+            if (w.Status__c == 'Signed') {
+                Boolean expired = w.Expiration_Date__c != null && w.Expiration_Date__c < Date.today();
+                status = expired ? 'Expired' : 'Signed';
+            } else if (w.Status__c == 'Pending' || w.Status__c == 'Revoked') {
+                status = w.Status__c;
+            } else {
+                status = 'Unknown';
+            }
+            result.put(w.Member__c, status);
+        }
+        return result;
     }
 
     /**
