@@ -16,6 +16,16 @@ public with sharing class EPIC01_MemberOnboarding_Service {
     // Inner Classes
     // =====================================================
 
+    public class ConversionException extends Exception {}
+
+    public static final String MSG_MEMBER_EXISTS      = 'Member already exists for this lead — view existing Member record';
+    public static final String MSG_ALREADY_CONVERTED  = 'Lead already converted to Member — view linked Member record';
+    public static final String MSG_DISQUALIFIED       = 'Cannot convert disqualified lead — change status to Qualified first';
+    public static final String MSG_NO_LOCATION        = 'Cannot convert: Lead has no Franchise Location assigned';
+    public static final String MSG_NO_ORIGINAL_LEAD   = 'This Member was not created from a Lead, so it cannot be unconverted';
+    public static final String MSG_UNCONVERT_PROSPECT_ONLY = 'Only Prospect members can be unconverted';
+    public static final String MSG_UNCONVERT_PERMISSION    = 'Only a System Administrator can unconvert a Member';
+
     public class PaymentGateResult {
         @TestVisible public Boolean canProceed;
         @TestVisible public String   errorMessage;
@@ -45,21 +55,39 @@ public with sharing class EPIC01_MemberOnboarding_Service {
         Lead__c lead = [
             SELECT Id, Name, First_Name__c, Last_Name__c, Email__c, Phone__c,
                    Franchise_Location__c, Referred_By__c, Program_Interest__c,
-                   Lead_Source__c, Lead_Status__c
+                   Lead_Source__c, Lead_Status__c, Converted_Member__c
             FROM Lead__c WHERE Id = :leadId
         ];
 
+        // 1b. Guards (US-002 negative scenarios)
+        if (lead.Converted_Member__c != null) {
+            throw new ConversionException(MSG_MEMBER_EXISTS);
+        }
+        if (lead.Lead_Status__c == 'Converted') {
+            throw new ConversionException(MSG_ALREADY_CONVERTED);
+        }
+        if (lead.Lead_Status__c == 'Unqualified') {
+            // Gherkin calls this state "Disqualified"; the picklist value is "Unqualified".
+            throw new ConversionException(MSG_DISQUALIFIED);
+        }
+        if (lead.Franchise_Location__c == null) {
+            throw new ConversionException(MSG_NO_LOCATION);
+        }
+
         // 2. Create Member__c with copied fields, Status = 'Prospect'
         Member__c newMember = new Member__c(
-            Name             = lead.First_Name__c + '_' + lead.Last_Name__c,
-            First_Name__c    = lead.First_Name__c,
-            Last_Name__c     = lead.Last_Name__c,
-            Email__c         = lead.Email__c,
-            Phone__c         = lead.Phone__c,
-            Home_Location__c = lead.Franchise_Location__c,
-            Referred_By__c   = lead.Referred_By__c,
-            Status__c        = 'Prospect',
-            Waiver_Needed__c = false
+            Name                = lead.First_Name__c + '_' + lead.Last_Name__c,
+            First_Name__c       = lead.First_Name__c,
+            Last_Name__c        = lead.Last_Name__c,
+            Email__c            = lead.Email__c,
+            Phone__c            = lead.Phone__c,
+            Home_Location__c    = lead.Franchise_Location__c,
+            Referred_By__c      = lead.Referred_By__c,
+            Lead_Source__c      = lead.Lead_Source__c,
+            Program_Interest__c = lead.Program_Interest__c,
+            Original_Lead__c    = lead.Id,
+            Status__c           = 'Prospect',
+            Waiver_Needed__c    = false
         );
         insert newMember;
 
@@ -89,11 +117,24 @@ public with sharing class EPIC01_MemberOnboarding_Service {
 
             Task t = new Task(
                 WhatId   = newMember.Id,
-                Subject  = 'Member needs to sign waiver',
+                Subject  = 'Member needs to sign waiver before payment',
                 Status   = 'Not Started',
                 Priority = 'High'
             );
             insert t;
+        }
+
+        // 4b. Audit trail: task to schedule the first class
+        insert new Task(
+            WhatId   = newMember.Id,
+            Subject  = 'Schedule first class for ' + lead.First_Name__c + ' ' + lead.Last_Name__c,
+            Status   = 'Not Started',
+            Priority = 'Normal'
+        );
+
+        // 4c. Notify the referring member (if any)
+        if (lead.Referred_By__c != null) {
+            notifyReferrerOfConversion(lead.Referred_By__c, lead.First_Name__c + ' ' + lead.Last_Name__c);
         }
 
         // 5. Return newMember (re-query to ensure fresh data in memory)
@@ -102,6 +143,68 @@ public with sharing class EPIC01_MemberOnboarding_Service {
                    Home_Location__c, Referred_By__c, Status__c, Waiver_Needed__c
             FROM Member__c WHERE Id = :newMember.Id
         ];
+    }
+
+    /**
+     * Emails the referring member that their referral has joined.
+     * Email delivery problems (e.g. deliverability disabled in a scratch org)
+     * must not roll back a conversion, so they are caught and logged.
+     */
+    @TestVisible
+    private static void notifyReferrerOfConversion(Id referrerId, String referralName) {
+        List<Member__c> referrers = [SELECT Id, Email__c FROM Member__c WHERE Id = :referrerId];
+        if (referrers.isEmpty() || String.isBlank(referrers[0].Email__c)) {
+            return;
+        }
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        mail.setToAddresses(new List<String>{ referrers[0].Email__c });
+        mail.setSubject('Your referral ' + referralName + ' has joined NBS Gym!');
+        mail.setPlainTextBody('Your referral ' + referralName + ' has joined NBS Gym!');
+        try {
+            Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{ mail });
+        } catch (Exception e) {
+            System.debug(LoggingLevel.WARN, 'Referral notification not sent: ' + e.getMessage());
+        }
+    }
+
+    /**
+     * Reverses a conversion (System Administrator action).
+     * Deletes the Prospect Member, restores the Lead to Qualified, clears
+     * Converted_Member__c and detaches any waiver that was transferred.
+     * Active members are refused: deleting a paying member is not a "reversal".
+     */
+    public static void unconvertMember(Id memberId) {
+        if (!Schema.sObjectType.Member__c.isDeletable()) {
+            throw new ConversionException(MSG_UNCONVERT_PERMISSION);
+        }
+        List<Member__c> members = [
+            SELECT Id, Status__c, Original_Lead__c FROM Member__c WHERE Id = :memberId
+        ];
+        if (members.isEmpty() || members[0].Original_Lead__c == null) {
+            throw new ConversionException(MSG_NO_ORIGINAL_LEAD);
+        }
+        Member__c member = members[0];
+        if (member.Status__c != 'Prospect') {
+            throw new ConversionException(MSG_UNCONVERT_PROSPECT_ONLY);
+        }
+
+        // Waivers that came over from the lead go back to lead-only.
+        List<Waiver_Record__c> waivers = [
+            SELECT Id, Member__c FROM Waiver_Record__c
+            WHERE Member__c = :memberId AND Lead__c = :member.Original_Lead__c
+        ];
+        for (Waiver_Record__c w : waivers) {
+            w.Member__c = null;
+        }
+        update waivers;
+
+        // Lookup is Restrict-on-delete, so clear it before deleting the member.
+        update new Lead__c(
+            Id                  = member.Original_Lead__c,
+            Lead_Status__c      = 'Qualified',
+            Converted_Member__c = null
+        );
+        delete member;
     }
 
     // =====================================================

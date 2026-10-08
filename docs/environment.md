@@ -37,6 +37,7 @@ sf project deploy start --source-dir force-app --target-org my-gym --dry-run --t
 
 ## Known Gotchas
 
+- **CI "0 tests passing / 0 failing" is NOT a pass**: it means a metadata component failed before tests ran. See [`ci-validation-gotchas.md`](./ci-validation-gotchas.md) for this and for what commonly breaks Apex tests in this repo.
 - **Connected App creation blocked in DevHub org**: "You can't create a connected app. To enable connected app creation, contact Salesforce Customer Support." Workaround: create via UI on laptop browser (login.salesforce.com) instead of programmatic deployment.
 - **Scratch org auth is VM-only**: OTP URLs are network-bound to the VM. Cannot authenticate scratch org from laptop directly.
 - **RunRelevantTests vs RunLocalTests**: Use RunRelevantTests to avoid flaky pre-existing tests (e.g., DataManager_QuotaTest).
