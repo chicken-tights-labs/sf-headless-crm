@@ -159,8 +159,8 @@ public with sharing class EPIC01_MemberOnboarding_Service {
         }
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setToAddresses(new List<String>{ referrers[0].Email__c });
-        mail.setSubject('Your referral ' + referralName + ' has joined NBS Gym!');
-        mail.setPlainTextBody('Your referral ' + referralName + ' has joined NBS Gym!');
+        mail.setSubject('Your referral ' + referralName + ' has joined Boxing Fitness Gym!');
+        mail.setPlainTextBody('Your referral ' + referralName + ' has joined Boxing Fitness Gym!');
         try {
             Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{ mail });
         } catch (Exception e) {
@@ -626,7 +626,7 @@ public with sharing class EPIC01_MemberOnboarding_Service {
         String greetingName = String.isNotBlank(m.Guardian_Name__c) ? m.Guardian_Name__c : m.First_Name__c;
         String tier = String.isBlank(m.Membership_Tier__c) ? 'your membership' : m.Membership_Tier__c;
         String body = 'Hi ' + greetingName + ',\n\n'
-            + 'Welcome to NBS Gym! You are now an active member on the ' + tier + ' plan.\n\n'
+            + 'Welcome to Boxing Fitness Gym! You are now an active member on the ' + tier + ' plan.\n\n'
             + 'Class schedule: see your member portal or ask the front desk for this week\'s schedule.\n'
             + 'Next step: we will contact you to schedule a facility orientation within 7 days.\n';
         if (m.Home_Location__r != null) {
@@ -644,7 +644,7 @@ public with sharing class EPIC01_MemberOnboarding_Service {
         }
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setToAddresses(new List<String>{ m.Email__c.trim() });
-        mail.setSubject('Welcome to NBS Gym, ' + m.First_Name__c + '!');
+        mail.setSubject('Welcome to Boxing Fitness Gym, ' + m.First_Name__c + '!');
         mail.setPlainTextBody(body);
         welcomeBodiesForTest.add(body);
         return mail;
@@ -697,8 +697,8 @@ public with sharing class EPIC01_MemberOnboarding_Service {
             if (String.isNotBlank(m.Email__c) && EMAIL_FORMAT.matcher(m.Email__c.trim()).matches()) {
                 Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
                 mail.setToAddresses(new List<String>{ m.Email__c.trim() });
-                mail.setSubject('Friendly reminder: Your NBS Gym waiver is still pending');
-                mail.setPlainTextBody('Hi ' + m.First_Name__c + ',\n\nYour NBS Gym waiver is still pending. '
+                mail.setSubject('Friendly reminder: Your Boxing Fitness Gym waiver is still pending');
+                mail.setPlainTextBody('Hi ' + m.First_Name__c + ',\n\nYour Boxing Fitness Gym waiver is still pending. '
                     + 'Please sign it before your first class or payment.\n');
                 mails.add(mail);
             }

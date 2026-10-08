@@ -7,13 +7,13 @@ Issue: #23. Gherkin lives in the issue body. The Obsidian copy is not reachable 
 | Concern | Implementation |
 |---|---|
 | Trigger | `EPIC01_MemberActivation` (after update on `Member__c`): when `Status__c` changes to Active (from anything else) it calls `EPIC01_MemberOnboarding_Service.handleActivation`. Not fired on inserts or unrelated updates |
-| Welcome email | `sendWelcomeEmails(Set<Id>)` (bulk-safe, one `sendEmail` call). Subject "Welcome to NBS Gym, <first>!"; body has tier name, schedule line, location name and phone, guardian section, referral thank-you |
+| Welcome email | `sendWelcomeEmails(Set<Id>)` (bulk-safe, one `sendEmail` call). Subject "Welcome to Boxing Fitness Gym, <first>!"; body has tier name, schedule line, location name and phone, guardian section, referral thank-you |
 | Idempotence | Only members with `Welcome_Email_Sent__c = false` are processed; the flag is set after a successful send. No duplicate email or task |
 | Orientation task | "Schedule facility orientation for <name>", due today + 7 |
 | Failure path | Blank or invalid address, or a send error: task "Welcome email failed for <name> — verify email address", flag stays false |
 | Minor / guardian | Section "Parent/Guardian Information" when `Guardian_Name__c` is set or `Date_of_Birth__c` is under 18; greeting uses the guardian name when present |
-| Referral | Welcome email includes "Thanks to <referrer> for the referral!" and the referrer gets "Your referral <name> has joined NBS Gym!" |
-| Waiver reminder | `EPIC01_WaiverReminder_Job` (Schedulable) runs `runWaiverReminderJob`: members with `Waiver_Needed__c`, created 7+ days ago, with no valid waiver, get task "Waiver reminder for <name>" and email "Friendly reminder: Your NBS Gym waiver is still pending". One task per member (daily reruns skip them) |
+| Referral | Welcome email includes "Thanks to <referrer> for the referral!" and the referrer gets "Your referral <name> has joined Boxing Fitness Gym!" |
+| Waiver reminder | `EPIC01_WaiverReminder_Job` (Schedulable) runs `runWaiverReminderJob`: members with `Waiver_Needed__c`, created 7+ days ago, with no valid waiver, get task "Waiver reminder for <name>" and email "Friendly reminder: Your Boxing Fitness Gym waiver is still pending". One task per member (daily reruns skip them) |
 | Tests | `EPIC01_Welcome_Test` |
 
 ## Register the reminder job (one time per org)
