@@ -9,7 +9,7 @@ const API_VERSION = 'v58.0';
 
 export async function sfRequest(
   session: SalesforceSession,
-  method: 'GET' | 'POST' | 'PATCH',
+  method: 'GET' | 'POST' | 'PATCH' | 'DELETE',
   path: string,
   body?: unknown
 ): Promise<any> {
@@ -54,4 +54,12 @@ export async function sfGetRecord<T = any>(
   fields: string[]
 ): Promise<T> {
   return sfRequest(session, 'GET', `/services/data/${API_VERSION}/sobjects/${sobject}/${id}?fields=${fields.join(',')}`);
+}
+
+export async function sfDelete(
+  session: SalesforceSession,
+  sobject: string,
+  id: string
+): Promise<void> {
+  await sfRequest(session, 'DELETE', `/services/data/${API_VERSION}/sobjects/${sobject}/${id}`);
 }

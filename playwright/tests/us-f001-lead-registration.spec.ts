@@ -40,7 +40,7 @@
 import { test, expect, type Page, type Locator } from '@playwright/test';
 import { gotoObjectHome, waitForUrl } from '../support/lightning';
 import { resolveSalesforceSession } from '../support/salesforceSession';
-import { sfGetRecord } from '../support/restClient';
+import { sfDelete, sfGetRecord } from '../support/restClient';
 import { QA_FRANCHISE_LOCATION_NAME } from '../support/seedData';
 
 interface LeadFields {
@@ -158,5 +158,9 @@ test.describe('US-F001 — Register Walk-In Lead', () => {
     // (No "Recent Walk-Ins" list view exists in metadata yet — see gap note above.)
     await gotoObjectHome(page, 'Lead__c', 'Recent');
     await expect(page.getByRole('link', { name: 'John Smith' }).first()).toBeVisible({ timeout: 15000 });
+
+    // Cleanup: delete the lead so the test is idempotent and doesn't leave
+    // records in the org. Uses the REST API (not the UI) for reliability.
+    await sfDelete(session, 'Lead__c', leadId);
   });
 });
