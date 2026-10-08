@@ -149,7 +149,7 @@ private class EPIC01_MemberOnboarding_Test {
         // Assert: No "waiver needed" task (waiver was transferred)
         List<Task> waiverTasks = [
             SELECT Id FROM Task
-            WHERE Subject = 'Member needs to sign waiver'
+            WHERE Subject = 'Member needs to sign waiver before payment'
               AND WhatId = :newMember.Id
         ];
         System.assertEquals(0, waiverTasks.size(), 'No waiver task should be created when waiver is transferred');
@@ -190,7 +190,7 @@ private class EPIC01_MemberOnboarding_Test {
         List<Task> tasks = [
             SELECT Id, Subject, WhatId, Status
             FROM Task
-            WHERE Subject = 'Member needs to sign waiver'
+            WHERE Subject = 'Member needs to sign waiver before payment'
               AND WhatId = :newMember.Id
         ];
         System.assertEquals(1, tasks.size(), 'A waiver task should be created');
