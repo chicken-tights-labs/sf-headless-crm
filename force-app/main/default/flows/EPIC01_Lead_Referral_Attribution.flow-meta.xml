@@ -85,7 +85,7 @@
         <inputAssignments>
             <field>Notes__c</field>
             <value>
-                <stringValue>Invalid referral code — continuing without attribution</stringValue>
+                <stringValue>Referral code not found — continuing without attribution</stringValue>
             </value>
         </inputAssignments>
         <inputReference>$Record</inputReference>

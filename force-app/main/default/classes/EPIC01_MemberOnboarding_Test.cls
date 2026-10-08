@@ -593,13 +593,13 @@ private class EPIC01_MemberOnboarding_Test {
 
         System.assertEquals(75.00, finalAmount, '50% friend discount should apply');
 
-        // Referrer gets class credit
+        // Pricing only: the referrer reward is paid once by processPayment (see EPIC01_Referral_Test)
         Member__c referrerCheck = [
             SELECT Classes_Remaining__c FROM Member__c WHERE Id = :referrer.Id
         ];
-        System.assertEquals(referrer.Classes_Remaining__c + 1,
+        System.assertEquals(referrer.Classes_Remaining__c,
                             referrerCheck.Classes_Remaining__c,
-                            'Referrer should get +1 class credit');
+                            'Discount calculation must not award the referrer');
     }
 
     // =====================================================

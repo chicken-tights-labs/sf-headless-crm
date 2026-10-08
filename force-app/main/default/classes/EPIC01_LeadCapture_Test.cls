@@ -126,7 +126,7 @@ private class EPIC01_LeadCapture_Test {
         Lead__c l = [SELECT Referred_By__c, Lead_Source__c, Notes__c FROM Lead__c WHERE Id = :res.leadId];
         System.assertEquals(null, l.Referred_By__c);
         System.assertEquals('Web Form', l.Lead_Source__c);
-        System.assertEquals('Invalid referral code — continuing without attribution', l.Notes__c);
+        System.assertEquals('Referral code not found — continuing without attribution', l.Notes__c);
     }
 
     @isTest

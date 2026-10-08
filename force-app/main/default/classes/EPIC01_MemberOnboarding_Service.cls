@@ -132,8 +132,9 @@ public with sharing class EPIC01_MemberOnboarding_Service {
             Priority = 'Normal'
         );
 
-        // 4c. Notify the referring member (if any)
+        // 4c. Notify the referring member (if any) and advance the referral lifecycle
         if (lead.Referred_By__c != null) {
+            EPIC01_Referral_Handler.markMemberCreated(lead.Id, newMember.Id);
             notifyReferrerOfConversion(lead.Referred_By__c, lead.First_Name__c + ' ' + lead.Last_Name__c);
         }
 
@@ -204,6 +205,16 @@ public with sharing class EPIC01_MemberOnboarding_Service {
             Lead_Status__c      = 'Qualified',
             Converted_Member__c = null
         );
+        // US-006: the referral goes back to "Code Used" (attribution stays on the lead).
+        List<Referral_Reward__c> rewards = [
+            SELECT Id FROM Referral_Reward__c
+            WHERE Referred_Member__c = :memberId AND Status__c = 'Member Created'
+        ];
+        for (Referral_Reward__c r : rewards) {
+            r.Referred_Member__c = null;
+            r.Status__c = 'Code Used';
+        }
+        update rewards;
         delete member;
     }
 
@@ -432,9 +443,9 @@ public with sharing class EPIC01_MemberOnboarding_Service {
             SELECT Id, Referred_By__c FROM Member__c WHERE Id = :memberId
         ];
 
-        // 2. If Referred_By__c is set → return 50% discount AND award referral reward
+        // 2. If Referred_By__c is set → return 50% discount. Pricing only: the reward is
+        //    awarded once by processPayment (it used to be awarded here too, i.e. twice).
         if (member.Referred_By__c != null) {
-            awardReferralReward(member.Referred_By__c, memberId);
             return Decimal.valueOf(originalAmount) * 0.50;
         }
 
@@ -447,51 +458,11 @@ public with sharing class EPIC01_MemberOnboarding_Service {
     // =====================================================
 
     /**
-     * Generates a unique 8-character referral code for a Member.
-     * Format: 3-char initials + 5-char random alphanumeric
-     * e.g., MRXFF8A2
+     * Generates a unique 8-character referral code (3-char initials + 5 random chars)
+     * for a Member that has none. See EPIC01_Referral_Handler.generateCodes.
      */
     public static void generateReferralCode(Id memberId) {
-        // 1. Query Member__c
-        Member__c member = [
-            SELECT Id, First_Name__c, Last_Name__c FROM Member__c WHERE Id = :memberId
-        ];
-
-        // 2. Build 3-character initials prefix
-        String initials = '';
-        if (String.isNotBlank(member.First_Name__c) && member.First_Name__c.length() > 0) {
-            initials += member.First_Name__c.substring(0, 1).toUpperCase();
-        }
-        if (String.isNotBlank(member.Last_Name__c) && member.Last_Name__c.length() > 0) {
-            initials += member.Last_Name__c.substring(0, 1).toUpperCase();
-        }
-        while (initials.length() < 3) {
-            initials += 'X';
-        }
-        initials = initials.left(3);
-
-        // 3. Generate code and check uniqueness — if collision, regenerate
-        String code;
-        Integer attempts = 0;
-        Boolean isUnique = false;
-        Integer counter = 0;
-        do {
-            // 5-char random hex from a time-seeded blob hash
-            String seed = String.valueOf(Datetime.now().getTime()) + String.valueOf(counter);
-            code = initials + EncodingUtil.convertToHex(Blob.valueOf(seed)).left(5);
-            // Check uniqueness (exclude the current member)
-            isUnique = [
-                SELECT COUNT() FROM Member__c
-                WHERE Referral_Code__c = :code AND Id != :memberId
-            ] == 0;
-            attempts++;
-            counter++;
-        } while (!isUnique && attempts < 5);
-
-        // 4. Set Referral_Code__c and Referral_Attempts__c = 0
-        member.Referral_Code__c = code;
-        member.Referral_Attempts__c = 0;
-        update member;
+        EPIC01_Referral_Handler.generateCodes(new Set<Id>{ memberId });
     }
 
     /**
@@ -541,44 +512,11 @@ public with sharing class EPIC01_MemberOnboarding_Service {
     }
 
     /**
-     * Awards the referral reward to the referring member.
-     * Called when the referred member's first payment completes.
+     * Awards the referral reward to the referring member (once per referred member).
+     * Called by processPayment when the referred member's first payment completes.
      */
     public static void awardReferralReward(Id referringMemberId, Id referredMemberId) {
-        // 1. Query referring Member__c (with Membership_Tier__c, Classes_Remaining__c, Account_Credit__c)
-        Member__c referrer = [
-            SELECT Id, Name, Membership_Tier__c, Classes_Remaining__c, Account_Credit__c
-            FROM Member__c WHERE Id = :referringMemberId
-        ];
-
-        // 2. Determine reward type:
-        //    - Class pack tier → Classes_Remaining__c += 1
-        //    - Unlimited/Student/Military tier → Account_Credit__c += 10
-        //    - Drop-in → Account_Credit__c += 10
-        Integer currentClasses = (referrer.Classes_Remaining__c == null) ? 0 : (Integer)referrer.Classes_Remaining__c;
-        Decimal currentCredit = (referrer.Account_Credit__c == null) ? 0 : referrer.Account_Credit__c;
-
-        // Award +1 class credit to all referrers
-        referrer.Classes_Remaining__c = currentClasses + 1;
-
-        // Also award account credit for unlimited/membership tiers
-        if (referrer.Membership_Tier__c == 'Monthly Unlimited ($129)'
-            || referrer.Membership_Tier__c == 'Annual Prepaid ($99/mo)') {
-            referrer.Account_Credit__c = currentCredit + 10;
-        }
-
-        update referrer;
-
-        // 3. Create Referral_Reward__c record (Status = 'Reward Claimed')
-        Referral_Reward__c reward = new Referral_Reward__c(
-            Referring_Member__c = referringMemberId,
-            Referred_Member__c  = referredMemberId,
-            Status__c           = 'Reward Claimed'
-        );
-        insert reward;
-
-        // 4. Send notification email to referrer
-        //    (Simulated — in production, send email template)
+        EPIC01_Referral_Handler.awardReward(referringMemberId, referredMemberId);
     }
 
     // =====================================================
@@ -782,6 +720,7 @@ public with sharing class EPIC01_MemberOnboarding_Service {
      * Single place to hang activation work (welcome workflow; referral code, US-006).
      */
     public static void handleActivation(Set<Id> memberIds) {
+        EPIC01_Referral_Handler.generateCodes(memberIds);
         sendWelcomeEmails(memberIds);
     }
 }
