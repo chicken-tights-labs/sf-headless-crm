@@ -10,7 +10,7 @@ Issue: #20. Gherkin lives in the issue body. The Obsidian copy is not reachable 
 | Guards / messages | Member already linked, already Converted, Unqualified ("disqualified"), no location. Exact Gherkin messages, thrown as `ConversionException` |
 | Buttons | Quick actions `Lead__c.Convert_to_Member` and `Member__c.Unconvert` run screen flows `EPIC01_Convert_Lead_To_Member` / `EPIC01_Unconvert_Member` through invocable wrappers `EPIC01_LeadConversion_Action` / `EPIC01_MemberUnconvert_Action` |
 | Audit trail | Task "Schedule first class for <name>" on the new Member; waiver task now "Member needs to sign waiver before payment" |
-| Referral notification | Plain-text email to the referring member: "Your referral <name> has joined NBS Gym!" (send failures are caught so a conversion is never rolled back) |
+| Referral notification | Plain-text email to the referring member: "Your referral <name> has joined Boxing Fitness Gym!" (send failures are caught so a conversion is never rolled back) |
 | Unconvert | `unconvertMember`: Prospect members only; clears `Converted_Member__c`, restores lead to Qualified, detaches transferred waivers, deletes Member |
 | Schema | `Member__c.Program_Interest__c` (new picklist); `Member__c.Lead_Source__c` gained In Person, Web Form, Facebook Ad so lead sources copy across |
 | Tests | `EPIC01_LeadConversion_Test`; `EPIC01_MemberOnboarding_Test` updated for the new waiver task subject |
