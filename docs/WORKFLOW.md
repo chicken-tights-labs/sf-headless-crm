@@ -112,10 +112,12 @@ After PR merges to `main`:
    > *did* change Apex is the red flag — it means your test gate silently did nothing.
 
    > **Gotcha:** `sf project deploy report` **requires `--use-most-recent` or
-   > `--job-id`**. Without one it errors with
-   > `Exactly one of the following must be provided: --job-id, --use-most-recent`
-   > and returns a payload whose `result` fields are all `None` — which looks
-   > deceptively like "no data" but actually means the command was wrong.
+   > `--job-id`**. Verified on CLI 2.150.6: omitting it **hard-errors with exit
+   > code 2** —
+   > `Exactly one of the following must be provided: --job-id, --use-most-recent`.
+   > (Older/other builds reportedly returned an all-`None` payload that reads like
+   > "no data" instead. Either way: if you see no deploy fields, suspect the missing
+   > flag before you suspect the deploy.)
 5. Post-deploy sanity check:
    ```bash
    sf data query --target-org my-gym -q "SELECT COUNT() FROM Waiver_Record__c" --json
