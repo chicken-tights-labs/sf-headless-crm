@@ -61,6 +61,22 @@ When a test fails after metadata deploys, check these first:
 - `validate-and-test` is only a shim that reports the required check name. If it is red, open the two jobs it depends on; the shim shows no detail.
 - `RunRelevantTests` only runs tests that cover the deployed components. A test class that does not reference changed code may not run, so a "pass" does not prove untouched areas still work. The post-merge deploy also uses `RunRelevantTests`.
 
+## 4b. Running the Apex tests locally in a scratch org
+
+Used for PR #31 (all 59 tests passed). Needs the Dev Hub (`chickentightslabs`) authenticated locally.
+
+```bash
+sf org create scratch -f config/project-scratch-def.json -a us-test -v chickentightslabs --duration-days 7 --wait 15
+sf project deploy start --source-dir force-app -o us-test --wait 20
+sf org assign permset -n Boxing_Gym_CRM_Access -o us-test
+sf apex run test -o us-test -n EPIC01_BookingWaiver_Test -n EPIC01_MemberOnboarding_Test \
+  -n EPIC01_LeadConversion_Test -n EPIC01_LeadCapture_Test -n EPIC04_LeadRegistration_Test \
+  --result-format human --code-coverage --wait 15
+sf org delete scratch -o us-test --no-prompt
+```
+
+Gotchas: `-d` is `--set-default`, not duration (use `--duration-days`/`-y`). The test run took about 13 minutes of wall time here because of org queueing, although test execution itself was ~13 seconds. The scratch org deploys flows and quick actions that CI also validates, so it is a quick way to catch XML mistakes before pushing.
+
 ## 5. Checklist before asking for review
 
 1. Read the **Component Failures** section of the log before the test summary.
