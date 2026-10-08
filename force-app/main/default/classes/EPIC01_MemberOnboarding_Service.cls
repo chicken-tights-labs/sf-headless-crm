@@ -590,30 +590,126 @@ public with sharing class EPIC01_MemberOnboarding_Service {
      * Called when Member Status transitions to 'Active'.
      */
     public static void sendWelcomeEmail(Id memberId) {
-        // 1. Check Welcome_Email_Sent__c == false
-        Member__c member = [
-            SELECT Id, Name, First_Name__c, Last_Name__c, Welcome_Email_Sent__c
-            FROM Member__c WHERE Id = :memberId
+        sendWelcomeEmails(new Set<Id>{ memberId });
+    }
+
+    // Sent emails cannot be read back in Apex tests, so bodies are captured here for assertions.
+    @TestVisible private static List<String> welcomeBodiesForTest = new List<String>();
+    // Test hook: simulates the email send failing (Email__c is required and format-checked on Member__c).
+    @TestVisible private static Boolean simulateWelcomeSendFailure = false;
+
+    private static final Pattern EMAIL_FORMAT = Pattern.compile('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+
+    /**
+     * Bulk-safe welcome workflow. For each member whose Welcome_Email_Sent__c is false:
+     *  - success: sends the welcome email, creates the orientation task (due in 7 days),
+     *    sets Welcome_Email_Sent__c = true
+     *  - failure (blank/invalid address or send error): creates the admin task
+     *    "Welcome email failed for <name> — verify email address" and leaves the flag false
+     * Members already flagged are skipped, so the email and task never repeat.
+     */
+    public static void sendWelcomeEmails(Set<Id> memberIds) {
+        List<Member__c> members = [
+            SELECT Id, First_Name__c, Last_Name__c, Email__c, Membership_Tier__c, Date_of_Birth__c,
+                   Guardian_Name__c, Welcome_Email_Sent__c, Referred_By__c, Referred_By__r.Name,
+                   Home_Location__r.Name, Home_Location__r.Phone__c
+            FROM Member__c
+            WHERE Id IN :memberIds AND Welcome_Email_Sent__c = false
         ];
 
-        if (!member.Welcome_Email_Sent__c) {
-            // 2. Send email template 'NBS_Gym_Welcome' to member
-            //    (Simulated — in production, use Messaging.SingleEmailMessage)
+        List<Member__c> toSend = new List<Member__c>();
+        List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
+        List<Task> tasks = new List<Task>();
+        List<Member__c> sentFlags = new List<Member__c>();
 
-            // 3. Create Task: "Schedule facility orientation for [Member Name]"
-            Task t = new Task(
-                WhatId   = memberId,
-                Subject  = 'Schedule facility orientation for '
-                           + member.First_Name__c + ' ' + member.Last_Name__c,
-                Status   = 'Not Started',
-                Priority = 'High'
-            );
-            insert t;
-
-            // 4. Set Welcome_Email_Sent__c = true
-            member.Welcome_Email_Sent__c = true;
-            update member;
+        for (Member__c m : members) {
+            if (String.isBlank(m.Email__c) || !EMAIL_FORMAT.matcher(m.Email__c.trim()).matches()) {
+                tasks.add(welcomeFailedTask(m));
+                continue;
+            }
+            toSend.add(m);
+            mails.add(buildWelcomeEmail(m));
         }
+
+        if (!mails.isEmpty()) {
+            List<Messaging.SendEmailResult> results;
+            try {
+                if (simulateWelcomeSendFailure) {
+                    throw new System.EmailException('Simulated send failure');
+                }
+                results = Messaging.sendEmail(mails, false);
+            } catch (Exception e) {
+                System.debug(LoggingLevel.WARN, 'Welcome email send failed: ' + e.getMessage());
+            }
+            for (Integer i = 0; i < toSend.size(); i++) {
+                Member__c m = toSend[i];
+                if (results != null && results[i].isSuccess()) {
+                    tasks.add(new Task(
+                        WhatId       = m.Id,
+                        Subject      = 'Schedule facility orientation for ' + m.First_Name__c + ' ' + m.Last_Name__c,
+                        Status       = 'Not Started',
+                        Priority     = 'High',
+                        ActivityDate = Date.today().addDays(7)
+                    ));
+                    sentFlags.add(new Member__c(Id = m.Id, Welcome_Email_Sent__c = true));
+                    if (m.Referred_By__c != null) {
+                        notifyReferrerOfConversion(m.Referred_By__c, m.First_Name__c + ' ' + m.Last_Name__c);
+                    }
+                } else {
+                    tasks.add(welcomeFailedTask(m));
+                }
+            }
+        }
+
+        if (!tasks.isEmpty()) {
+            insert tasks;
+        }
+        if (!sentFlags.isEmpty()) {
+            update sentFlags;
+        }
+    }
+
+    private static Task welcomeFailedTask(Member__c m) {
+        return new Task(
+            WhatId   = m.Id,
+            Subject  = 'Welcome email failed for ' + m.First_Name__c + ' ' + m.Last_Name__c
+                       + ' — verify email address',
+            Status   = 'Not Started',
+            Priority = 'High'
+        );
+    }
+
+    private static Boolean isMinor(Member__c m) {
+        return m.Date_of_Birth__c != null && m.Date_of_Birth__c > Date.today().addYears(-18);
+    }
+
+    private static Messaging.SingleEmailMessage buildWelcomeEmail(Member__c m) {
+        Boolean showGuardian = String.isNotBlank(m.Guardian_Name__c) || isMinor(m);
+        String greetingName = String.isNotBlank(m.Guardian_Name__c) ? m.Guardian_Name__c : m.First_Name__c;
+        String tier = String.isBlank(m.Membership_Tier__c) ? 'your membership' : m.Membership_Tier__c;
+        String body = 'Hi ' + greetingName + ',\n\n'
+            + 'Welcome to NBS Gym! You are now an active member on the ' + tier + ' plan.\n\n'
+            + 'Class schedule: see your member portal or ask the front desk for this week\'s schedule.\n'
+            + 'Next step: we will contact you to schedule a facility orientation within 7 days.\n';
+        if (m.Home_Location__r != null) {
+            body += '\nYour gym: ' + m.Home_Location__r.Name
+                 + (String.isNotBlank(m.Home_Location__r.Phone__c) ? ' (' + m.Home_Location__r.Phone__c + ')' : '') + '\n';
+        }
+        if (showGuardian) {
+            body += '\nParent/Guardian Information\n'
+                 + 'This membership is for a minor' + (String.isNotBlank(m.Guardian_Name__c)
+                      ? '; guardian on file: ' + m.Guardian_Name__c : '')
+                 + '. A parent or guardian must stay on file and sign all waivers.\n';
+        }
+        if (m.Referred_By__c != null && m.Referred_By__r != null) {
+            body += '\nThanks to ' + m.Referred_By__r.Name.replace('_', ' ') + ' for the referral!\n';
+        }
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        mail.setToAddresses(new List<String>{ m.Email__c.trim() });
+        mail.setSubject('Welcome to NBS Gym, ' + m.First_Name__c + '!');
+        mail.setPlainTextBody(body);
+        welcomeBodiesForTest.add(body);
+        return mail;
     }
 
     /**
@@ -622,28 +718,70 @@ public with sharing class EPIC01_MemberOnboarding_Service {
      * Called by a scheduled job (daily).
      */
     public static void runWaiverReminderJob() {
-        // Query Member__c WHERE Waiver_Needed__c = true AND CreatedDate <= TODAY() - 7
-        Date thresholdDate = Date.today().addDays(-7);
-        List<Member__c> membersNeedingWaiver = [
-            SELECT Id, Name, First_Name__c, Last_Name__c
+        // Members flagged at conversion who are still unsigned after 7 days
+        Datetime threshold = Datetime.now().addDays(-7);
+        List<Member__c> candidates = [
+            SELECT Id, First_Name__c, Last_Name__c, Email__c
             FROM Member__c
             WHERE Waiver_Needed__c = true
-              AND CreatedDate < :thresholdDate
+              AND CreatedDate <= :threshold
+            LIMIT 200
         ];
+        if (candidates.isEmpty()) {
+            return;
+        }
+        Set<Id> candidateIds = new Map<Id, Member__c>(candidates).keySet();
 
-        // For each: create task "Waiver reminder for [Name]", send email
+        // Skip members who have since signed a valid waiver
+        Map<Id, String> waiverStatus = waiverStatusByMember(candidateIds);
+
+        // Skip members who already have a reminder task (job runs daily)
+        Set<Id> alreadyReminded = new Set<Id>();
+        for (Task t : [
+            SELECT WhatId FROM Task
+            WHERE WhatId IN :candidateIds AND Subject LIKE 'Waiver reminder for %'
+        ]) {
+            alreadyReminded.add(t.WhatId);
+        }
+
         List<Task> tasks = new List<Task>();
-        for (Member__c m : membersNeedingWaiver) {
+        List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
+        for (Member__c m : candidates) {
+            if (waiverStatus.get(m.Id) == 'Signed' || alreadyReminded.contains(m.Id)) {
+                continue;
+            }
             tasks.add(new Task(
                 WhatId   = m.Id,
                 Subject  = 'Waiver reminder for ' + m.First_Name__c + ' ' + m.Last_Name__c,
                 Status   = 'Not Started',
                 Priority = 'Medium'
             ));
+            if (String.isNotBlank(m.Email__c) && EMAIL_FORMAT.matcher(m.Email__c.trim()).matches()) {
+                Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                mail.setToAddresses(new List<String>{ m.Email__c.trim() });
+                mail.setSubject('Friendly reminder: Your NBS Gym waiver is still pending');
+                mail.setPlainTextBody('Hi ' + m.First_Name__c + ',\n\nYour NBS Gym waiver is still pending. '
+                    + 'Please sign it before your first class or payment.\n');
+                mails.add(mail);
+            }
         }
-
         if (!tasks.isEmpty()) {
             insert tasks;
         }
+        if (!mails.isEmpty()) {
+            try {
+                Messaging.sendEmail(mails, false);
+            } catch (Exception e) {
+                System.debug(LoggingLevel.WARN, 'Waiver reminder email failed: ' + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Called by the Member__c status trigger when members transition to Active.
+     * Single place to hang activation work (welcome workflow; referral code, US-006).
+     */
+    public static void handleActivation(Set<Id> memberIds) {
+        sendWelcomeEmails(memberIds);
     }
 }
