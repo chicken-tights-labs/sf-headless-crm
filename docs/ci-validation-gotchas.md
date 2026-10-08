@@ -16,6 +16,10 @@ Dry-run complete.
 
 That is a failure to reach the tests, not a clean test run. Always read the **Component Failures** table above it first. Example: PR #30 (US-002) failed on 4 metadata errors, so `EPIC01_LeadConversion_Test` and `EPIC01_MemberOnboarding_Test` never executed. After fixing the metadata, a second CI run can still reveal Apex test failures that were hidden the first time. Budget for at least two CI rounds on any PR that adds Apex and metadata together.
 
+## 1b. All tests can pass and the dry-run still fails on coverage
+
+`RunRelevantTests` enforces **75% coverage per selected Apex class**. With 28/28 passing, PR #30's second CI run still failed with `EPIC01_MemberUnconvert_Action - Test coverage of selected Apex Class is 73.333%, at least 75% test coverage is required`. The uncovered lines were the `catch` branch (the failure path). The "Failing: 0" count and the `Running Tests` summary hide this: look for the coverage warning above `Dry-run complete`. Every new Apex class needs tests for both the success path and the error/catch path, including invocable wrappers.
+
 ## 2. Hand-written metadata cannot be validated locally without an org
 
 Flows, quick actions and similar XML are easy to get subtly wrong. The project's `sourceApiVersion` is **58.0**, and the deploy rejects properties from newer versions.

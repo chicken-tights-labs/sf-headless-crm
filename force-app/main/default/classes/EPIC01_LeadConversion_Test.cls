@@ -167,6 +167,29 @@ private class EPIC01_LeadConversion_Test {
     }
 
     @isTest
+    static void unconvertActionReturnsMessageInsteadOfThrowing() {
+        Member__c sam = [SELECT Id FROM Member__c WHERE Referral_Code__c = 'SAM0KA00'];
+        EPIC01_MemberUnconvert_Action.Request req = new EPIC01_MemberUnconvert_Action.Request();
+        req.memberId = sam.Id;
+        List<EPIC01_MemberUnconvert_Action.Result> res = EPIC01_MemberUnconvert_Action.unconvert(
+            new List<EPIC01_MemberUnconvert_Action.Request>{ req });
+        System.assertEquals(false, res[0].success);
+        System.assert(res[0].message.contains('not created from a Lead'), res[0].message);
+        System.assertEquals(1, [SELECT COUNT() FROM Member__c WHERE Id = :sam.Id], 'Member must not be deleted');
+    }
+
+    @isTest
+    static void convertActionSucceedsAndReturnsMemberId() {
+        Lead__c lead = makeLead('Pat', 'Ok', 'pat.ok@email.com', 'Qualified', 'Lexington HQ');
+        EPIC01_LeadConversion_Action.Request req = new EPIC01_LeadConversion_Action.Request();
+        req.leadId = lead.Id;
+        List<EPIC01_LeadConversion_Action.Result> res = EPIC01_LeadConversion_Action.convert(
+            new List<EPIC01_LeadConversion_Action.Request>{ req });
+        System.assertEquals(true, res[0].success, res[0].message);
+        System.assertNotEquals(null, res[0].memberId);
+    }
+
+    @isTest
     static void unconvertRefusesActiveMember() {
         Member__c sam = [SELECT Id, Original_Lead__c FROM Member__c WHERE Referral_Code__c = 'SAM0KA00'];
         Lead__c lead = makeLead('Orig', 'Lead', 'orig@email.com', 'Converted', 'Lexington HQ');
