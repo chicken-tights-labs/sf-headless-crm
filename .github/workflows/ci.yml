@@ -83,3 +83,32 @@ jobs:
       #   sf project deploy start --target-org ci-org --source-dir force-app
       #   sf apex run test --target-org ci-org --test-level RunLocalTests --code-coverage
       #   sf org delete scratch --target-org ci-org --no-prompt -p
+
+  # DO NOT DELETE without updating branch protection.
+  #
+  # Branch protection on `main` requires a status check named literally
+  # "validate-and-test". This PR splits that single job into
+  # `lint-and-unit-test` + `validate-salesforce`, which means the required
+  # context would never be reported — and GitHub treats a required check
+  # that is never reported as "expected/pending", permanently blocking
+  # every merge (even with all real checks green).
+  #
+  # This shim re-reports the required context name. It must use
+  # `if: always()`: a *skipped* job's required check also stays pending
+  # forever, so the shim has to run and decide, not be skipped.
+  validate-and-test:
+    needs: [lint-and-unit-test, validate-salesforce]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Gate on upstream job results
+        run: |
+          echo "lint-and-unit-test : ${{ needs.lint-and-unit-test.result }}"
+          echo "validate-salesforce: ${{ needs.validate-salesforce.result }}"
+          if [ "${{ needs.lint-and-unit-test.result }}" != "success" ] || \
+             [ "${{ needs.validate-salesforce.result }}" != "success" ]; then
+            echo "::error::Upstream CI jobs did not all succeed — blocking merge."
+            exit 1
+          fi
+          echo "All upstream checks passed."
+
