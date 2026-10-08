@@ -78,12 +78,55 @@ See [`docs/environment.md`](./environment.md) for:
 After PR merges to `main`:
 1. `cd /home/maria_robbins/sf-project/sf-headless-crm`
 2. `git pull origin main`
-3. `sf project deploy start --source-dir force-app --target-org my-gym`
-4. Post-deploy sanity check:
+3. Deploy **with the test gate**:
+   ```bash
+   sf project deploy start --source-dir force-app --target-org my-gym \
+     --test-level RunRelevantTests --wait 30
+   ```
+   Use `RunRelevantTests`, **not** `RunLocalTests` — the org has pre-existing
+   flaky/unrelated test classes (e.g. `DataManager_QuotaTest`) that depend on
+   org-specific Documents and would fail a full-suite deploy on noise.
+   This matches `.github/workflows/ci.yml` and `.github/workflows/deploy.yml`.
+4. **Verify the deploy** (do not eyeball the success table — assert the fields):
+   ```bash
+   sf project deploy report --target-org my-gym --use-most-recent --json > /tmp/dr.json
+   ```
+   Then check:
+
+   | Field | Expected |
+   |---|---|
+   | `status` | `Succeeded` |
+   | `numberComponentsDeployed` == `numberComponentsTotal` | e.g. 203 / 203 |
+   | `numberComponentErrors` | `0` |
+   | `numberTestsCompleted` | **> 0 when components actually changed** — see note below |
+
+   > **Reading `numberTestsCompleted` correctly:** `RunRelevantTests` runs the tests
+   > for the components *being deployed*. If nothing changed, nothing is deployed and
+   > **0 tests run — that is correct, not a failure.** Verified on `my-gym`: a full
+   > 203/203 re-deploy reported `numberTestsCompleted: 0` because every component came
+   > back `"changed": false`; deploying one changed Apex class reported
+   > `numberTestsCompleted: 1` (`EPIC04_LeadRegistration_Test`, PASSED).
+   >
+   > So the gate is: **`numberTestsCompleted > 0` whenever `numberComponentsDeployed > 0`
+   > with real changes.** A `0` on a no-op re-deploy is expected. A `0` on a deploy that
+   > *did* change Apex is the red flag — it means your test gate silently did nothing.
+
+   > **Gotcha:** `sf project deploy report` **requires `--use-most-recent` or
+   > `--job-id`**. Verified on CLI 2.150.6: omitting it **hard-errors with exit
+   > code 2** —
+   > `Exactly one of the following must be provided: --job-id, --use-most-recent`.
+   > (Older/other builds reportedly returned an all-`None` payload that reads like
+   > "no data" instead. Either way: if you see no deploy fields, suspect the missing
+   > flag before you suspect the deploy.)
+5. Post-deploy sanity check:
    ```bash
    sf data query --target-org my-gym -q "SELECT COUNT() FROM Waiver_Record__c" --json
    ```
-5. Comment on the issue with handoff protocol (see section 8).
+6. Comment on the issue with handoff protocol (see section 8).
+
+**Why this matters:** a bare `sf project deploy start` performs **no Apex tests**
+(`numberTestsCompleted: 0`). Without the test level, "deployed successfully" means
+*metadata landed*, not *behavior verified*. The test gate makes `done` mean verified.
 
 ## 8. Handoff Protocol
 
