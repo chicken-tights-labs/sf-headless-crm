@@ -87,6 +87,12 @@ sf org create scratch -f config/project-scratch-def.json -a my-gym -d 7
 # Deploy metadata
 sf project deploy start --target-org my-gym
 
+# Assign the permission set — REQUIRED, and easy to forget.
+# A fresh scratch org's admin has NO permission set assigned. Boxing_Gym_CRM_Access
+# is what grants field-level security on the custom fields, so without this step the
+# metadata deploys fine but every custom field is INVISIBLE to the running user.
+sf org assign permset --target-org my-gym --name Boxing_Gym_CRM_Access
+
 # Push source (faster, for dev only)
 sf project deploy start --source-dir force-app --target-org my-gym
 

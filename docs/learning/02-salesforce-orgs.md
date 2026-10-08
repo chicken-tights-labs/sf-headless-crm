@@ -91,6 +91,11 @@ sf org create scratch --definition-file config/project-scratch-def.json --alias 
 # Deploy into it
 sf project deploy start --target-org practice-scratch
 
+# Grant field access — don't skip this one
+# The deploy puts the metadata in the org, but a brand-new admin user holds no
+# permission set, so field-level security hides every custom field the set grants.
+sf org assign permset --target-org practice-scratch --name Boxing_Gym_CRM_Access
+
 # When done
 sf org delete scratch --target-org practice-scratch --no-prompt
 ```
