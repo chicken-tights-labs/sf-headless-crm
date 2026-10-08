@@ -8,7 +8,7 @@ Issue: #28. Gherkin lives in the issue body. The Obsidian copy is not reachable 
 |---|---|
 | Enforcement point | `EPIC01_BookingWaiverGuard` (before insert on `Booking__c`) calls `EPIC01_BookingWaiver_Handler`. A trigger is used (not a validation rule) because it must query `Waiver_Record__c`, and it must hold for UI, API, data loader and flows alike |
 | Shared rule | `EPIC01_MemberOnboarding_Service.waiverStatusByMember(Set<Id>)` is the one definition of "valid waiver" (bulk-safe). `attemptProceedToPayment` (US-003 payment gate) was refactored to use it, with unchanged messages and results |
-| Rule | Uses each member's **most recent** `Waiver_Record__c`: Signed and not expired = valid. Pending, Revoked, Expired, Draft or none = blocked |
+| Rule | **Any** Signed, non-expired `Waiver_Record__c` makes the member valid. If none is valid, the member is blocked and the message reflects their most recent waiver (Pending, Revoked, Expired, Draft) or "none" |
 | Messages | Exact Gherkin text for missing / expired / pending / revoked. A Draft waiver is reported as "does not have a valid signed waiver" |
 | Tests | `EPIC01_BookingWaiver_Test` (6 Gherkin scenarios + draft + bulk + shared-rule check) |
 | Test data | `EPIC01_TestDataFactory` — use `createMemberWithWaiver(...)` for any test that inserts a `Booking__c` |
@@ -23,6 +23,6 @@ There is intentionally **no bypass** of the rule. Test bookings need a real vali
 
 ## Notes / decisions
 
-- "Most recent waiver wins" matches the existing payment gate. A member with an old valid waiver and a newer Pending one is blocked until the new one is signed. Change `waiverStatusByMember` if you prefer "any valid waiver".
+- Decision (board user): any valid waiver is good. A member with a valid waiver and a newer Pending one (e.g. mid-renewal) can still book and pay. This also applies to the US-003 payment gate because both use `waiverStatusByMember`.
 - Only inserts are guarded (per the issue). Updating an existing booking, or inserting a Cancelled booking, still requires a valid waiver on insert.
 - The payment gate messages still differ from the US-003 Gherkin; that wording is handled in #21.
