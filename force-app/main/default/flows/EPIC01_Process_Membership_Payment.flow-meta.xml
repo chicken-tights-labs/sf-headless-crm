@@ -144,7 +144,7 @@
     <formulas>
         <name>defaultAmount</name>
         <dataType>String</dataType>
-        <expression>IF({!Get_Member.Membership_Tier__c} = "Punch Card (10 classes - $150)", "150.00", IF({!Get_Member.Membership_Tier__c} = "Monthly Unlimited ($129)", "129.00", IF({!Get_Member.Membership_Tier__c} = "Drop-In ($20/class)", "20.00", IF({!Get_Member.Membership_Tier__c} = "Annual Prepaid ($99/mo)", "1188.00", "0.00"))))</expression>
+        <expression>IF(ISPICKVAL({!Get_Member.Membership_Tier__c}, "Punch Card (10 classes - $150)"), "150.00", IF(ISPICKVAL({!Get_Member.Membership_Tier__c}, "Monthly Unlimited ($129)"), "129.00", IF(ISPICKVAL({!Get_Member.Membership_Tier__c}, "Drop-In ($20/class)"), "20.00", IF(ISPICKVAL({!Get_Member.Membership_Tier__c}, "Annual Prepaid ($99/mo)"), "1188.00", "0.00"))))</expression>
     </formulas>
     <interviewLabel>EPIC01 Process Membership Payment {!$Flow.CurrentDateTime}</interviewLabel>
     <label>EPIC01 Process Membership Payment</label>
