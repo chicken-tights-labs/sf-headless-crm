@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Check_Gate</name>
+        <label>Check Payment Gate</label>
+        <locationX>176</locationX>
+        <locationY>458</locationY>
+        <actionName>EPIC01_PaymentGate_Action</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Result_Decision</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Blocked_Screen</targetReference>
+        </faultConnector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>memberId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>EPIC01_PaymentGate_Action</nameSegment>
+        <outputParameters>
+            <assignToReference>canProceed</assignToReference>
+            <name>canProceed</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>gateMessage</assignToReference>
+            <name>message</name>
+        </outputParameters>
+    </actionCalls>
+    <apiVersion>58.0</apiVersion>
+    <choices>
+        <name>Choice_Drop_In</name>
+        <choiceText>Drop-In ($20/class)</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Drop-In ($20/class)</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Choice_Punch_Card</name>
+        <choiceText>Punch Card (10 classes - $150)</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Punch Card (10 classes - $150)</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Choice_Monthly</name>
+        <choiceText>Monthly Unlimited ($129)</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Monthly Unlimited ($129)</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Choice_Annual</name>
+        <choiceText>Annual Prepaid ($99/mo)</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Annual Prepaid ($99/mo)</stringValue>
+        </value>
+    </choices>
+    <decisions>
+        <name>Result_Decision</name>
+        <label>Can Proceed to Payment</label>
+        <locationX>176</locationX>
+        <locationY>566</locationY>
+        <defaultConnector>
+            <targetReference>Blocked_Screen</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Blocked</defaultConnectorLabel>
+        <rules>
+            <name>Gate_Open</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>canProceed</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Success_Screen</targetReference>
+            </connector>
+            <label>Can Proceed</label>
+        </rules>
+    </decisions>
+    <description>EPIC01-US-003: Quick action flow on Member__c. Saves Membership_Tier__c (no dates) and checks the waiver payment gate.</description>
+    <environments>Default</environments>
+    <interviewLabel>EPIC01 Select Membership Tier {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>EPIC01 Select Membership Tier</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <recordLookups>
+        <name>Get_Member</name>
+        <label>Get Member</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Select_Tier_Screen</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Blocked_Screen</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Member__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Update_Tier</name>
+        <label>Update Tier</label>
+        <locationX>176</locationX>
+        <locationY>350</locationY>
+        <connector>
+            <targetReference>Check_Gate</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Blocked_Screen</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Member.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Membership_Tier__c</field>
+            <value>
+                <elementReference>selectedTier</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Member__c</object>
+    </recordUpdates>
+    <screens>
+        <name>Blocked_Screen</name>
+        <label>Waiver Required</label>
+        <locationX>440</locationX>
+        <locationY>674</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>BlockedText</name>
+            <fieldText>&lt;p&gt;&lt;strong&gt;{!gateMessage}&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Sign your waiver before continuing to payment. Open related Waiver Records on this Member, or create a new signed waiver, then run Select Membership Tier again.&lt;/p&gt;&lt;p&gt;{!$Flow.FaultMessage}&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Select_Tier_Screen</name>
+        <label>Select Membership Tier</label>
+        <locationX>176</locationX>
+        <locationY>242</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Update_Tier</targetReference>
+        </connector>
+        <fields>
+            <name>Tier_Intro</name>
+            <fieldText>&lt;p&gt;Choose a membership. Selecting a tier does not start the membership or set start/expiry dates — those are set when payment completes.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Drop-In ($20/class)&lt;/li&gt;&lt;li&gt;Punch Card (10 classes - $150)&lt;/li&gt;&lt;li&gt;Monthly Unlimited ($129)&lt;/li&gt;&lt;li&gt;Annual Prepaid ($99/mo)&lt;/li&gt;&lt;/ul&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>selectedTier</name>
+            <choiceReferences>Choice_Drop_In</choiceReferences>
+            <choiceReferences>Choice_Punch_Card</choiceReferences>
+            <choiceReferences>Choice_Monthly</choiceReferences>
+            <choiceReferences>Choice_Annual</choiceReferences>
+            <dataType>String</dataType>
+            <defaultValue>
+                <elementReference>Get_Member.Membership_Tier__c</elementReference>
+            </defaultValue>
+            <fieldText>Membership Tier</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Success_Screen</name>
+        <label>Ready for Payment</label>
+        <locationX>176</locationX>
+        <locationY>674</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>SuccessText</name>
+            <fieldText>&lt;p&gt;Tier saved: &lt;strong&gt;{!selectedTier}&lt;/strong&gt;. Dates are still empty until payment.&lt;/p&gt;&lt;p&gt;{!gateMessage}&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Member</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>canProceed</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>gateMessage</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>recordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

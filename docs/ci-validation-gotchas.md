@@ -30,6 +30,8 @@ Known issues we have hit:
 |---|---|---|
 | `Property 'versionString' not valid in version 58.0` | `<versionString>` inside a Flow `actionCalls` element | Remove it |
 | QuickAction `Required fields are missing: [Component]` (type Flow) | Seen alongside the flow errors above; may be a knock-on of the flow failing, not confirmed | Re-check after the flows deploy; if it persists, fix the QuickAction XML shape |
+| `'GreaterThanOrEqual' is not a valid value for enum 'FlowRecordFilterOperator'` | Record-triggered start filters use `GreaterThanOrEqualTo`, not `GreaterThanOrEqual`. Date `>=` is safer as a Flow formula + Decision (PRs #43/#44) | Use `EqualTo`/`IsNull` in start filters; put date logic in a formula |
+| `Picklist fields are only supported in certain functions` in a Flow formula | `{!Get_Record.Picklist__c} = "Value"` is invalid | Use `ISPICKVAL({!Get_Record.Picklist__c}, "Value")` |
 
 Before pushing Flow, QuickAction, validation-rule or layout XML, run a check-only deploy of just those files against a confirmed org (see `docs/environment.md`), for example:
 

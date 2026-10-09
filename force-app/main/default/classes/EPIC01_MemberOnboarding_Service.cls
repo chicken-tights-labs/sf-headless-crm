@@ -26,6 +26,14 @@ public with sharing class EPIC01_MemberOnboarding_Service {
     public static final String MSG_UNCONVERT_PROSPECT_ONLY = 'Only Prospect members can be unconverted';
     public static final String MSG_UNCONVERT_PERMISSION    = 'Only a System Administrator can unconvert a Member';
 
+    public static final String MSG_WAIVER_MISSING = 'Please sign your waiver first';
+    public static final String MSG_WAIVER_PENDING =
+        'Your waiver is pending signature. Please complete it before continuing.';
+    public static final String MSG_WAIVER_REVOKED = 'Waiver has been revoked';
+    public static final String MSG_WAIVER_VALID = 'Your waiver is valid. You can proceed to payment.';
+    public static final String MSG_WAIVER_CONFIRMED =
+        'Your waiver is confirmed! You can now proceed to payment.';
+
     public class PaymentGateResult {
         @TestVisible public Boolean canProceed;
         @TestVisible public String   errorMessage;
@@ -237,18 +245,61 @@ public with sharing class EPIC01_MemberOnboarding_Service {
             return new PaymentGateResult(true, null, 'Signed');
         }
         if (status == 'Missing') {
-            return new PaymentGateResult(false, 'Please sign your waiver first', 'Missing');
+            return new PaymentGateResult(false, MSG_WAIVER_MISSING, 'Missing');
         }
         if (status == 'Pending') {
-            return new PaymentGateResult(false, 'Waiver pending signature', 'Pending');
+            return new PaymentGateResult(false, MSG_WAIVER_PENDING, 'Pending');
         }
         if (status == 'Revoked') {
-            return new PaymentGateResult(false, 'Waiver has been revoked', 'Revoked');
+            return new PaymentGateResult(false, MSG_WAIVER_REVOKED, 'Revoked');
         }
         if (status == 'Expired') {
-            return new PaymentGateResult(false, 'Your waiver has expired', 'Expired');
+            return new PaymentGateResult(false, expiredWaiverMessage(latestSignedExpiration(memberId)), 'Expired');
         }
         return new PaymentGateResult(false, 'Unable to determine waiver status', 'Unknown');
+    }
+
+    public static String expiredWaiverMessage(Date expiration) {
+        if (expiration == null) {
+            return 'Your waiver has expired. Please re-sign your waiver before continuing.';
+        }
+        return 'Your waiver has expired on ' + String.valueOf(expiration)
+            + '. Please re-sign your waiver before continuing.';
+    }
+
+    private static Date latestSignedExpiration(Id memberId) {
+        List<Waiver_Record__c> waivers = [
+            SELECT Expiration_Date__c FROM Waiver_Record__c
+            WHERE Member__c = :memberId AND Status__c = 'Signed'
+            ORDER BY Expiration_Date__c DESC NULLS LAST
+            LIMIT 1
+        ];
+        return waivers.isEmpty() ? null : waivers[0].Expiration_Date__c;
+    }
+
+    /**
+     * Emails a Prospect that their waiver is signed and payment is unblocked.
+     * Called from the US-003 record-triggered Flow. Send failures must not
+     * roll back the confirmation Task the Flow already created.
+     */
+    public static void notifyWaiverConfirmed(Id memberId) {
+        List<Member__c> members = [
+            SELECT Id, First_Name__c, Email__c FROM Member__c WHERE Id = :memberId
+        ];
+        if (members.isEmpty() || String.isBlank(members[0].Email__c)) {
+            return;
+        }
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        mail.setToAddresses(new List<String>{ members[0].Email__c });
+        mail.setSubject(MSG_WAIVER_CONFIRMED);
+        mail.setPlainTextBody(
+            'Hi ' + members[0].First_Name__c + ',\n\n' + MSG_WAIVER_CONFIRMED + '\n'
+        );
+        try {
+            Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{ mail });
+        } catch (Exception e) {
+            System.debug(LoggingLevel.WARN, 'Waiver confirmation email not sent: ' + e.getMessage());
+        }
     }
 
     /**
