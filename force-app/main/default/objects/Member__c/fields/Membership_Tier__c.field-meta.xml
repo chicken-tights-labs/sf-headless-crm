@@ -8,6 +8,8 @@
     <valueSetDefinition>
       <value>
         <fullName>Membership_Tier__c</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
         <label>Membership_Tier__c</label>
       </value>
       <value>

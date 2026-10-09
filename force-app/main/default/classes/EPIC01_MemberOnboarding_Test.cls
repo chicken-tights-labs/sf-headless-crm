@@ -153,6 +153,15 @@ private class EPIC01_MemberOnboarding_Test {
               AND WhatId = :newMember.Id
         ];
         System.assertEquals(0, waiverTasks.size(), 'No waiver task should be created when waiver is transferred');
+
+        EPIC01_MemberOnboarding_Service.PaymentGateResult gate =
+            EPIC01_MemberOnboarding_Service.attemptProceedToPayment(newMember.Id);
+        System.assertEquals(true, gate.canProceed, 'Trial-class waiver should open the payment gate');
+        System.assertEquals(1, [
+            SELECT COUNT() FROM Task
+            WHERE WhatId = :newMember.Id
+              AND Subject = :EPIC01_MemberOnboarding_Service.MSG_WAIVER_CONFIRMED
+        ], 'Signing/transfer should notify that payment is unblocked');
     }
 
     @isTest
@@ -230,7 +239,7 @@ private class EPIC01_MemberOnboarding_Test {
             EPIC01_MemberOnboarding_Service.attemptProceedToPayment(member.Id);
 
         System.assertEquals(false, result.canProceed, 'Member without waiver cannot proceed');
-        System.assert(result.errorMessage.contains('waiver'), 'Error should mention waiver');
+        System.assertEquals(EPIC01_MemberOnboarding_Service.MSG_WAIVER_MISSING, result.errorMessage);
     }
 
     @isTest
@@ -320,7 +329,10 @@ private class EPIC01_MemberOnboarding_Test {
             EPIC01_MemberOnboarding_Service.attemptProceedToPayment(member.Id);
 
         System.assertEquals(false, result.canProceed, 'Member with expired waiver cannot proceed');
-        System.assert(result.errorMessage.contains('expired'), 'Error should mention expiration');
+        System.assertEquals(
+            EPIC01_MemberOnboarding_Service.expiredWaiverMessage(Date.today().addDays(-1)),
+            result.errorMessage
+        );
     }
 
     @isTest
@@ -362,7 +374,7 @@ private class EPIC01_MemberOnboarding_Test {
             EPIC01_MemberOnboarding_Service.attemptProceedToPayment(member.Id);
 
         System.assertEquals(false, result.canProceed, 'Member with pending waiver cannot proceed');
-        System.assert(result.errorMessage.contains('pending'), 'Error should mention pending status');
+        System.assertEquals(EPIC01_MemberOnboarding_Service.MSG_WAIVER_PENDING, result.errorMessage);
     }
 
     @isTest
