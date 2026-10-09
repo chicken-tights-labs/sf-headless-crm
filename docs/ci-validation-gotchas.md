@@ -47,6 +47,7 @@ When a test fails after metadata deploys, check these first:
 
 - **Restricted picklists.** `Lead_Source__c`, `Lead_Status__c`, `Program_Interest__c`, `Member__c.Lead_Source__c` etc. are restricted. Inserting a value that is not in the picklist fails the whole test. When Lead data is copied to Member, the Member picklist must contain every Lead value (this bit US-002).
 - **Required fields.** `Lead__c.Name`, `Lead__c.First_Name__c`, `Lead__c.Franchise_Location__c`, `Lead__c.Lead_Status__c`, `Member__c.Name`, and `Waiver_Record__c.Status__c` are required. Franchise Location needs a Franchise Owner first.
+- **Number defaults.** `Member__c.Classes_Remaining__c` has `<defaultValue>0</defaultValue>`. Asserting `null` after insert/pay fails with `Expected: null, Actual: 0` (PR #44 drop-in test). Treat 0 as unset.
 - **Duplicate email trigger** (`EPIC01_LeadDuplicateGuard`). Two `Lead__c` rows with the same email (case-insensitive) in one test fail. Use unique emails per lead in a test method. Data created in `@testSetup` counts.
 - **Phone validation rule** (`Valid_Phone_Format`). `Lead__c.Phone__c` must be 10 digits after stripping `-`, spaces, parentheses, dots and a leading `+1`. Test data like `555-1234` fails.
 - **Automation side effects.** Inserting a Signed `Waiver_Record__c` linked to a Lead flips that Lead to `Trial Completed` (flow `EPIC01_Waiver_Marks_Lead_Trial_Completed`). Setting `Referral_Code_Entered__c` on a new Lead runs the referral flow and may overwrite `Notes__c` / `Lead_Source__c`.

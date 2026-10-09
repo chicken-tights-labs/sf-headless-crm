@@ -9,7 +9,7 @@ Issue: #22. Kanban: `t-fb4958ca7608`. Gherkin lives in the issue body. The Obsid
 | Take payment | `EPIC01_MemberOnboarding_Service.processPayment` (simulated processor; `simulatePaymentFailure` for card declines). Cash never declines. |
 | Staff UI | Quick action `Member__c.Process_Membership_Payment` → screen flow `EPIC01_Process_Membership_Payment` → `EPIC01_ProcessPayment_Action` |
 | Gate | Payment refuses without a selected tier and a valid signed waiver (US-003). No Payment_Transaction is created on a gate miss. |
-| Dates / classes | Drop-In: Active, no dates, no classes. Punch Card: start today, expiry +180, `Classes_Remaining__c = 10`. Monthly: start today, expiry +30, `Is_Recurring__c`. Annual: start today, expiry +365. |
+| Dates / classes | Drop-In: Active, no dates, `Classes_Remaining__c` stays at the field default `0`. Punch Card: start today, expiry +180, `Classes_Remaining__c = 10`. Monthly: start today, expiry +30, `Is_Recurring__c`. Annual: start today, expiry +365. |
 | Recurring stand-in | Task due in 30 days: `Process recurring payment for {First Last}` (not a Stripe subscription). |
 | Receipt | Plain-text email with tier, amount, payment date, expiry. Welcome email still fires via US-005 activation. |
 | Card decline | Failed txn, member stays Prospect, Task `Retry payment for {First Last}` |

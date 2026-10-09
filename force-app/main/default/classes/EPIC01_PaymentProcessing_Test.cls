@@ -45,7 +45,7 @@ private class EPIC01_PaymentProcessing_Test {
         System.assertEquals('Active', check.Status__c);
         System.assertEquals(null, check.Start_Date__c);
         System.assertEquals(null, check.Expiry_Date__c);
-        System.assertEquals(null, check.Classes_Remaining__c);
+        System.assertEquals(0, check.Classes_Remaining__c, 'Drop-in uses field default 0, not a class pack');
         System.assert(EPIC01_MemberOnboarding_Service.receiptBodiesForTest[0].contains('Drop-In'));
         System.assert(EPIC01_MemberOnboarding_Service.receiptBodiesForTest[0].contains('$20.00'));
     }
