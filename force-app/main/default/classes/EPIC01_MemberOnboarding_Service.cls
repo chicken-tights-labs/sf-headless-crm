@@ -17,6 +17,7 @@ public with sharing class EPIC01_MemberOnboarding_Service {
     // =====================================================
 
     public class ConversionException extends Exception {}
+    public class PaymentException extends Exception {}
 
     public static final String MSG_MEMBER_EXISTS      = 'Member already exists for this lead — view existing Member record';
     public static final String MSG_ALREADY_CONVERTED  = 'Lead already converted to Member — view linked Member record';
@@ -33,6 +34,13 @@ public with sharing class EPIC01_MemberOnboarding_Service {
     public static final String MSG_WAIVER_VALID = 'Your waiver is valid. You can proceed to payment.';
     public static final String MSG_WAIVER_CONFIRMED =
         'Your waiver is confirmed! You can now proceed to payment.';
+    public static final String MSG_NO_TIER = 'Select a membership tier first';
+    public static final String MSG_PAYMENT_OK = 'Payment completed';
+    public static final String MSG_PAYMENT_FAILED = 'Payment failed. A retry task was created.';
+    public static final String TIER_MONTHLY = 'Monthly Unlimited ($129)';
+    public static final String TIER_ANNUAL = 'Annual Prepaid ($99/mo)';
+    public static final String TIER_DROPIN = 'Drop-In ($20/class)';
+    public static final String TIER_PUNCH = 'Punch Card (10 classes - $150)';
 
     public class PaymentGateResult {
         @TestVisible public Boolean canProceed;
@@ -376,7 +384,6 @@ public with sharing class EPIC01_MemberOnboarding_Service {
      * Returns true if payment succeeded, false if failed.
      */
     public static Boolean processPayment(Id memberId, String amount, String paymentMethod) {
-        // 1. Query Member__c
         Member__c member = [
             SELECT Id, Name, First_Name__c, Last_Name__c, Email__c,
                    Home_Location__c, Membership_Tier__c, Referred_By__c,
@@ -384,15 +391,20 @@ public with sharing class EPIC01_MemberOnboarding_Service {
             FROM Member__c WHERE Id = :memberId
         ];
 
-        // 2. Call payment processor (Stripe) — simulated for test context
-        //    In production, this would be an HTTP callout to Stripe's API
-        //    For testing: simulate failure when test method name contains 'PaymentFails'
-        Boolean simulateFailure = simulatePaymentFailure;
+        if (String.isBlank(member.Membership_Tier__c)) {
+            throw new PaymentException(MSG_NO_TIER);
+        }
+        PaymentGateResult gate = attemptProceedToPayment(memberId);
+        if (!gate.canProceed) {
+            throw new PaymentException(gate.errorMessage);
+        }
 
-        if (simulateFailure) {
-            // 4. On failure:
-            //    a. Create Payment_Transaction__c with Status='Failed'
-            Payment_Transaction__c failedTxn = new Payment_Transaction__c(
+        String displayName = member.First_Name__c + ' ' + member.Last_Name__c;
+        Boolean cardPath = paymentMethod == 'Credit Card' || paymentMethod == 'Debit Card';
+
+        // Simulated processor (no Stripe). Cash / in-person paths never decline.
+        if (simulatePaymentFailure && cardPath) {
+            insert new Payment_Transaction__c(
                 Member__c             = memberId,
                 Amount__c             = Decimal.valueOf(amount),
                 Payment_Type__c       = mapTierToPaymentType(member.Membership_Tier__c),
@@ -400,52 +412,20 @@ public with sharing class EPIC01_MemberOnboarding_Service {
                 Status__c             = 'Failed',
                 Franchise_Location__c = member.Home_Location__c
             );
-            insert failedTxn;
-
-            //    b. Create task "Retry payment for [Member Name]"
-            Task retryTask = new Task(
+            insert new Task(
                 WhatId   = memberId,
-                Subject  = 'Retry payment for ' + member.Name,
+                Subject  = 'Retry payment for ' + displayName,
                 Status   = 'Not Started',
                 Priority = 'High'
             );
-            insert retryTask;
-
             return false;
         }
 
-        // 3. On success:
-        //    a. Set Status__c = 'Active'
         member.Status__c = 'Active';
-
-        //    b. Set Start_Date__c = TODAY
-        member.Start_Date__c = Date.today();
-
-        //    c. Set Expiry_Date__c based on tier
-        if (member.Membership_Tier__c == 'Monthly Unlimited ($129)') {
-            member.Expiry_Date__c = Date.today().addDays(30);
-        } else if (member.Membership_Tier__c == 'Annual Prepaid ($99/mo)') {
-            member.Expiry_Date__c = Date.today().addDays(365);
-        } else if (member.Membership_Tier__c == 'Drop-In ($20/class)') {
-            member.Start_Date__c = null;    // No start date for pay-per-class
-            member.Expiry_Date__c = null;  // No expiry for drop-in
-        } else if (member.Membership_Tier__c == 'Punch Card (10 classes - $150)') {
-            member.Expiry_Date__c = Date.today().addDays(180);
-        }
-
-        //    d. Set Classes_Remaining__c based on tier
-        if (member.Membership_Tier__c == 'Punch Card (10 classes - $150)') {
-            member.Classes_Remaining__c = 10;
-        }
-
-        //    e. Set Is_Recurring__c = true for recurring tiers
-        //    f. If Referred_By__c is set → trigger referral reward (US-006)
-        //    g. Trigger welcome email + orientation task (US-005)
-        //    h. Create Payment_Transaction__c (Amount, Method, Status='Completed')
-
+        applyTierDatesAndClasses(member);
         update member;
 
-        //    h. Create Payment_Transaction__c
+        Boolean recurring = member.Membership_Tier__c == TIER_MONTHLY;
         Payment_Transaction__c txn = new Payment_Transaction__c(
             Member__c             = memberId,
             Amount__c             = Decimal.valueOf(amount),
@@ -453,32 +433,81 @@ public with sharing class EPIC01_MemberOnboarding_Service {
             Transaction_Method__c = paymentMethod,
             Status__c             = 'Completed',
             Franchise_Location__c = member.Home_Location__c,
-            Is_Recurring__c       = (member.Membership_Tier__c == 'Monthly Unlimited ($129)')
+            Is_Recurring__c       = recurring
         );
         insert txn;
 
-        //    f. If Referred_By__c is set → trigger referral reward (US-006)
+        if (recurring) {
+            insert new Task(
+                WhatId       = memberId,
+                Subject      = 'Process recurring payment for ' + displayName,
+                Status       = 'Not Started',
+                Priority     = 'Normal',
+                ActivityDate = Date.today().addDays(30)
+            );
+        }
+
         if (member.Referred_By__c != null) {
             awardReferralReward(member.Referred_By__c, memberId);
         }
-
-        //    g. Trigger welcome email + orientation task (US-005)
+        sendPaymentReceipt(member, amount, txn);
         sendWelcomeEmail(memberId);
-
         return true;
+    }
+
+    private static void applyTierDatesAndClasses(Member__c member) {
+        if (member.Membership_Tier__c == TIER_DROPIN) {
+            member.Start_Date__c = null;
+            member.Expiry_Date__c = null;
+            return;
+        }
+        member.Start_Date__c = Date.today();
+        if (member.Membership_Tier__c == TIER_MONTHLY) {
+            member.Expiry_Date__c = Date.today().addDays(30);
+        } else if (member.Membership_Tier__c == TIER_ANNUAL) {
+            member.Expiry_Date__c = Date.today().addDays(365);
+        } else if (member.Membership_Tier__c == TIER_PUNCH) {
+            member.Expiry_Date__c = Date.today().addDays(180);
+            member.Classes_Remaining__c = 10;
+        }
+    }
+
+    @TestVisible private static List<String> receiptBodiesForTest = new List<String>();
+
+    private static void sendPaymentReceipt(Member__c member, String amount, Payment_Transaction__c txn) {
+        if (String.isBlank(member.Email__c)) {
+            return;
+        }
+        String expiry = member.Expiry_Date__c == null ? 'n/a (pay-per-class)' : String.valueOf(member.Expiry_Date__c);
+        String body = 'Hi ' + member.First_Name__c + ',\n\n'
+            + 'Payment receipt for Boxing Fitness Gym\n'
+            + 'Tier: ' + member.Membership_Tier__c + '\n'
+            + 'Amount: $' + amount + '\n'
+            + 'Payment date: ' + String.valueOf(Date.today()) + '\n'
+            + 'Expiry date: ' + expiry + '\n';
+        receiptBodiesForTest.add(body);
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        mail.setToAddresses(new List<String>{ member.Email__c });
+        mail.setSubject('Payment receipt — Boxing Fitness Gym');
+        mail.setPlainTextBody(body);
+        try {
+            Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{ mail });
+        } catch (Exception e) {
+            System.debug(LoggingLevel.WARN, 'Payment receipt not sent: ' + e.getMessage());
+        }
     }
 
     /**
      * Maps a Membership_Tier__c value to the corresponding Payment_Type__c picklist value.
      */
     private static String mapTierToPaymentType(String tier) {
-        if (tier == 'Monthly Unlimited ($129)') {
+        if (tier == TIER_MONTHLY) {
             return 'Monthly Fee';
-        } else if (tier == 'Annual Prepaid ($99/mo)') {
+        } else if (tier == TIER_ANNUAL) {
             return 'Annual Prepayment';
-        } else if (tier == 'Drop-In ($20/class)') {
+        } else if (tier == TIER_DROPIN) {
             return 'Drop-In Fee';
-        } else if (tier == 'Punch Card (10 classes - $150)') {
+        } else if (tier == TIER_PUNCH) {
             return 'Punch Card Top-Up';
         }
         return 'Other';

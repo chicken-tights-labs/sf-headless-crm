@@ -105,6 +105,33 @@ private class EPIC01_BookingWaiver_Test {
     }
 
     @isTest
+    static void prospectWithWaiverCannotBook() {
+        Member__c m = new Member__c(
+            Name = 'Jordan_Prospect', First_Name__c = 'Jordan', Last_Name__c = 'Prospect',
+            Email__c = 'jordan.prospect@email.com', Home_Location__c = loc().Id,
+            Status__c = 'Prospect', Membership_Tier__c = 'Punch Card (10 classes - $150)'
+        );
+        insert m;
+        EPIC01_TestDataFactory.createValidWaiver(m.Id, loc().Id, tmpl().Id);
+        System.assertEquals(
+            EPIC01_BookingWaiver_Handler.MSG_NOT_ACTIVE,
+            bookingError(m)
+        );
+    }
+
+    @isTest
+    static void punchCardBookingDecrementsClassesRemaining() {
+        Member__c m = EPIC01_TestDataFactory.createMemberWithWaiver('Maya', 'Pack', loc().Id, tmpl().Id);
+        m.Membership_Tier__c = EPIC01_MemberOnboarding_Service.TIER_PUNCH;
+        m.Classes_Remaining__c = 8;
+        update m;
+        insert EPIC01_TestDataFactory.newBooking(m.Id, session().Id, loc().Id);
+        System.assertEquals(7, [
+            SELECT Classes_Remaining__c FROM Member__c WHERE Id = :m.Id
+        ].Classes_Remaining__c);
+    }
+
+    @isTest
     static void sharedStatusMatchesPaymentGate() {
         Member__c m = EPIC01_TestDataFactory.createMember('Pat', 'Gate', loc().Id);
         System.assertEquals('Missing', EPIC01_MemberOnboarding_Service.waiverStatusByMember(new Set<Id>{ m.Id }).get(m.Id));

@@ -494,8 +494,8 @@ private class EPIC01_MemberOnboarding_Test {
         ];
 
         System.assertEquals('Active', check.Status__c, 'Status should be Active after payment');
-        System.assertNotEquals(null, check.Start_Date__c, 'Start date should be set');
-        System.assertNotEquals(null, check.Expiry_Date__c, 'Expiry date should be set');
+        System.assertEquals(Date.today(), check.Start_Date__c, 'Start date should be set');
+        System.assertEquals(Date.today().addDays(180), check.Expiry_Date__c, 'Punch card expires in 180 days');
         System.assertEquals(10, check.Classes_Remaining__c, '10-class pack should start with 10 classes remaining');
 
         // Verify payment transaction created
@@ -527,6 +527,13 @@ private class EPIC01_MemberOnboarding_Test {
             Membership_Tier__c = 'Monthly Unlimited ($129)'
         );
         insert member;
+        Waiver_Template__c tmpl = [SELECT Id FROM Waiver_Template__c LIMIT 1];
+        insert new Waiver_Record__c(
+            Name = 'WR-Avery-Johnson', Franchise_Location__c = loc.Id, Waiver_Template__c = tmpl.Id,
+            Member__c = member.Id, Status__c = 'Signed', Expiration_Date__c = Date.today().addDays(365),
+            Signature_Timestamp__c = DateTime.now(), Signature_Method__c = 'Digital In-Person',
+            Signer_Email__c = 'avery.j@email.com', Signer_Role__c = 'Participant'
+        );
 
         // Simulate failed payment (mock)
         EPIC01_MemberOnboarding_Service.simulatePaymentFailure = true;
@@ -542,6 +549,11 @@ private class EPIC01_MemberOnboarding_Test {
             FROM Member__c WHERE Id = :member.Id
         ];
         System.assertEquals('Prospect', check.Status__c, 'Member should stay Prospect on failure');
+
+        System.assertEquals(1, [
+            SELECT COUNT() FROM Task
+            WHERE WhatId = :member.Id AND Subject = 'Retry payment for Avery Johnson'
+        ]);
 
         List<Payment_Transaction__c> txns = [
             SELECT Status__c FROM Payment_Transaction__c

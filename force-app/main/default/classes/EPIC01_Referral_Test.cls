@@ -2,10 +2,12 @@
 private class EPIC01_Referral_Test {
 
     private static Franchise_Location__c loc;
+    private static Waiver_Template__c tmpl;
     private static Member__c referrer;
 
     private static void setup() {
         loc = EPIC01_TestDataFactory.createLocation('Referral HQ');
+        tmpl = EPIC01_TestDataFactory.createWaiverTemplate();
         referrer = EPIC01_TestDataFactory.createMember('Sam', 'Okafor', loc.Id);
         referrer.Referral_Code__c = 'SAMAB234';
         referrer.Referral_Attempts__c = 0;
@@ -26,6 +28,11 @@ private class EPIC01_Referral_Test {
     private static Member__c reload(Id id) {
         return [SELECT Referral_Code__c, Referral_Attempts__c, Classes_Remaining__c, Account_Credit__c, Status__c
                 FROM Member__c WHERE Id = :id];
+    }
+
+    private static Boolean pay(Id memberId, String amount) {
+        EPIC01_TestDataFactory.createValidWaiver(memberId, loc.Id, tmpl.Id);
+        return EPIC01_MemberOnboarding_Service.processPayment(memberId, amount, 'Credit Card');
     }
 
     @isTest
@@ -138,7 +145,7 @@ private class EPIC01_Referral_Test {
         System.assertEquals(member.Id, r.Referred_Member__c);
 
         update new Member__c(Id = member.Id, Membership_Tier__c = 'Punch Card (10 classes - $150)');
-        System.assertEquals(true, EPIC01_MemberOnboarding_Service.processPayment(member.Id, '75.00', 'Credit Card'));
+        System.assertEquals(true, pay(member.Id, '75.00'));
 
         r = [SELECT Status__c, Reward_Type__c, Date_Claimed__c FROM Referral_Reward__c WHERE Referred_Lead__c = :l.Id];
         System.assertEquals('Reward Claimed', r.Status__c);
@@ -163,7 +170,7 @@ private class EPIC01_Referral_Test {
         insert l;
         Member__c member = EPIC01_MemberOnboarding_Service.convertLeadToMember(l.Id);
         update new Member__c(Id = member.Id, Membership_Tier__c = 'Punch Card (10 classes - $150)');
-        EPIC01_MemberOnboarding_Service.processPayment(member.Id, '75.00', 'Credit Card');
+        pay(member.Id, '75.00');
         Member__c r = reload(referrer.Id);
         System.assertEquals(10, r.Account_Credit__c);
         System.assertEquals(4, r.Classes_Remaining__c);
@@ -181,7 +188,7 @@ private class EPIC01_Referral_Test {
         update referrer;
 
         update new Member__c(Id = member.Id, Membership_Tier__c = 'Punch Card (10 classes - $150)');
-        EPIC01_MemberOnboarding_Service.processPayment(member.Id, '75.00', 'Credit Card');
+        pay(member.Id, '75.00');
 
         System.assertEquals('Cancelled', [SELECT Status__c FROM Referral_Reward__c].Status__c);
         System.assertEquals(3, reload(referrer.Id).Classes_Remaining__c, 'no reward for a cancelled referrer');

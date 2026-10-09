@@ -8,6 +8,8 @@
     <valueSetDefinition>
       <value>
         <fullName>Transaction_Method__c</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
         <label>Transaction_Method__c</label>
       </value>
       <value>

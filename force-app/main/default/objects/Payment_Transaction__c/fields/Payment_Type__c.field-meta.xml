@@ -8,6 +8,8 @@
     <valueSetDefinition>
       <value>
         <fullName>Payment_Type__c</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
         <label>Payment_Type__c</label>
       </value>
       <value>
