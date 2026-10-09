@@ -4,7 +4,7 @@
         <name>Send_Confirmation_Email</name>
         <label>Send Confirmation Email</label>
         <locationX>176</locationX>
-        <locationY>458</locationY>
+        <locationY>566</locationY>
         <actionName>EPIC01_WaiverConfirmed_Action</actionName>
         <actionType>apex</actionType>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
@@ -18,10 +18,32 @@
     </actionCalls>
     <apiVersion>58.0</apiVersion>
     <decisions>
+        <name>Waiver_Still_Valid</name>
+        <label>Waiver Still Valid</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <defaultConnectorLabel>Expired</defaultConnectorLabel>
+        <rules>
+            <name>Not_Expired</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>WaiverNotExpired</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Member</targetReference>
+            </connector>
+            <label>Not Expired</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>Is_Prospect</name>
         <label>Member is Prospect</label>
         <locationX>176</locationX>
-        <locationY>242</locationY>
+        <locationY>350</locationY>
         <defaultConnectorLabel>Not Prospect</defaultConnectorLabel>
         <rules>
             <name>Prospect_Member</name>
@@ -41,6 +63,11 @@
     </decisions>
     <description>EPIC01-US-003: When a valid signed Waiver_Record__c is linked to a Prospect Member, create a confirmation Task and email so they can proceed to payment.</description>
     <environments>Default</environments>
+    <formulas>
+        <name>WaiverNotExpired</name>
+        <dataType>Boolean</dataType>
+        <expression>OR(ISBLANK({!$Record.Expiration_Date__c}), {!$Record.Expiration_Date__c} &gt;= {!$Flow.CurrentDate})</expression>
+    </formulas>
     <interviewLabel>EPIC01 Waiver Confirmed Notify {!$Flow.CurrentDateTime}</interviewLabel>
     <label>EPIC01 Waiver Confirmed Notify</label>
     <processMetadataValues>
@@ -54,7 +81,7 @@
         <name>Create_Confirmation_Task</name>
         <label>Create Confirmation Task</label>
         <locationX>176</locationX>
-        <locationY>350</locationY>
+        <locationY>458</locationY>
         <connector>
             <targetReference>Send_Confirmation_Email</targetReference>
         </connector>
@@ -89,7 +116,7 @@
         <name>Get_Member</name>
         <label>Get Member</label>
         <locationX>176</locationX>
-        <locationY>134</locationY>
+        <locationY>242</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Is_Prospect</targetReference>
@@ -110,10 +137,10 @@
         <locationX>50</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Get_Member</targetReference>
+            <targetReference>Waiver_Still_Valid</targetReference>
         </connector>
         <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
-        <filterLogic>1 AND 2 AND (3 OR 4)</filterLogic>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Member__c</field>
             <operator>IsNull</operator>
@@ -126,20 +153,6 @@
             <operator>EqualTo</operator>
             <value>
                 <stringValue>Signed</stringValue>
-            </value>
-        </filters>
-        <filters>
-            <field>Expiration_Date__c</field>
-            <operator>IsNull</operator>
-            <value>
-                <booleanValue>true</booleanValue>
-            </value>
-        </filters>
-        <filters>
-            <field>Expiration_Date__c</field>
-            <operator>GreaterThanOrEqual</operator>
-            <value>
-                <elementReference>$Flow.CurrentDate</elementReference>
             </value>
         </filters>
         <object>Waiver_Record__c</object>
