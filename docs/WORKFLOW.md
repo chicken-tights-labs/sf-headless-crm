@@ -151,7 +151,34 @@ When Hermes finishes or fixes work, add a comment on the GitHub issue covering:
 - **GitHub `main` is the only finished copy**: Code deployed to a scratch org but not merged is not "done."
 - **Terminal lane**: Tasks assigned to `@platform:cursor` are Cursor's terminal lane — Hermes will NOT auto-spawn workers for them.
 
-## 11. Where This Doc Lives
+## 11. Documentation Drafts (EPIC-11)
+
+EPIC-11 user guides stay **Draft** until the org is finished. A first pass is a **source-verified draft**, not a finished manual.
+
+**Canonical file is the repo file.** Obsidian `CRM-Documentation/` is a copy, synced from the repo when that vault is available. Do not let the two copies evolve separately.
+
+### Story → File Map
+
+| Story | Issue | Canonical file |
+|---|---|---|
+| US-D001 End user manual | #37 | `docs/EPIC-11_D001_End_User_Manual.md` |
+| US-D002 Manager guide | #38 | `docs/EPIC-11_D002_Manager_Guide.md` |
+| US-D003 Franchise owner guide | #39 | `docs/EPIC-11_D003_Franchise_Owner_Guide.md` |
+| US-D004 System admin guide | #40 | `docs/EPIC-11_D004_System_Admin_Guide.md` |
+| US-D005 API docs | #41 | `docs/EPIC-11_D005_API_Documentation.md` |
+| US-D006 Troubleshooting + FAQ | #42 | `docs/EPIC-11_D006_Troubleshooting_FAQ.md` |
+
+These issues are `@platform:cursor`. Do not implement them. Maria is drafting US-D004 on `feat/EPIC11-USD004-system-admin-guide`. Do not open a competing guide.
+
+### Rules
+
+1. **Every guide starts with:** `Status: Draft`. `Last verified:` date and the `main` SHA the facts were checked against. `Checked from:` source in `force-app`, or a named org. `Still open:` the short list that is not true yet.
+2. **Mark each section** as verified from source, not built, or needs an org click-through. Write only what is in `force-app` or what you confirmed in the org. A "not built" note is the right content for the rest. Do not describe screens that do not exist.
+3. **A draft PR says `Relates to #N`.** Do not use `Closes #N`. Leave the GitHub issue open and do not move the kanban card to done. Close the issue only when its own How to Verify is true, including a live org check and screenshots where the issue requires them.
+4. **When your PR changes behavior a guide describes,** update that guide in the same PR if the file already exists. Set `Last verified` to the new `main` SHA. Diff only since the previous `Last verified` SHA, and edit the sections that diff touches. If the file does not exist yet, write "docs not drafted yet" under Docs Updated and leave the Cursor story open.
+5. **Update map:** permission set, profiles, sharing, users → US-D004. Staff quick actions and record pages → US-D001. Reports or the management dashboard → US-D002. Royalty or franchise dashboards → US-D003. REST or auth → US-D005. A real failure you had to diagnose → US-D006.
+
+## 12. Where This Doc Lives
 
 - Repo path: `docs/WORKFLOW.md` on `main`
 - `.cursorrules` points here (3-line pointer)

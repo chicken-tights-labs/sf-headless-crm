@@ -1,6 +1,6 @@
-## Closes
+## Issue Reference
 
-<!-- Issue number: Closes #N -->
+<!-- Implementation PRs: Closes #N. EPIC-11 draft PRs: Relates to #N. -->
 
 ## Kanban ID
 
