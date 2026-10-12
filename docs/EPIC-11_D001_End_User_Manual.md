@@ -15,7 +15,7 @@ Admin setup (users, the permission set, locations, waiver templates, tier values
 
 ## Where staff work
 
-**Verified from source.** The Lightning app is **Boxing Gym CRM**. Front-desk steps below use that app. There is no trainer mobile app in source. Architecture notes say trainers are meant to use a thin client without a Salesforce license. That client is not in this repo, so none of the trainer steps can be written yet.
+**Verified from source.** The Lightning app is **Boxing Gym CRM**. Front-desk steps below use that app. There is no trainer mobile app in source. Trainers will work in the Boxing Gym CRM app on a Salesforce Platform license ([licensing decision](licensing-and-architecture.md)). Those trainer screens are not built yet, so none of the trainer steps can be written yet.
 
 ## Trainer workflows
 
