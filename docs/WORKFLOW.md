@@ -178,7 +178,11 @@ These issues are `@platform:cursor`. Do not implement them. Maria is drafting US
 4. **When your PR changes behavior a guide describes,** update that guide in the same PR if the file already exists. Set `Last verified` to the new `main` SHA. Diff only since the previous `Last verified` SHA, and edit the sections that diff touches. If the file does not exist yet, write "docs not drafted yet" under Docs Updated and leave the Cursor story open.
 5. **Update map:** permission set, profiles, sharing, users → US-D004. Staff quick actions and record pages → US-D001. Reports or the management dashboard → US-D002. Royalty or franchise dashboards → US-D003. REST or auth → US-D005. A real failure you had to diagnose → US-D006.
 
-## 12. Where This Doc Lives
+## 12. Story Order
+
+The expected merge order for open EPIC-03, EPIC-04, and EPIC-11 stories, with dependencies and decisions, is in [`docs/story-order.md`](./story-order.md). Read it before picking up or deploying one of those stories.
+
+## 13. Where This Doc Lives
 
 - Repo path: `docs/WORKFLOW.md` on `main`
 - `.cursorrules` points here (3-line pointer)
