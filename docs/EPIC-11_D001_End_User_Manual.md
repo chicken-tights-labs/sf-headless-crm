@@ -3,9 +3,9 @@
 Issue: #37. Kanban: `t_9d84897e`.
 
 **Status:** Draft
-**Last verified:** 2026-10-08 against `main` `23d6c67`
+**Last verified:** 2026-10-12 against `main` `06fa226`
 **Checked from:** source in `force-app` (not an org click-through)
-**Still open:** screenshots in `my-gym`; trainer check-in, attendance, substitutes, merchandise, discounts, refunds, and renewals are not built; the walk-in form and Convert to Member are not placed on a page in source
+**Still open:** screenshots in `my-gym`; trainer check-in, attendance, substitutes, merchandise, discounts, refunds, and renewals are not built; Convert to Member is not placed on a page in source
 
 This is the canonical copy. The issue names `CRM-Documentation/EPIC-11_D001_End_User_Manual.md`. Sync that vault from this file when the vault is available.
 
@@ -21,29 +21,30 @@ Admin setup (users, the permission set, locations, waiver templates, tier values
 
 **Not built**, except where a Salesforce report already shows the same data to someone who can log into the CRM.
 
-| Asked for | What exists |
-|---|---|
-| View my class schedule | No trainer schedule screen. The report **Upcoming Sessions and Capacity** lists sessions from today forward. See US-D002. |
-| Check in by QR code | No QR check-in. |
-| Check in by phone lookup | No phone-lookup check-in. |
-| Mark attendance | No attendance action. `Booking__c.Status__c` exists as data. |
-| View class attendee lists | No trainer attendee screen. **Class Attendance** and **Upcoming Sessions and Capacity** include booking rows. See US-D002. |
-| Open a member profile | A CRM user can open a Member record. There is no trainer profile or trainer app. |
-| View medical notes | `Member__c.Medical_Notes__c` (Medical Notes) is a text area. The permission set does not hide it from other CRM fields. No separate medical-notes permission exists. |
-| Substitute a class | No substitute-class action. |
-| Create a member record | Staff create a member by converting a lead (below). There is no trainer "create member" screen. |
+| Asked for                 | What exists                                                                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| View my class schedule    | No trainer schedule screen. The report **Upcoming Sessions and Capacity** lists sessions from today forward. See US-D002.                                            |
+| Check in by QR code       | No QR check-in.                                                                                                                                                      |
+| Check in by phone lookup  | No phone-lookup check-in.                                                                                                                                            |
+| Mark attendance           | No attendance action. `Booking__c.Status__c` exists as data.                                                                                                         |
+| View class attendee lists | No trainer attendee screen. **Class Attendance** and **Upcoming Sessions and Capacity** include booking rows. See US-D002.                                           |
+| Open a member profile     | A CRM user can open a Member record. There is no trainer profile or trainer app.                                                                                     |
+| View medical notes        | `Member__c.Medical_Notes__c` (Medical Notes) is a text area. The permission set does not hide it from other CRM fields. No separate medical-notes permission exists. |
+| Substitute a class        | No substitute-class action.                                                                                                                                          |
+| Create a member record    | Staff create a member by converting a lead (below). There is no trainer "create member" screen.                                                                      |
 
 ## Front desk: register a walk-in lead
 
-**Verified from source, with a placement gap.** Component `epic04LeadRegistrationForm` shows a card titled **Walk-In Lead Registration**. It is allowed on an app page, record page, or home page. No page in source places it. **Needs an org click-through** to see whether the org has it on a screen that source does not.
+**Verified from source.** The card **Walk-In Lead Registration** is on the **Home** tab of the Boxing Gym CRM app (page **Gym Manager Home**), in the Members & Leads column. Desktop only; the app's home page override is set for large screens. **Needs an org click-through** for screenshots.
 
-When the card is on screen:
+1. Open **Boxing Gym CRM**, then **Home**.
+2. Enter **First Name**, **Last Name**, **Phone**, and **Email**.
+3. Pick the gym from **Franchise Location**. The list shows active locations by name.
+4. Click **Register Walk-In**.
 
-1. Enter **First Name**, **Last Name**, **Phone**, **Email**, and **Franchise Location**.
-2. Franchise Location is a plain text box. Type the location record Id, not the gym name.
-3. Click **Register Walk-In**.
+Success text: `Lead registered successfully! Lead ID: ` plus the new Id. The form then clears First Name, Last Name, Phone, and Email. Franchise Location stays selected for the next walk-in.
 
-Success text: `Lead registered successfully! Lead ID: ` plus the new Id. The form then clears First Name, Last Name, Phone, and Email.
+If the list is empty, the card says `No active gym locations found. Ask an admin to add one.` A location must have Status **Active** to appear (US-D004). If the list fails to load, the card says `Could not load gym locations. Refresh the page and try again.`
 
 The saved lead uses Lead Status **Walk-In** and Lead Source **In Person**. Phone must be a 10-digit number or the org validation rule rejects it. A duplicate email is rejected. The controller does not set program interest or a referral code.
 
@@ -60,12 +61,12 @@ Creating the lead any other way (including the API in US-D005) with `Referral_Co
 
 These messages mean the convert did not happen:
 
-| Message | What to do |
-|---|---|
-| Member already exists for this lead — view existing Member record | Open the linked Member. |
-| Lead already converted to Member — view linked Member record | Open the linked Member. |
+| Message                                                             | What to do                                                                                        |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Member already exists for this lead — view existing Member record   | Open the linked Member.                                                                           |
+| Lead already converted to Member — view linked Member record        | Open the linked Member.                                                                           |
 | Cannot convert disqualified lead — change status to Qualified first | The status value in the org is **Unqualified**. Set Lead Status to Qualified, then convert again. |
-| Cannot convert: Lead has no Franchise Location assigned | Set Franchise Location on the lead, then convert again. |
+| Cannot convert: Lead has no Franchise Location assigned             | Set Franchise Location on the lead, then convert again.                                           |
 
 **Unconvert** is on the Member record page. It runs only for a System Administrator, and only while the Member is still Prospect. It restores the lead to Qualified, detaches transferred waivers, and deletes the Member. Other statuses show **Only Prospect members can be unconverted**.
 
@@ -89,13 +90,13 @@ Success screen **Ready for Payment**: `Tier saved: {tier}. Dates are still empty
 
 Waiver messages from the gate:
 
-| Message | Meaning |
-|---|---|
-| Please sign your waiver first | No waiver on the member. |
-| Your waiver is pending signature. Please complete it before continuing. | Latest relevant waiver is Pending. |
-| Waiver has been revoked | Latest relevant waiver is Revoked. |
+| Message                                                                          | Meaning                                         |
+| -------------------------------------------------------------------------------- | ----------------------------------------------- |
+| Please sign your waiver first                                                    | No waiver on the member.                        |
+| Your waiver is pending signature. Please complete it before continuing.          | Latest relevant waiver is Pending.              |
+| Waiver has been revoked                                                          | Latest relevant waiver is Revoked.              |
 | Your waiver has expired on {date}. Please re-sign your waiver before continuing. | Last signed waiver is past its expiration date. |
-| Your waiver is valid. You can proceed to payment. | Gate is open. |
+| Your waiver is valid. You can proceed to payment.                                | Gate is open.                                   |
 
 A trial waiver that was signed on the lead and copied at conversion counts. Any Signed, unexpired waiver is enough, even if a newer waiver is still Pending.
 
@@ -119,12 +120,12 @@ Success screen **Payment Completed** includes `Payment completed` and `Member is
 
 What payment writes:
 
-| Tier | Dates and classes |
-|---|---|
-| Drop-In ($20/class) | Status Active. Start and expiry stay empty. Classes Remaining stays 0. |
-| Monthly Unlimited ($129) | Start today, expiry in 30 days. A task **Process recurring payment for {name}** is due in 30 days. That task is not a subscription. |
-| Annual Prepaid ($99/mo) | Start today, expiry in 365 days. |
-| Punch Card (10 classes - $150) | Start today, expiry in 180 days. Classes Remaining becomes 10. |
+| Tier                           | Dates and classes                                                                                                                   |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Drop-In ($20/class)            | Status Active. Start and expiry stay empty. Classes Remaining stays 0.                                                              |
+| Monthly Unlimited ($129)       | Start today, expiry in 30 days. A task **Process recurring payment for {name}** is due in 30 days. That task is not a subscription. |
+| Annual Prepaid ($99/mo)        | Start today, expiry in 365 days.                                                                                                    |
+| Punch Card (10 classes - $150) | Start today, expiry in 180 days. Classes Remaining becomes 10.                                                                      |
 
 Card decline: screen **Payment Failed**, message `Payment failed. A retry task was created.` The member stays Prospect. Task subject: `Retry payment for {name}`.
 
