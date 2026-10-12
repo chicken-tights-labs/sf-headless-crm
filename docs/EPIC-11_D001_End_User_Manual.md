@@ -3,7 +3,7 @@
 Issue: #37. Kanban: `t_9d84897e`.
 
 **Status:** Draft
-**Last verified:** 2026-10-12 against `main` `06fa226`
+**Last verified:** 2026-10-12 against `main` `cdac3ac` plus branch `feat/EPIC04-USF004-payment-screen`
 **Checked from:** source in `force-app` (not an org click-through)
 **Still open:** screenshots in `my-gym`; trainer check-in, attendance, substitutes, merchandise, discounts, refunds, and renewals are not built; Convert to Member is not placed on a page in source
 
@@ -108,13 +108,15 @@ When a Prospect gets a valid Signed waiver, **EPIC01 Waiver Confirmed Notify** c
 
 **Verified from source.** On the Member record, **Process Membership Payment** runs **EPIC01 Process Membership Payment**. The processor is simulated. There is no Stripe charge.
 
-1. Open the Member. A tier must already be saved.
+1. Open the Member.
 2. Click **Process Membership Payment**.
-3. If the gate fails, **Cannot Take Payment** shows the waiver or tier message. No payment record is created.
-4. On **Collect Payment**, the screen shows the tier and the line `Processor is simulated (no Stripe). Cash never declines.`
-5. **Amount** is prefilled: Drop-In `20.00`, Monthly `129.00`, Punch Card `150.00`, Annual `1188.00` (99 × 12). Staff can change it.
-6. **Payment Method**: **Credit Card** or **Cash (paid in person)**. Cash is stored as Cash.
-7. Finish.
+3. If the member is already **Active**, screen **Already Active** says no payment was taken and to use Renew Membership instead. Renewal is not built yet (US-F003). Every other status continues.
+4. If the waiver gate fails, **Cannot Take Payment** shows the waiver message. No payment record is created.
+5. On **Confirm Membership Tier**, pick Drop-In, Punch Card, Monthly Unlimited, or Annual Prepaid. The member's saved tier is preselected. Choosing a different tier saves it on the Member before payment.
+6. On **Collect Payment**, the screen shows the tier and the line `Processor is simulated (no Stripe). Only Credit Card and Debit Card can decline.`
+7. **Amount** is prefilled from the chosen tier: Drop-In `20.00`, Monthly `129.00`, Punch Card `150.00`, Annual `1188.00` (99 × 12). Staff can change it.
+8. **Payment Method**: **Credit Card**, **Debit Card**, **Cash (paid in person)**, **Check**, **ACH**, or **Gift Card**. The choice is stored as the transaction method. Cash is stored as Cash.
+9. Finish.
 
 Success screen **Payment Completed** includes `Payment completed` and `Member is now Active. A receipt was emailed when an address is on file.` A welcome email can also send. See US-D006 if the member has no email.
 
@@ -127,7 +129,7 @@ What payment writes:
 | Annual Prepaid ($99/mo)        | Start today, expiry in 365 days.                                                                                                    |
 | Punch Card (10 classes - $150) | Start today, expiry in 180 days. Classes Remaining becomes 10.                                                                      |
 
-Card decline: screen **Payment Failed**, message `Payment failed. A retry task was created.` The member stays Prospect. Task subject: `Retry payment for {name}`.
+Card decline (Credit Card or Debit Card only): screen **Payment Failed**, message `Payment failed. A retry task was created.` The member stays Prospect. Task subject: `Retry payment for {name}`. If the tier was changed on step 5, the new tier stays saved.
 
 The 50% referred-friend discount is a calculator in Apex (`calculatePaymentWithReferralDiscount`). The payment screen does not apply it. Staff who want that price type half the amount.
 
@@ -147,7 +149,7 @@ A punch-card booking decrements Classes Remaining. There is no front-desk bookin
 
 **Not built.**
 
-- Renew a membership. Paying again is the same **Process Membership Payment** action. There is no renewal screen.
+- Renew a membership. There is no renewal screen. **Process Membership Payment** stops Active members (US-F003).
 - Capture a digital waiver. Waiver Records are data entry.
 - Sell merchandise. Merchandise Sale and Sale Line Item exist as objects. There is no sale screen.
 - Apply a discount with manager approval. No approval process.
@@ -157,6 +159,6 @@ A punch-card booking decrements Classes Remaining. There is no front-desk bookin
 
 1. In **Boxing Gym CRM**, open a Member and confirm **Select Membership Tier**, **Process Membership Payment**, and **Unconvert** are on the record.
 2. Confirm whether **Convert to Member** is visible on a Lead. Source does not place it.
-3. Confirm whether **Walk-In Lead Registration** is on any page. Source does not place it.
+3. Confirm **Walk-In Lead Registration** is on **Home** (Gym Manager Home).
 4. Run the tier action with no Signed waiver and expect **Waiver Required**.
 5. Do not expect QR check-in, merchandise, or refunds. Those sections stay **Not built** until the feature exists.
