@@ -23,6 +23,12 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
+                <componentName>epic04LeadRegistrationForm</componentName>
+                <identifier>epic04LeadRegistrationForm</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
                 <componentInstanceProperties>
                     <name>decorate</name>
                     <value>true</value>

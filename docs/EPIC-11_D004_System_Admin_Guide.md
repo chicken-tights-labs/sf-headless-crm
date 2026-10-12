@@ -3,7 +3,7 @@
 Issue: #40. Kanban: `t_7b14be8b`.
 
 **Status:** Draft
-**Last verified:** 2026-10-08 against `main` `23d6c67`
+**Last verified:** 2026-10-12 against `main` `06fa226`
 **Checked from:** source in `force-app` (not an org click-through)
 **Still open:** screenshots in `my-gym`; Apex class access and Referral Reward tab are gaps, not finished admin features; Obsidian copy
 
@@ -23,18 +23,18 @@ The Lightning app is **Boxing Gym CRM** (`Boxing_Gym_CRM`). Open it from the App
 
 The app navigation shows:
 
-| Tab | Object |
-|---|---|
-| Home | Gym Manager Home page |
-| Members | `Member__c` |
-| Scheduled Sessions | `Scheduled_Session__c` |
-| Bookings | `Booking__c` |
-| Leads | `Lead__c` |
-| Franchise Locations | `Franchise_Location__c` |
-| Waiver Records | `Waiver_Record__c` |
+| Tab                  | Object                   |
+| -------------------- | ------------------------ |
+| Home                 | Gym Manager Home page    |
+| Members              | `Member__c`              |
+| Scheduled Sessions   | `Scheduled_Session__c`   |
+| Bookings             | `Booking__c`             |
+| Leads                | `Lead__c`                |
+| Franchise Locations  | `Franchise_Location__c`  |
+| Waiver Records       | `Waiver_Record__c`       |
 | Payment Transactions | `Payment_Transaction__c` |
-| Reports | standard |
-| Dashboards | standard |
+| Reports              | standard                 |
+| Dashboards           | standard                 |
 
 These tabs are granted by the permission set but are **not** on the app bar. Open them from the App Launcher:
 
@@ -60,14 +60,14 @@ flowchart TD
   perm --> line
 ```
 
-| Layer | What is in source |
-|---|---|
-| Profile | None. Use a standard Salesforce profile. The scratch-org admin uses System Administrator. |
-| Permission set | `Boxing_Gym_CRM_Access`, label **Boxing Gym CRM Access**. Not activation-required. |
-| Role | None. |
-| Org-wide default | `ReadWrite` (Public Read/Write) on every custom object except `Sale_Line_Item__c`, which is `ControlledByParent`. |
-| Sharing rules | None. |
-| Field-level security | Every field listed in the permission set is readable and editable. |
+| Layer                | What is in source                                                                                                 |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Profile              | None. Use a standard Salesforce profile. The scratch-org admin uses System Administrator.                         |
+| Permission set       | `Boxing_Gym_CRM_Access`, label **Boxing Gym CRM Access**. Not activation-required.                                |
+| Role                 | None.                                                                                                             |
+| Org-wide default     | `ReadWrite` (Public Read/Write) on every custom object except `Sale_Line_Item__c`, which is `ControlledByParent`. |
+| Sharing rules        | None.                                                                                                             |
+| Field-level security | Every field listed in the permission set is readable and editable.                                                |
 
 `Boxing Gym CRM Access` grants Create, Read, Edit, Delete, View All, and Modify All on these objects:
 
@@ -89,7 +89,7 @@ In the UI: Setup → Permission Sets → **Boxing Gym CRM Access** → Manage As
 
 ### Gaps in the permission set
 
-- **No Apex class access.** The set does not list any class. Before go-live, grant `EPIC01_LeadCapture_Rest` to the integration user (profile or a permission set). Screen actions such as Convert to Member call Apex; a user who is not a System Administrator needs class access added in source before those buttons work for them.
+- **Apex class access is partial.** The set grants only `EPIC04_LeadRegistration_Controller`, which the walk-in card on Home needs. Before go-live, grant `EPIC01_LeadCapture_Rest` to the integration user (profile or a permission set). Screen actions such as Convert to Member call Apex; a user who is not a System Administrator needs class access added in source before those buttons work for them.
 - **No Flow access entries.** The set does not name any Flow.
 - **Referral Reward** (`Referral_Reward__c`) has field permissions only. It has no object permission and no tab. Users will not get a normal Referral Rewards tab from this set. Rewards are created by the referral Apex, not by a screen in this guide.
 
@@ -136,8 +136,8 @@ There is nothing to assign. Setup → Roles will not show a gym role hierarchy f
 
 One set does all CRM access. It is not split by trainer, front desk, manager, or franchise owner.
 
-| File | API name | Label |
-|---|---|---|
+| File                                                                                 | API name                | Label                 |
+| ------------------------------------------------------------------------------------ | ----------------------- | --------------------- |
 | `force-app/main/default/permissionsets/Boxing_Gym_CRM_Access.permissionset-meta.xml` | `Boxing_Gym_CRM_Access` | Boxing Gym CRM Access |
 
 ### Field-level security
@@ -181,11 +181,11 @@ Setup → Object Manager is useful for reading labels. It is the wrong place to 
 
 `Member__c.Membership_Tier__c` is a restricted picklist. Payment logic matches these **exact** values in `EPIC01_MemberOnboarding_Service`:
 
-| Picklist value | What payment does |
-|---|---|
-| Monthly Unlimited ($129) | Start date today, expiry in 30 days. Payment type Monthly Fee. |
-| Annual Prepaid ($99/mo) | Start date today, expiry in 365 days. Payment type Annual Prepayment. |
-| Drop-In ($20/class) | Start and expiry stay empty. Payment type Drop-In Fee. |
+| Picklist value                 | What payment does                                                                                  |
+| ------------------------------ | -------------------------------------------------------------------------------------------------- |
+| Monthly Unlimited ($129)       | Start date today, expiry in 30 days. Payment type Monthly Fee.                                     |
+| Annual Prepaid ($99/mo)        | Start date today, expiry in 365 days. Payment type Annual Prepayment.                              |
+| Drop-In ($20/class)            | Start and expiry stay empty. Payment type Drop-In Fee.                                             |
 | Punch Card (10 classes - $150) | Start date today, expiry in 180 days, Classes Remaining set to 10. Payment type Punch Card Top-Up. |
 
 The dollar amounts in the labels are not a price book. Staff still type the amount on the payment action. Renaming a value only in Setup breaks payment, welcome email, and referral checks, because Apex compares the full string.
@@ -205,15 +205,15 @@ Waiver templates are **records**, not setup metadata. Age-based template selecti
 
 Create one from the App Launcher → **Waiver Templates** → **New**.
 
-| Field on screen | Required | Notes |
-|---|---|---|
-| Waiver Template Name | Yes | Text name. Tests use "General Liability Waiver - Fencing & Boxing". |
-| Template Type | Yes | Use **Adult**, **Minor**, or **Visitor**. A leftover value labeled `Template_Type__c` is also active. Do not select it. |
-| Content Document | Yes | Text field (`Content_Version_Id__c`), up to 255 characters. It stores an id string. There is no file-upload automation in source. |
-| Effective Date | Yes | Date the template starts. |
-| Expiry Date | No | |
-| Minimum Age | No | Number. Nothing in Apex reads it. |
-| Is Current | No | Checkbox, default unchecked. Nothing enforces a single current template. |
+| Field on screen      | Required | Notes                                                                                                                             |
+| -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Waiver Template Name | Yes      | Text name. Tests use "General Liability Waiver - Fencing & Boxing".                                                               |
+| Template Type        | Yes      | Use **Adult**, **Minor**, or **Visitor**. A leftover value labeled `Template_Type__c` is also active. Do not select it.           |
+| Content Document     | Yes      | Text field (`Content_Version_Id__c`), up to 255 characters. It stores an id string. There is no file-upload automation in source. |
+| Effective Date       | Yes      | Date the template starts.                                                                                                         |
+| Expiry Date          | No       |                                                                                                                                   |
+| Minimum Age          | No       | Number. Nothing in Apex reads it.                                                                                                 |
+| Is Current           | No       | Checkbox, default unchecked. Nothing enforces a single current template.                                                          |
 
 A signed waiver is a **Waiver Record** that looks up to a template, a member or lead, and a franchise location. Booking and payment gates care about a valid signed waiver record, not about which template type you picked.
 
@@ -223,32 +223,32 @@ Leads require a franchise location. Create the owner first, then the location.
 
 **Franchise Owner** (App Launcher → Franchise Owners → New):
 
-| Field | Required |
-|---|---|
-| Franchise Owner Name | Yes |
-| Legal Name | Yes |
-| Contact First Name | Yes |
-| Contact Last Name | Yes |
-| Email | Yes |
-| Phone | No |
-| Tax ID | No |
-| Agreement Start Date | No |
-| Agreement End Date | No |
-| Payment Terms | No |
-| Royalty Rate % | No. Whole-number percent. No royalty calculation runs from this field yet. |
+| Field                | Required                                                                   |
+| -------------------- | -------------------------------------------------------------------------- |
+| Franchise Owner Name | Yes                                                                        |
+| Legal Name           | Yes                                                                        |
+| Contact First Name   | Yes                                                                        |
+| Contact Last Name    | Yes                                                                        |
+| Email                | Yes                                                                        |
+| Phone                | No                                                                         |
+| Tax ID               | No                                                                         |
+| Agreement Start Date | No                                                                         |
+| Agreement End Date   | No                                                                         |
+| Payment Terms        | No                                                                         |
+| Royalty Rate %       | No. Whole-number percent. No royalty calculation runs from this field yet. |
 
 **Franchise Location** (app tab Franchise Locations → New):
 
-| Field | Required |
-|---|---|
-| Franchise Location Name | Yes. Lead capture can find a location by this name. |
-| Franchise Owner | Yes. Lookup to the owner you just saved. |
-| Status | Yes. Use **Active**, **Inactive**, or **Coming Soon**. Do not select the leftover value `Status__c`. |
-| Corporate Owned | No. Checkbox, default unchecked. |
-| Phone, Contact Email, Website | No |
-| Billing Contact | No |
-| Hours Mon-Fri, Hours Saturday, Hours Sunday | No |
-| Active Members | No. A plain number. It does not count members for you. |
+| Field                                       | Required                                                                                             |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Franchise Location Name                     | Yes. Lead capture can find a location by this name.                                                  |
+| Franchise Owner                             | Yes. Lookup to the owner you just saved.                                                             |
+| Status                                      | Yes. Use **Active**, **Inactive**, or **Coming Soon**. Do not select the leftover value `Status__c`. |
+| Corporate Owned                             | No. Checkbox, default unchecked.                                                                     |
+| Phone, Contact Email, Website               | No                                                                                                   |
+| Billing Contact                             | No                                                                                                   |
+| Hours Mon-Fri, Hours Saturday, Hours Sunday | No                                                                                                   |
+| Active Members                              | No. A plain number. It does not count members for you.                                               |
 
 ## What this guide does not cover
 
