@@ -3,9 +3,9 @@
 Issue: #37. Kanban: `t_9d84897e`.
 
 **Status:** Draft
-**Last verified:** 2026-10-15 against branch `feat/EPIC04-USF005-capture-digital-waiver`
+**Last verified:** 2026-10-15 against branch `feat/EPIC03-UST004-trainer-view-attendees`
 **Checked from:** source in `force-app` (not an org click-through)
-**Still open:** screenshots in `my-gym`; trainer check-in, attendance, substitutes, merchandise, discounts, refunds, and renewals are not built
+**Still open:** screenshots in `my-gym`; trainer schedule, check-in actions, substitutes, merchandise, discounts, refunds, and renewals are not built
 
 This is the canonical copy. The issue names `CRM-Documentation/EPIC-11_D001_End_User_Manual.md`. Sync that vault from this file when the vault is available.
 
@@ -15,19 +15,23 @@ Admin setup (users, the permission set, locations, waiver templates, tier values
 
 ## Where staff work
 
-**Verified from source.** The Lightning app is **Boxing Gym CRM**. Front-desk steps below use that app. There is no trainer mobile app in source. Trainers will work in the Boxing Gym CRM app on a Salesforce Platform license ([licensing decision](licensing-and-architecture.md)). Those trainer screens are not built yet, so none of the trainer steps can be written yet.
+**Verified from source.** The Lightning app is **Boxing Gym CRM**. Front-desk steps below use that app. There is no trainer mobile app in source. Trainers will work in the Boxing Gym CRM app on a Salesforce Platform license ([licensing decision](licensing-and-architecture.md)).
 
 ## Trainer workflows
 
-**Not built**, except where a Salesforce report already shows the same data to someone who can log into the CRM.
+**Partially built.** Class attendee roster is on the Scheduled Session record. Schedule, check-in actions, substitutes, and trainer-only medical notes are not.
+
+### Trainer: view class attendees
+
+**Verified from source.** Open a **Scheduled Session** in Boxing Gym CRM. The **Attendees** tab (default) lists every booking for that session: member name, check-in status (`Checked in` / `Not checked in` / `No-Show` / `Cancelled`), waiver status from the same rules as payment and booking, and booking status. Read-only — Mark Attended is US-T005.
 
 | Asked for                 | What exists                                                                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | View my class schedule    | No trainer schedule screen. The report **Upcoming Sessions and Capacity** lists sessions from today forward. See US-D002.                                            |
 | Check in by QR code       | No QR check-in.                                                                                                                                                      |
 | Check in by phone lookup  | No phone-lookup check-in.                                                                                                                                            |
-| Mark attendance           | No attendance action. `Booking__c.Status__c` exists as data.                                                                                                         |
-| View class attendee lists | No trainer attendee screen. **Class Attendance** and **Upcoming Sessions and Capacity** include booking rows. See US-D002.                                           |
+| Mark attendance           | No Mark Attended action yet (US-T005). The Attendees tab is the screen that will get it.                                                                             |
+| View class attendee lists | **Verified from source.** On a Scheduled Session, the **Attendees** tab lists bookings with member name, check-in status, and waiver status (US-T004).               |
 | Open a member profile     | A CRM user can open a Member record. There is no trainer profile or trainer app.                                                                                     |
 | View medical notes        | `Member__c.Medical_Notes__c` (Medical Notes) is a text area. The permission set does not hide it from other CRM fields. No separate medical-notes permission exists. |
 | Substitute a class        | No substitute-class action.                                                                                                                                          |
