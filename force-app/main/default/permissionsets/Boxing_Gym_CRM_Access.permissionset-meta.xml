@@ -4,6 +4,10 @@
     <apexClass>EPIC04_LeadRegistration_Controller</apexClass>
     <enabled>true</enabled>
   </classAccesses>
+  <classAccesses>
+    <apexClass>EPIC04_WaiverCapture_Controller</apexClass>
+    <enabled>true</enabled>
+  </classAccesses>
   <hasActivationRequired>false</hasActivationRequired>
   <label>Boxing Gym CRM Access</label>
   <description

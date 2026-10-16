@@ -23,32 +23,32 @@ A user who can log in and still cannot see custom fields is not a password probl
 
 ### Data does not appear
 
-| Symptom | Cause | What to do |
-|---|---|---|
-| Custom fields are blank on a record you know has values | Field-level security. The permission set is missing on this user, or the field was deployed without a field permission. | Assign **Boxing Gym CRM Access**. If the field is new, add it to that permission set in source and redeploy. US-D004. |
-| A report is empty and the object is not | Report filters. Active Members keeps Status = Active. Class Attendance keeps Session Status = Completed. Upcoming Sessions keeps start time ≥ today, Session Status = Scheduled, and scope **user**. | US-D002. Widen the filter or own the session. |
-| Sharing hides a row | Unlikely for a user with the permission set. That set has View All and Modify All, and org-wide default is Public Read/Write (Sale Line Item is controlled by its parent). | If the set is not assigned, Salesforce sharing applies and this project defines no sharing rules. |
+| Symptom                                                 | Cause                                                                                                                                                                                                | What to do                                                                                                            |
+| ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Custom fields are blank on a record you know has values | Field-level security. The permission set is missing on this user, or the field was deployed without a field permission.                                                                              | Assign **Boxing Gym CRM Access**. If the field is new, add it to that permission set in source and redeploy. US-D004. |
+| A report is empty and the object is not                 | Report filters. Active Members keeps Status = Active. Class Attendance keeps Session Status = Completed. Upcoming Sessions keeps start time ≥ today, Session Status = Scheduled, and scope **user**. | US-D002. Widen the filter or own the session.                                                                         |
+| Sharing hides a row                                     | Unlikely for a user with the permission set. That set has View All and Modify All, and org-wide default is Public Read/Write (Sale Line Item is controlled by its parent).                           | If the set is not assigned, Salesforce sharing applies and this project defines no sharing rules.                     |
 
 ### Payment did not complete
 
 **Verified from source.**
 
-| Symptom | Cause | What to do |
-|---|---|---|
-| Screen **Cannot Take Payment**, `Select a membership tier first` | No tier saved | Run **Select Membership Tier**, then pay. |
-| Screen **Waiver Required** or a waiver sentence (`Please sign your waiver first`, pending, revoked, expired) | No valid Signed waiver | Create a Waiver Record with Status Signed and a future expiration, then retry. |
-| Screen **Payment Failed**, `Payment failed. A retry task was created.` | Simulated card decline | Member stays Prospect. Task `Retry payment for {name}`. Cash does not decline. There is no Stripe dashboard to check. |
-| Member is Active but no receipt | Email blank, or send failed | Receipt sends only when Email is set. The send is caught and does not roll back the payment. |
-| Amount was not halved for a referral | The payment screen does not apply the 50% calculator | Type the discounted amount. `calculatePaymentWithReferralDiscount` is not called by the screen. |
+| Symptom                                                                                                      | Cause                                                | What to do                                                                                                            |
+| ------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Screen **Cannot Take Payment**, `Select a membership tier first`                                             | No tier saved                                        | Run **Select Membership Tier**, then pay.                                                                             |
+| Screen **Waiver Required** or a waiver sentence (`Please sign your waiver first`, pending, revoked, expired) | No valid Signed waiver                               | Create a Waiver Record with Status Signed and a future expiration, then retry.                                        |
+| Screen **Payment Failed**, `Payment failed. A retry task was created.`                                       | Simulated card decline                               | Member stays Prospect. Task `Retry payment for {name}`. Cash does not decline. There is no Stripe dashboard to check. |
+| Member is Active but no receipt                                                                              | Email blank, or send failed                          | Receipt sends only when Email is set. The send is caught and does not roll back the payment.                          |
+| Amount was not halved for a referral                                                                         | The payment screen does not apply the 50% calculator | Type the discounted amount. `calculatePaymentWithReferralDiscount` is not called by the screen.                       |
 
 ### Waiver problems
 
-| Symptom | Cause | What to do |
-|---|---|---|
-| Booking error `Cannot book class — member does not have a valid signed waiver` | No Signed, unexpired waiver. A Draft waiver counts as missing. | Add a Signed waiver with a future Expiration Date. |
-| `member's waiver has expired` / `pending signature` / `has been revoked` | The member's waiver status | New Signed waiver, or finish the pending one. A newer Pending waiver does not block someone who still has a different valid Signed waiver. |
-| `Membership not active — please complete payment` | Booking insert and the member is not Active | Take payment first. |
-| No signature pad | Digital capture is not built | Staff type a Waiver Record. US-D001. |
+| Symptom                                                                        | Cause                                                          | What to do                                                                                                                                 |
+| ------------------------------------------------------------------------------ | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Booking error `Cannot book class — member does not have a valid signed waiver` | No Signed, unexpired waiver. A Draft waiver counts as missing. | Add a Signed waiver with a future Expiration Date.                                                                                         |
+| `member's waiver has expired` / `pending signature` / `has been revoked`       | The member's waiver status                                     | New Signed waiver, or finish the pending one. A newer Pending waiver does not block someone who still has a different valid Signed waiver. |
+| `Membership not active — please complete payment`                              | Booking insert and the member is not Active                    | Take payment first.                                                                                                                        |
+| Cannot find the signature pad                                                  | Wrong record or action                                         | On the Member or Lead, click **Capture Waiver**. Or create a Waiver Record manually. US-D001 / US-F005.                                    |
 
 ### Reports
 
@@ -58,13 +58,13 @@ A user who can log in and still cannot see custom fields is not a password probl
 
 **Verified from source** for `POST /services/apexrest/leadcapture`. Full table in US-D005.
 
-| Status | Message | What to do |
-|---|---|---|
-| 400 | `First Name is required` / `Last Name is required` / email or phone message | Fix that field. |
-| 400 | `A valid franchise location is required` | Send an existing location Id, or the name of an **Active** location. |
-| 400 | `Invalid request body` | Send JSON, not form data. |
-| 409 | `Lead already exists — redirecting to update flow` | Use `leadId` from the body. There is no update call. |
-| Auth error before a JSON body | Class access or token | Grant `EPIC01_LeadCapture_Rest`. The CRM permission set does not include it. |
+| Status                        | Message                                                                     | What to do                                                                   |
+| ----------------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| 400                           | `First Name is required` / `Last Name is required` / email or phone message | Fix that field.                                                              |
+| 400                           | `A valid franchise location is required`                                    | Send an existing location Id, or the name of an **Active** location.         |
+| 400                           | `Invalid request body`                                                      | Send JSON, not form data.                                                    |
+| 409                           | `Lead already exists — redirecting to update flow`                          | Use `leadId` from the body. There is no update call.                         |
+| Auth error before a JSON body | Class access or token                                                       | Grant `EPIC01_LeadCapture_Rest`. The CRM permission set does not include it. |
 
 Other POS paths are not deployed. A 404 on those URLs is expected.
 

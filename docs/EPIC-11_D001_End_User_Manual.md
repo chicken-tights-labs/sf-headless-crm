@@ -3,7 +3,7 @@
 Issue: #37. Kanban: `t_9d84897e`.
 
 **Status:** Draft
-**Last verified:** 2026-10-15 against branch `feat/EPIC04-USF002-convert-lead-to-member`
+**Last verified:** 2026-10-15 against branch `feat/EPIC04-USF005-capture-digital-waiver`
 **Checked from:** source in `force-app` (not an org click-through)
 **Still open:** screenshots in `my-gym`; trainer check-in, attendance, substitutes, merchandise, discounts, refunds, and renewals are not built
 
@@ -103,7 +103,23 @@ Waiver messages from the gate:
 
 A trial waiver that was signed on the lead and copied at conversion counts. Any Signed, unexpired waiver is enough, even if a newer waiver is still Pending.
 
-To record a waiver: App Launcher → **Waiver Records** → New. Required links are a Waiver Template, the Member (or the Lead, before conversion), Status **Signed**, and an expiration date in the future. There is no signature-pad or digital-capture screen.
+## Front desk: capture a digital waiver
+
+**Verified from source.** On a Member or Lead record, **Capture Waiver** opens the signature pad (`epic04CaptureDigitalWaiver`).
+
+1. Open the Member or Lead (Franchise Location must be set).
+2. Click **Capture Waiver**.
+3. Confirm signer name, email, role, and waiver template (Adult template is preferred when present).
+4. Ask the visitor to sign on the pad.
+5. Click **Save signed waiver**.
+
+What it writes:
+
+- A `Waiver_Record__c` with Status **Signed**, Signature Method **Digital In-Person**, effective today, expiration in 365 days.
+- A PNG signature file attached to that waiver.
+- On a Member: `Waiver_Needed__c = false` and `Waiver_Signed__c` points at the new record.
+
+Staff can still create a Waiver Record manually (App Launcher → **Waiver Records** → New) if needed.
 
 When a Prospect gets a valid Signed waiver, **EPIC01 Waiver Confirmed Notify** creates a task and sends `Your waiver is confirmed! You can now proceed to payment.`
 
@@ -153,15 +169,15 @@ A punch-card booking decrements Classes Remaining. There is no front-desk bookin
 **Not built.**
 
 - Renew a membership. There is no renewal screen. **Process Membership Payment** stops Active members (US-F003).
-- Capture a digital waiver. Waiver Records are data entry.
 - Sell merchandise. Merchandise Sale and Sale Line Item exist as objects. There is no sale screen.
 - Apply a discount with manager approval. No approval process.
 - Refund or return. No refund action.
 
 ## How to verify this draft
 
-1. In **Boxing Gym CRM**, open a Member and confirm **Select Membership Tier**, **Process Membership Payment**, and **Unconvert** are on the record.
-2. Confirm whether **Convert to Member** is visible on a Lead. Source does not place it.
+1. In **Boxing Gym CRM**, open a Member and confirm **Capture Waiver**, **Select Membership Tier**, **Process Membership Payment**, and **Unconvert** are on the record.
+2. On a Lead, confirm **Capture Waiver** and **Convert to Member** are on the record.
 3. Confirm **Walk-In Lead Registration** is on **Home** (Gym Manager Home).
-4. Run the tier action with no Signed waiver and expect **Waiver Required**.
-5. Do not expect QR check-in, merchandise, or refunds. Those sections stay **Not built** until the feature exists.
+4. Run **Capture Waiver**, sign the pad, and confirm a Signed Waiver Record appears.
+5. Run the tier action with no Signed waiver and expect **Waiver Required**.
+6. Do not expect QR check-in, merchandise, or refunds. Those sections stay **Not built** until the feature exists.
