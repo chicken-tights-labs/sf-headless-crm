@@ -192,4 +192,83 @@ private class EPIC03_SessionAttendees_Test {
     System.assertEquals('Confirmed', unchanged.Status__c);
     System.assertEquals(null, unchanged.Checked_In_At__c);
   }
+
+  @isTest
+  static void markAttendedGuardsNullCancelledNoShowAndAlreadyDone() {
+    Id sid = sessionId();
+    Member__c avery = memberNamed('Avery');
+    Member__c sam = memberNamed('Sam');
+
+    Booking__c cancelled = EPIC01_TestDataFactory.newBooking(
+      avery.Id,
+      sid,
+      locId()
+    );
+    Booking__c noShow = EPIC01_TestDataFactory.newBooking(sam.Id, sid, locId());
+    insert new List<Booking__c>{ cancelled, noShow };
+    cancelled.Status__c = 'Cancelled';
+    noShow.Status__c = 'No-Show';
+    update new List<Booking__c>{ cancelled, noShow };
+
+    Booking__c alreadyDone = EPIC01_TestDataFactory.newBooking(
+      avery.Id,
+      sid,
+      locId()
+    );
+    // Second booking for Avery needs a distinct name; reuse factory then complete.
+    alreadyDone.Name = 'Booking already done';
+    insert alreadyDone;
+    alreadyDone.Status__c = 'Completed';
+    alreadyDone.Checked_In_At__c = DateTime.now();
+    update alreadyDone;
+
+    Test.startTest();
+    EPIC03_SessionAttendees_Controller.MarkResult nullId = EPIC03_SessionAttendees_Controller.markAttended(
+      null
+    );
+    // Wrong sObject Id → query returns no Booking rows.
+    EPIC03_SessionAttendees_Controller.MarkResult missing = EPIC03_SessionAttendees_Controller.markAttended(
+      UserInfo.getUserId()
+    );
+    EPIC03_SessionAttendees_Controller.MarkResult cancelledResult = EPIC03_SessionAttendees_Controller.markAttended(
+      cancelled.Id
+    );
+    EPIC03_SessionAttendees_Controller.MarkResult noShowResult = EPIC03_SessionAttendees_Controller.markAttended(
+      noShow.Id
+    );
+    EPIC03_SessionAttendees_Controller.MarkResult already = EPIC03_SessionAttendees_Controller.markAttended(
+      alreadyDone.Id
+    );
+    List<EPIC03_SessionAttendees_Controller.AttendeeRow> empty = EPIC03_SessionAttendees_Controller.getAttendees(
+      null
+    );
+    Test.stopTest();
+
+    System.assertEquals(false, nullId.success);
+    System.assertEquals(
+      EPIC03_SessionAttendees_Controller.MSG_CHECKIN_NO_BOOKING,
+      nullId.message
+    );
+    System.assertEquals(false, missing.success);
+    System.assertEquals(
+      EPIC03_SessionAttendees_Controller.MSG_CHECKIN_NO_BOOKING,
+      missing.message
+    );
+    System.assertEquals(false, cancelledResult.success);
+    System.assertEquals(
+      EPIC03_SessionAttendees_Controller.MSG_CHECKIN_CANCELLED,
+      cancelledResult.message
+    );
+    System.assertEquals(false, noShowResult.success);
+    System.assertEquals(
+      EPIC03_SessionAttendees_Controller.MSG_CHECKIN_NO_SHOW,
+      noShowResult.message
+    );
+    System.assertEquals(false, already.success);
+    System.assertEquals(
+      EPIC03_SessionAttendees_Controller.MSG_CHECKIN_ALREADY,
+      already.message
+    );
+    System.assertEquals(0, empty.size());
+  }
 }
