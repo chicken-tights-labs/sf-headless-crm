@@ -6,24 +6,25 @@
 
 ## 1. Roles
 
-| Role | Who | Responsibility |
-|---|---|---|
-| **Issue Creator** | Hermes (via auto-ticket-creator) or Cursor | Converts EPIC stories → GitHub issue + kanban card |
-| **Implementer** | Cursor (Agent mode) | All `@platform:cursor` stories |
-| **Hermes Worker** | Hermes | Non-`@platform:cursor` stories (auto-spawned) |
-| **Reviewer** | Maria (manual) or Cursor | PR review — `needs-review` label gates merge |
-| **Merger** | Maria; Hermes for its own non-`@platform:cursor` PRs | Merges PR to `main` once CI is green |
-| **Deployer** | Hermes (post-merge) | `git pull` + `sf project deploy start` to scratch org / dev org |
+| Role              | Who                                                  | Responsibility                                                  |
+| ----------------- | ---------------------------------------------------- | --------------------------------------------------------------- |
+| **Issue Creator** | Hermes (via auto-ticket-creator) or Cursor           | Converts EPIC stories → GitHub issue + kanban card              |
+| **Implementer**   | Cursor (Agent mode)                                  | All `@platform:cursor` stories                                  |
+| **Hermes Worker** | Hermes                                               | Non-`@platform:cursor` stories (auto-spawned)                   |
+| **Reviewer**      | Maria (manual) or Cursor                             | PR review — `needs-review` label gates merge                    |
+| **Merger**        | Maria; Hermes for its own non-`@platform:cursor` PRs | Merges PR to `main` once CI is green                            |
+| **Deployer**      | Hermes (post-merge)                                  | `git pull` + `sf project deploy start` to scratch org / dev org |
 
 ## 2. State Machine
 
-| Kanban Card Status | GitHub Issue State | GitHub PR State | Who moves it |
-|---|---|---|---|
-| `ready` | open | — | Issue creator |
-| `review` | open | OPEN | Implementer (on PR open) |
-| `done` | closed | MERGED | **Merger** merges PR, then **Deployer** deploys to org |
+| Kanban Card Status | GitHub Issue State | GitHub PR State | Who moves it                                           |
+| ------------------ | ------------------ | --------------- | ------------------------------------------------------ |
+| `ready`            | open               | —               | Issue creator                                          |
+| `review`           | open               | OPEN            | Implementer (on PR open)                               |
+| `done`             | closed             | MERGED          | **Merger** merges PR, then **Deployer** deploys to org |
 
 **Rules:**
+
 - A card and its issue stay **open** until the PR is merged.
 - The GitHub issue **auto-closes** on PR merge (via `Closes #N`). The kanban card does **not** move to `done` until the org is deployed and verified.
 - **Never** close a GitHub issue or move a card to `done` based on VM-only state (code deployed to scratch org but not merged to `main`).
@@ -51,6 +52,7 @@ Both templates enforce the fields listed in section 5 below.
 ## 5. Required Fields per Artifact
 
 ### GitHub Issue (story)
+
 - **Story**: What story does this implement?
 - **Acceptance Criteria**: Gherkin scenarios
 - **Out of Scope**: What's explicitly excluded
@@ -59,6 +61,7 @@ Both templates enforce the fields listed in section 5 below.
 - **Open Questions**: Anything blocking implementation
 
 ### Pull Request
+
 - **Closes #N**: Issue reference
 - **Kanban ID**: e.g., `t_sf_07`
 - **What Changed**: Summary of changes
@@ -68,6 +71,7 @@ Both templates enforce the fields listed in section 5 below.
 ## 6. VM Environment & Deployment
 
 See [`docs/environment.md`](./environment.md) for:
+
 - Scratch org alias and credentials
 - Dev org SFDX auth URL
 - Deploy and verify commands
@@ -76,6 +80,7 @@ See [`docs/environment.md`](./environment.md) for:
 ## 7. Deploy Procedure (Post-Merge)
 
 After PR merges to `main`:
+
 1. `cd /home/maria_robbins/sf-project/sf-headless-crm`
 2. `git pull origin main`
 3. Deploy **with the test gate**:
@@ -88,20 +93,22 @@ After PR merges to `main`:
    org-specific Documents and would fail a full-suite deploy on noise.
    This matches `.github/workflows/ci.yml` and `.github/workflows/deploy.yml`.
 4. **Verify the deploy** (do not eyeball the success table — assert the fields):
+
    ```bash
    sf project deploy report --target-org my-gym --use-most-recent --json > /tmp/dr.json
    ```
+
    Then check:
 
-   | Field | Expected |
-   |---|---|
-   | `status` | `Succeeded` |
-   | `numberComponentsDeployed` == `numberComponentsTotal` | e.g. 203 / 203 |
-   | `numberComponentErrors` | `0` |
-   | `numberTestsCompleted` | **> 0 when components actually changed** — see note below |
+   | Field                                                 | Expected                                                  |
+   | ----------------------------------------------------- | --------------------------------------------------------- |
+   | `status`                                              | `Succeeded`                                               |
+   | `numberComponentsDeployed` == `numberComponentsTotal` | e.g. 203 / 203                                            |
+   | `numberComponentErrors`                               | `0`                                                       |
+   | `numberTestsCompleted`                                | **> 0 when components actually changed** — see note below |
 
    > **Reading `numberTestsCompleted` correctly:** `RunRelevantTests` runs the tests
-   > for the components *being deployed*. If nothing changed, nothing is deployed and
+   > for the components _being deployed_. If nothing changed, nothing is deployed and
    > **0 tests run — that is correct, not a failure.** Verified on `my-gym`: a full
    > 203/203 re-deploy reported `numberTestsCompleted: 0` because every component came
    > back `"changed": false`; deploying one changed Apex class reported
@@ -109,7 +116,7 @@ After PR merges to `main`:
    >
    > So the gate is: **`numberTestsCompleted > 0` whenever `numberComponentsDeployed > 0`
    > with real changes.** A `0` on a no-op re-deploy is expected. A `0` on a deploy that
-   > *did* change Apex is the red flag — it means your test gate silently did nothing.
+   > _did_ change Apex is the red flag — it means your test gate silently did nothing.
 
    > **Gotcha:** `sf project deploy report` **requires `--use-most-recent` or
    > `--job-id`**. Verified on CLI 2.150.6: omitting it **hard-errors with exit
@@ -118,6 +125,7 @@ After PR merges to `main`:
    > (Older/other builds reportedly returned an all-`None` payload that reads like
    > "no data" instead. Either way: if you see no deploy fields, suspect the missing
    > flag before you suspect the deploy.)
+
 5. Post-deploy sanity check:
    ```bash
    sf data query --target-org my-gym -q "SELECT COUNT() FROM Waiver_Record__c" --json
@@ -126,11 +134,12 @@ After PR merges to `main`:
 
 **Why this matters:** a bare `sf project deploy start` performs **no Apex tests**
 (`numberTestsCompleted: 0`). Without the test level, "deployed successfully" means
-*metadata landed*, not *behavior verified*. The test gate makes `done` mean verified.
+_metadata landed_, not _behavior verified_. The test gate makes `done` mean verified.
 
 ## 8. Handoff Protocol
 
 When Hermes finishes or fixes work, add a comment on the GitHub issue covering:
+
 1. **What it did** — summary of changes
 2. **VM state** — scratch org / dev org health
 3. **main state** — PR merged or not
@@ -145,13 +154,35 @@ When Hermes finishes or fixes work, add a comment on the GitHub issue covering:
 - **Why 0 approvals**: `chicken-tights-labs` is a single GitHub User account and the sole collaborator.
 - **Merge split**: Hermes may merge its own non-`@platform:cursor` PRs once CI is green. Maria merges `@platform:cursor` PRs and anything changing branch protection, CI, or this policy.
 
-## 10. Principles (Restored from .cursorrules)
+## 11. Principles (Restored from .cursorrules)
 
 - **Docs-as-code**: CRM-Documentation lives in `~/Documents/Obsidian Vault/CRM-Documentation/` — updated alongside features, not after.
 - **GitHub `main` is the only finished copy**: Code deployed to a scratch org but not merged is not "done."
-- **Terminal lane**: Tasks assigned to `@platform:cursor` are Cursor's terminal lane — Hermes will NOT auto-spawn workers for them.
+- **Terminal lane:** Tasks assigned to `@platform:cursor` are Cursor's terminal lane — Hermes will NOT auto-spawn workers for them.
 
-## 11. Documentation Drafts (EPIC-11)
+## 10. Agent Engineering Habits (shared SoT for Cursor + Hermes)
+
+Synced 2026-10-16 from Cursor's .cursor/rules. These are the defaults on
+both lanes; exceptions need Maria's sign-off.
+
+- **One story per PR** (`feat/EPICxx-USxx-short-name`). No unrelated stories
+  bundled — each PR implements exactly one US.
+- **No drive-by refactors.** No speculative abstractions or unused helpers.
+  If it isn't needed for this story, don't build it.
+- **Flow-first.** Apex/LWC only with a one-line plain-language why. Ask if unsure.
+- **Confirm target org alias before deploy/retrieve.** Never invent aliases,
+  usernames, or package IDs — use `docs/environment.md` or ask Maria.
+- **Prefer scratch** for feature work when Dev Hub is available. Warn before
+  non-scratch / shared / production-like targets.
+- **Git is the source of truth.** Metadata stays in `force-app`. Deploy/retrieve
+  with explicit `--source-dir` or `--metadata`. No org-only Setup drift.
+- **Secrets never leave the VM.** No auth URLs, tokens, passwords, keys, or
+  Playwright `.auth` in chat, logs, or git. Point at `docs/CI_CD_SECRETS.md`
+  / `docs/environment.md`.
+- **Done means PR merged + org deploy + sanity check.** Fill verification
+  (tests / dry-run / manual check) before claiming work finished.
+
+## 12. Documentation Drafts (EPIC-11)
 
 EPIC-11 user guides stay **Draft** until the org is finished. A first pass is a **source-verified draft**, not a finished manual.
 
@@ -159,14 +190,14 @@ EPIC-11 user guides stay **Draft** until the org is finished. A first pass is a 
 
 ### Story → File Map
 
-| Story | Issue | Canonical file |
-|---|---|---|
-| US-D001 End user manual | #37 | `docs/EPIC-11_D001_End_User_Manual.md` |
-| US-D002 Manager guide | #38 | `docs/EPIC-11_D002_Manager_Guide.md` |
-| US-D003 Franchise owner guide | #39 | `docs/EPIC-11_D003_Franchise_Owner_Guide.md` |
-| US-D004 System admin guide | #40 | `docs/EPIC-11_D004_System_Admin_Guide.md` |
-| US-D005 API docs | #41 | `docs/EPIC-11_D005_API_Documentation.md` |
-| US-D006 Troubleshooting + FAQ | #42 | `docs/EPIC-11_D006_Troubleshooting_FAQ.md` |
+| Story                         | Issue | Canonical file                               |
+| ----------------------------- | ----- | -------------------------------------------- |
+| US-D001 End user manual       | #37   | `docs/EPIC-11_D001_End_User_Manual.md`       |
+| US-D002 Manager guide         | #38   | `docs/EPIC-11_D002_Manager_Guide.md`         |
+| US-D003 Franchise owner guide | #39   | `docs/EPIC-11_D003_Franchise_Owner_Guide.md` |
+| US-D004 System admin guide    | #40   | `docs/EPIC-11_D004_System_Admin_Guide.md`    |
+| US-D005 API docs              | #41   | `docs/EPIC-11_D005_API_Documentation.md`     |
+| US-D006 Troubleshooting + FAQ | #42   | `docs/EPIC-11_D006_Troubleshooting_FAQ.md`   |
 
 These issues are `@platform:cursor`. Do not implement them. Maria is drafting US-D004 on `feat/EPIC11-USD004-system-admin-guide`. Do not open a competing guide.
 
@@ -178,11 +209,11 @@ These issues are `@platform:cursor`. Do not implement them. Maria is drafting US
 4. **When your PR changes behavior a guide describes,** update that guide in the same PR if the file already exists. Set `Last verified` to the new `main` SHA. Diff only since the previous `Last verified` SHA, and edit the sections that diff touches. If the file does not exist yet, write "docs not drafted yet" under Docs Updated and leave the Cursor story open.
 5. **Update map:** permission set, profiles, sharing, users → US-D004. Staff quick actions and record pages → US-D001. Reports or the management dashboard → US-D002. Royalty or franchise dashboards → US-D003. REST or auth → US-D005. A real failure you had to diagnose → US-D006.
 
-## 12. Story Order
+## 13. Story Order
 
 The expected merge order for open EPIC-03, EPIC-04, and EPIC-11 stories, with dependencies and decisions, is in [`docs/story-order.md`](./story-order.md). Read it before picking up or deploying one of those stories.
 
-## 13. Where This Doc Lives
+## 14. Where This Doc Lives
 
 - Repo path: `docs/WORKFLOW.md` on `main`
 - `.cursorrules` points here (3-line pointer)
