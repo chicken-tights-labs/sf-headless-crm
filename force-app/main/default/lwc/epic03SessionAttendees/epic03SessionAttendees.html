@@ -1,0 +1,26 @@
+<template>
+  <lightning-card title="Attendees" icon-name="standard:people">
+    <div class="slds-p-horizontal_medium slds-p-bottom_small">
+      <p class="slds-text-body_small slds-m-bottom_small">{countLabel}</p>
+
+      <template if:true={error}>
+        <p class="slds-text-color_error" role="alert">{error}</p>
+      </template>
+
+      <template if:true={isEmpty}>
+        <p>No bookings for this session yet.</p>
+      </template>
+
+      <template if:true={hasRows}>
+        <lightning-datatable
+          key-field="bookingId"
+          data={attendees}
+          columns={columns}
+          hide-checkbox-column
+        ></lightning-datatable>
+      </template>
+
+      <!-- US-T005 / US-T006 / US-T002 / US-T003: check-in actions and scan/phone go here -->
+    </div>
+  </lightning-card>
+</template>
