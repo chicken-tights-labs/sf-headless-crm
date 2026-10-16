@@ -43,7 +43,6 @@
                 <identifier>c_epic03SessionAttendees</identifier>
             </componentInstance>
         </itemInstances>
-        <mode>Replace</mode>
         <name>attendeesTabContent</name>
         <type>Facet</type>
     </flexiPageRegions>
