@@ -6,8 +6,8 @@ sf-headless-crm-workflow skill (loaded on the VM). Both reference docs/WORKFLOW.
 the single source of truth.
 
 Key points:
+- Implement @platform:cursor stories (Cursor's terminal lane). Do not pick up Hermes-owned work.
 - No direct pushes to main; always use a feature branch + PR
-- Do not implement @platform:cursor stories
 - Do not close issues/mark cards done before PR merge + org deploy + sanity check
 - Branch naming: feat/EPICxx-USxx-short-name
 - See docs/WORKFLOW.md for full details: roles, state machine, deployment, handoff protocol

@@ -1,0 +1,12 @@
+---
+description: Flow-first DX; confirm org; scoped deploy; Git is SoT
+alwaysApply: true
+---
+
+# Salesforce DX safety
+
+- Prefer Flow for automation. Introduce Apex or LWC only with a one-line plain-language why; ask if unsure.
+- Confirm the target org alias before any deploy/retrieve. Never invent aliases, usernames, or package IDs — use docs/environment.md or ask.
+- Prefer scratch orgs for new feature work when Dev Hub is available. Warn clearly before deploying to non-scratch / shared / production-like orgs.
+- Keep metadata in force-app (or packageDirectories). Git is source of truth — no org-only Setup drift.
+- Deploy/retrieve with explicit --source-dir or --metadata scope. Do not "fix the org" by hand and leave source behind.

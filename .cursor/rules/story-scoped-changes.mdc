@@ -1,0 +1,11 @@
+---
+description: Keep PRs story-scoped; no drive-bys or speculative code
+alwaysApply: true
+---
+
+# Story-scoped changes
+
+- One user story (or one EPIC-xx-US-xx theme) per branch/PR. Do not bundle unrelated stories.
+- Change only files needed for the acceptance criteria. No drive-by refactors, renames, or cleanup outside the story.
+- No speculative abstractions, "future-proof" layers, or unused helpers/libraries.
+- If scope creeps, stop and ask before expanding.

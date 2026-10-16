@@ -1,0 +1,11 @@
+---
+description: Do not claim done without verification matching the story
+alwaysApply: true
+---
+
+# Verify before done
+
+- Before calling work done: fill PR "How It Was Verified" (test run, deploy dry-run, or explicit manual check from the issue).
+- Locally when touching LWC/JS: npm run lint and npm test (or rely on husky). Apex/metadata: deploy or dry-run with RunRelevantTests against a confirmed org alias.
+- Do not mark the GitHub issue or kanban card done — that waits for PR merge + org deploy + sanity check per docs/WORKFLOW.md.
+- Prefer a focused automated test (Apex/Jest/Playwright) when the story adds behavior; otherwise state the manual check clearly.
