@@ -7,7 +7,7 @@
 | Resource               | Value                                            |
 | ---------------------- | ------------------------------------------------ |
 | Scratch org alias      | `my-gym`                                         |
-| Scratch org expiration | 2026-11-07 (recreated 2026-10-08)                |
+| Scratch org expiration | **Nov 7, 2026** (recreated Oct 12)               |
 | Dev org alias          | `dev-org`                                        |
 | Partner Dev Org alias  | `partner-dev`                                    |
 | VM scratch org path    | `/home/maria_robbins/sf-project/sf-headless-crm` |
