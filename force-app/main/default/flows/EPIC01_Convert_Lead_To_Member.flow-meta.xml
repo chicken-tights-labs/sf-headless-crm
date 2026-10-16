@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
         <name>Convert_Lead</name>
@@ -60,9 +60,11 @@
             <label>Succeeded</label>
         </rules>
     </decisions>
-    <description>EPIC01-US-002: Quick action flow on Lead__c. Converts the lead to a Prospect Member via EPIC01_LeadConversion_Action and shows the result or the guard message.</description>
+    <description
+  >EPIC01-US-002: Convert-only screen flow. Converts the lead to a Prospect Member via EPIC01_LeadConversion_Action. The Lead quick action Convert to Member now runs EPIC04_Convert_Lead_And_Pay (US-F002), which calls this same convert action then the payment subflow.</description>
     <environments>Default</environments>
-    <interviewLabel>EPIC01 Convert Lead To Member {!$Flow.CurrentDateTime}</interviewLabel>
+    <interviewLabel
+  >EPIC01 Convert Lead To Member {!$Flow.CurrentDateTime}</interviewLabel>
     <label>EPIC01 Convert Lead To Member</label>
     <processMetadataValues>
         <name>BuilderType</name>
@@ -81,7 +83,8 @@
         <allowPause>false</allowPause>
         <fields>
             <name>ErrorText</name>
-            <fieldText>&lt;p&gt;&lt;strong&gt;{!conversionMessage}&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;{!$Flow.FaultMessage}&lt;/p&gt;</fieldText>
+            <fieldText
+      >&lt;p&gt;&lt;strong&gt;{!conversionMessage}&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;{!$Flow.FaultMessage}&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>
