@@ -1,11 +1,18 @@
 /**
- * EPIC03-US-T004: read-only attendee roster for a Scheduled Session.
- * Why Apex: joins Booking__c rows with waiverStatusByMember (cannot do in LWC alone).
- * This LWC is the class check-in screen; later stories add mark-attended / scan / phone.
+ * EPIC03-US-T004 / US-T005 / US-T006: session attendee roster and check-in.
+ * Why Apex: joins Booking__c with waiverStatusByMember; markAttended is the
+ * shared attendance write for US-T002 / US-T003 later.
+ * Check-in does not use EPIC01_BookingWaiverGuard (that trigger is insert-only).
  */
 public with sharing class EPIC03_SessionAttendees_Controller {
   public static final String CHECKIN_CHECKED_IN = 'Checked in';
   public static final String CHECKIN_NOT_CHECKED_IN = 'Not checked in';
+  public static final String MSG_CHECKIN_OK = 'Checked in';
+  public static final String MSG_CHECKIN_NO_WAIVER = 'Cannot check in - member does not have a valid signed waiver';
+  public static final String MSG_CHECKIN_NO_BOOKING = 'Booking not found.';
+  public static final String MSG_CHECKIN_CANCELLED = 'Cannot check in — this booking is Cancelled.';
+  public static final String MSG_CHECKIN_NO_SHOW = 'Cannot check in — this booking is marked No-Show.';
+  public static final String MSG_CHECKIN_ALREADY = 'This member is already checked in.';
 
   public class AttendeeRow {
     @AuraEnabled
@@ -22,6 +29,13 @@ public with sharing class EPIC03_SessionAttendees_Controller {
     public Datetime checkedInAt;
     @AuraEnabled
     public String waiverStatus;
+  }
+
+  public class MarkResult {
+    @AuraEnabled
+    public Boolean success;
+    @AuraEnabled
+    public String message;
   }
 
   @AuraEnabled(cacheable=true)
@@ -71,6 +85,82 @@ public with sharing class EPIC03_SessionAttendees_Controller {
       rows.add(row);
     }
     return rows;
+  }
+
+  /**
+   * US-T005 + US-T006: set Checked_In_At__c and Status__c = Completed after
+   * waiverStatusByMember returns Signed. Called later by QR/phone check-in.
+   */
+  @AuraEnabled
+  public static MarkResult markAttended(Id bookingId) {
+    MarkResult result = new MarkResult();
+    Savepoint sp = Database.setSavepoint();
+    try {
+      if (bookingId == null) {
+        result.success = false;
+        result.message = MSG_CHECKIN_NO_BOOKING;
+        return result;
+      }
+
+      List<Booking__c> bookings = [
+        SELECT Id, Status__c, Checked_In_At__c, Member__c
+        FROM Booking__c
+        WHERE Id = :bookingId
+        LIMIT 1
+      ];
+      if (bookings.isEmpty()) {
+        result.success = false;
+        result.message = MSG_CHECKIN_NO_BOOKING;
+        return result;
+      }
+
+      Booking__c booking = bookings[0];
+      if (booking.Status__c == 'Cancelled') {
+        result.success = false;
+        result.message = MSG_CHECKIN_CANCELLED;
+        return result;
+      }
+      if (booking.Status__c == 'No-Show') {
+        result.success = false;
+        result.message = MSG_CHECKIN_NO_SHOW;
+        return result;
+      }
+      if (
+        booking.Checked_In_At__c != null ||
+        booking.Status__c == 'Completed'
+      ) {
+        result.success = false;
+        result.message = MSG_CHECKIN_ALREADY;
+        return result;
+      }
+      if (booking.Member__c == null) {
+        result.success = false;
+        result.message = MSG_CHECKIN_NO_WAIVER;
+        return result;
+      }
+
+      String waiverStatus = EPIC01_MemberOnboarding_Service.waiverStatusByMember(
+          new Set<Id>{ booking.Member__c }
+        )
+        .get(booking.Member__c);
+      if (waiverStatus != 'Signed') {
+        result.success = false;
+        result.message = MSG_CHECKIN_NO_WAIVER;
+        return result;
+      }
+
+      booking.Checked_In_At__c = DateTime.now();
+      booking.Status__c = 'Completed';
+      update booking;
+
+      result.success = true;
+      result.message = MSG_CHECKIN_OK;
+    } catch (Exception e) {
+      Database.rollback(sp);
+      result.success = false;
+      result.message = e.getMessage();
+    }
+    return result;
   }
 
   @TestVisible
