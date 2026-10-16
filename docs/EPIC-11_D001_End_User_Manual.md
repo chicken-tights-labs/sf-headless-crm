@@ -3,9 +3,9 @@
 Issue: #37. Kanban: `t_9d84897e`.
 
 **Status:** Draft
-**Last verified:** 2026-10-12 against `main` `cdac3ac` plus branch `feat/EPIC04-USF004-payment-screen`
+**Last verified:** 2026-10-15 against branch `feat/EPIC04-USF002-convert-lead-to-member`
 **Checked from:** source in `force-app` (not an org click-through)
-**Still open:** screenshots in `my-gym`; trainer check-in, attendance, substitutes, merchandise, discounts, refunds, and renewals are not built; Convert to Member is not placed on a page in source
+**Still open:** screenshots in `my-gym`; trainer check-in, attendance, substitutes, merchandise, discounts, refunds, and renewals are not built
 
 This is the canonical copy. The issue names `CRM-Documentation/EPIC-11_D001_End_User_Manual.md`. Sync that vault from this file when the vault is available.
 
@@ -50,23 +50,26 @@ The saved lead uses Lead Status **Walk-In** and Lead Source **In Person**. Phone
 
 Creating the lead any other way (including the API in US-D005) with `Referral_Code_Entered__c` set runs **EPIC01 Lead Referral Attribution** before save. A matching member code sets Referred By and Lead Source Referral. An unknown code still saves the lead and writes `Referral code not found — continuing without attribution` on Notes.
 
-## Front desk: convert a lead to a member
+## Front desk: convert a lead to a member (and take first payment)
 
-**Verified from source, with a placement gap.** Quick action **Convert to Member** on Lead runs the screen flow **EPIC01 Convert Lead To Member**. Source has no Lead record page, so the button may be missing until it is added to the Lead page. **Needs an org click-through.**
+**Verified from source.** Quick action **Convert to Member** on Lead runs **EPIC04 Convert Lead And Pay**. The Lead record page (**Lead Record Page**) is in source and is the Boxing Gym CRM View override for Lead, with the button in the highlights panel. **Needs an org click-through** for screenshots.
 
-1. Open the Lead.
-2. Run **Convert to Member**.
-3. Success screen **Lead Converted** shows the conversion message. The new Member is Status Prospect. A signed lead waiver is copied onto the Member. A task **Schedule first class for {name}** is created. If there is no signed waiver, the task subject is **Member needs to sign waiver before payment**.
-4. The referring member, when there is one, gets a plain-text email: `Your referral {name} has joined Boxing Fitness Gym!`
+1. Open the Lead (Leads tab or from a recent walk-in).
+2. Click **Convert to Member**.
+3. Conversion runs first (same engine as EPIC-01 US-002). Screen **Lead Converted — Continue to Payment** shows the conversion message. The new Member is Status **Prospect**. A signed lead waiver is copied onto the Member. A task **Schedule first class for {name}** is created. If there is no signed waiver, the task subject is **Member needs to sign waiver before payment**. The referring member, when there is one, gets: `Your referral {name} has joined Boxing Fitness Gym!`
+4. Finish that screen. The flow continues into the same payment screens as **Process Membership Payment** (waiver gate, confirm tier, collect payment). Active comes from a successful payment, not from conversion alone.
+5. If the waiver gate blocks payment, the Member stays Prospect. Fix the waiver, then use **Process Membership Payment** on the Member (or convert again only if conversion had failed).
 
-These messages mean the convert did not happen:
+These messages mean the convert step did not happen (payment never starts):
 
 | Message                                                             | What to do                                                                                        |
 | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| Member already exists for this lead — view existing Member record   | Open the linked Member.                                                                           |
+| Member already exists for this lead — view existing Member record   | Open the linked Member. Use **Process Membership Payment** if they still need first payment.      |
 | Lead already converted to Member — view linked Member record        | Open the linked Member.                                                                           |
 | Cannot convert disqualified lead — change status to Qualified first | The status value in the org is **Unqualified**. Set Lead Status to Qualified, then convert again. |
 | Cannot convert: Lead has no Franchise Location assigned             | Set Franchise Location on the lead, then convert again.                                           |
+
+Walk-In leads convert. The field is **Lead Status** (`Lead_Status__c`), not `Status__c`.
 
 **Unconvert** is on the Member record page. It runs only for a System Administrator, and only while the Member is still Prospect. It restores the lead to Qualified, detaches transferred waivers, and deletes the Member. Other statuses show **Only Prospect members can be unconverted**.
 
