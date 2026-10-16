@@ -1,0 +1,11 @@
+.signature-pad {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: 180px;
+  border: 1px solid #c9c9c9;
+  border-radius: 0.25rem;
+  background: #fff;
+  touch-action: none;
+  cursor: crosshair;
+}

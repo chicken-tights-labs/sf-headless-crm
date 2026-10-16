@@ -7,6 +7,9 @@
                     <name>actionNames</name>
                     <valueList>
                         <valueListItems>
+                            <value>Lead__c.Capture_Waiver</value>
+                        </valueListItems>
+                        <valueListItems>
                             <value>Lead__c.Convert_to_Member</value>
                         </valueListItems>
                         <valueListItems>

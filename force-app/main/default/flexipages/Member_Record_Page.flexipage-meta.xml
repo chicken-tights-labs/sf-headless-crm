@@ -7,6 +7,9 @@
                     <name>actionNames</name>
                     <valueList>
                         <valueListItems>
+                            <value>Member__c.Capture_Waiver</value>
+                        </valueListItems>
+                        <valueListItems>
                             <value>Member__c.Select_Membership_Tier</value>
                         </valueListItems>
                         <valueListItems>
@@ -26,7 +29,7 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>numVisibleActions</name>
-                    <value>4</value>
+                    <value>5</value>
                 </componentInstanceProperties>
                 <componentName>force:highlightsPanel</componentName>
                 <identifier>force_highlightsPanel</identifier>

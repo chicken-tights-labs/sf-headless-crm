@@ -1,0 +1,99 @@
+<template>
+  <lightning-card title={heading}>
+    <div class="slds-p-around_medium">
+      <template if:true={contextError}>
+        <p class="slds-text-color_error" role="alert">{contextError}</p>
+      </template>
+
+      <template if:true={isReady}>
+        <p class="slds-m-bottom_small">
+          Record type: {recordType}. Location: {locationName}.
+        </p>
+
+        <lightning-input
+          label="Signer name"
+          value={signerName}
+          onchange={handleSignerName}
+          class="slds-m-bottom_small"
+          required
+        ></lightning-input>
+
+        <lightning-input
+          type="email"
+          label="Signer email"
+          value={signerEmail}
+          onchange={handleSignerEmail}
+          class="slds-m-bottom_small"
+          required
+        ></lightning-input>
+
+        <lightning-combobox
+          label="Signer role"
+          value={signerRole}
+          options={roleOptions}
+          onchange={handleSignerRole}
+          class="slds-m-bottom_small"
+        ></lightning-combobox>
+
+        <lightning-combobox
+          label="Waiver template"
+          value={templateId}
+          options={templateOptions}
+          onchange={handleTemplate}
+          class="slds-m-bottom_small"
+          required
+        ></lightning-combobox>
+
+        <p class="slds-m-bottom_xx-small">
+          <strong>Signature</strong> — visitor signs below
+        </p>
+        <canvas
+          data-id="signature-pad"
+          class="signature-pad"
+          width="560"
+          height="180"
+          onmousedown={handlePointerDown}
+          onmousemove={handlePointerMove}
+          onmouseup={handlePointerUp}
+          onmouseleave={handlePointerUp}
+          ontouchstart={handlePointerDown}
+          ontouchmove={handlePointerMove}
+          ontouchend={handlePointerUp}
+        ></canvas>
+
+        <template if:true={saveError}>
+          <p class="slds-text-color_error slds-m-top_small" role="alert">
+            {saveError}
+          </p>
+        </template>
+        <template if:true={message}>
+          <p class="slds-text-color_success slds-m-top_small">{message}</p>
+        </template>
+
+        <div class="slds-m-top_medium slds-grid slds-gutters">
+          <div class="slds-col">
+            <lightning-button
+              label="Clear signature"
+              onclick={handleClear}
+              disabled={saving}
+            ></lightning-button>
+          </div>
+          <div class="slds-col slds-text-align_right">
+            <lightning-button
+              label="Cancel"
+              onclick={handleCancel}
+              class="slds-m-right_small"
+              disabled={saving}
+            ></lightning-button>
+            <lightning-button
+              variant="brand"
+              label="Save signed waiver"
+              onclick={handleSave}
+              disabled={saveDisabled}
+            ></lightning-button>
+          </div>
+        </div>
+      </template>
+    </div>
+  </lightning-card>
+</template>
