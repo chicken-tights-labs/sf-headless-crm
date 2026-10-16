@@ -336,7 +336,7 @@
         <fields>
             <name>AlreadyActiveText</name>
             <fieldText
-      >&lt;p&gt;&lt;strong&gt;This member is already Active.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;No payment was taken. A first payment would restart the membership dates and resend the welcome email. Use Renew Membership instead (US-F003, not built yet).&lt;/p&gt;</fieldText>
+      >&lt;p&gt;&lt;strong&gt;This member is already Active.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;No payment was taken. A first payment would restart the membership dates and resend the welcome email. Use the &lt;strong&gt;Renew Membership&lt;/strong&gt; action instead.&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>
