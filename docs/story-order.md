@@ -13,37 +13,37 @@ This is the order the open stories are expected to merge. Each story's GitHub is
 
 ## Wave 1: start in parallel
 
-| Issue | Story | Depends on |
-|---|---|---|
-| #65 | US-F001 Place walk-in lead form for front desk | None |
-| #59 | US-F005 Capture digital waiver | None |
-| #58 | US-F004 First payment screen (calls `EPIC01_ProcessPayment_Action`) | None |
-| #60 | US-F006 Merchandise sale | None |
-| #46 | US-T001 Trainer schedule | None |
-| #49 | US-T004 Attendee list (becomes the class check-in screen) | None |
-| #54 | US-T009 Medical-notes permission (trainers only) | None |
-| #40 | US-D004 System admin guide | None |
+| Issue | Story                                                               | Depends on |
+| ----- | ------------------------------------------------------------------- | ---------- |
+| #65   | US-F001 Place walk-in lead form for front desk                      | None       |
+| #59   | US-F005 Capture digital waiver                                      | None       |
+| #58   | US-F004 First payment screen (calls `EPIC01_ProcessPayment_Action`) | None       |
+| #60   | US-F006 Merchandise sale                                            | None       |
+| #46   | US-T001 Trainer schedule                                            | None       |
+| #49   | US-T004 Attendee list (becomes the class check-in screen)           | None       |
+| #54   | US-T009 Medical-notes permission (trainers only)                    | None       |
+| #40   | US-D004 System admin guide                                          | None       |
 
 ## Wave 2
 
-| Issue | Story | Depends on |
-|---|---|---|
-| #56 | US-F002 Convert and pay | #58, #65 |
-| #57 | US-F003 Renew membership (new signed waiver required) | #58, #59 |
-| #61 | US-F007 Merchandise discount: promo codes and manager PIN | #60 |
-| #52 | US-T007 Member profile | #54 |
-| #50 + #51 | US-T005 Mark Attended with US-T006 waiver block, as one action | #49, #59 |
+| Issue     | Story                                                          | Depends on |
+| --------- | -------------------------------------------------------------- | ---------- |
+| #56       | US-F002 Convert and pay                                        | #58, #65   |
+| #57       | US-F003 Renew membership (new signed waiver required)          | #58, #59   |
+| #61       | US-F007 Merchandise discount: promo codes and manager PIN      | #60        |
+| #52       | US-T007 Member profile                                         | #54        |
+| #50 + #51 | US-T005 Mark Attended with US-T006 waiver block, as one action | #49, #59   |
 
 ## Wave 3
 
-| Issue | Story | Depends on |
-|---|---|---|
-| #48 | US-T003 Phone check-in | #50 + #51 |
-| #47 | US-T002 QR check-in (Salesforce side: code field and scan) | #50 + #51 |
-| #64 | Member QR wallet pass and fob (`platform:app`) | Code field from #47 |
-| #53 | US-T008 Trainer new member | #65, #56, #58 |
-| #55 | US-T010 Substitute trainer | #46 |
-| #62 | US-F008 Merchandise refund | #60 |
+| Issue | Story                                                      | Depends on          |
+| ----- | ---------------------------------------------------------- | ------------------- |
+| #48   | US-T003 Phone check-in                                     | #50 + #51           |
+| #47   | US-T002 QR check-in (Salesforce side: code field and scan) | #50 + #51           |
+| #64   | Member QR wallet pass and fob (`platform:app`)             | Code field from #47 |
+| #53   | US-T008 Trainer new member                                 | #65, #56, #58       |
+| #55   | US-T010 Substitute trainer                                 | #46                 |
+| #62   | US-F008 Merchandise refund                                 | #60                 |
 
 ## Docs
 
@@ -71,11 +71,11 @@ This is the order the open stories are expected to merge. Each story's GitHub is
 
 ## Open questions
 
-| Issue | Question |
-|---|---|
-| #54 | Who enters or updates medical notes, if front desk and managers cannot see them? |
-| #61 | Where is a manager's PIN stored, and who sets it? Does 10% or less skip the PIN? Do promo codes expire or have usage limits? |
-| #57 | How do we tell that a waiver belongs to this renewal? |
-| #47, #64 | How is a lost code replaced so the old one stops working? |
-| #64 | Which repo and team build the wallet pass and fob? |
-| #65 | Gym Manager Home or a separate front desk page? Default the location to the staff member's gym? |
+| Issue    | Question                                                                                                                     |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| #54      | Who enters or updates medical notes, if front desk and managers cannot see them?                                             |
+| #61      | Where is a manager's PIN stored, and who sets it? Does 10% or less skip the PIN? Do promo codes expire or have usage limits? |
+| #57      | Decided: Signed waiver with Signature_Timestamp__c on/after today (Capture Waiver before renewing).                          |
+| #47, #64 | How is a lost code replaced so the old one stops working?                                                                    |
+| #64      | Which repo and team build the wallet pass and fob?                                                                           |
+| #65      | Gym Manager Home or a separate front desk page? Default the location to the staff member's gym?                              |

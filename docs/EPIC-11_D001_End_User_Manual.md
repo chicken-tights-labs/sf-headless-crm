@@ -3,9 +3,9 @@
 Issue: #37. Kanban: `t_9d84897e`.
 
 **Status:** Draft
-**Last verified:** 2026-10-15 against branch `feat/EPIC03-UST004-trainer-view-attendees`
+**Last verified:** 2026-10-15 against branches `feat/EPIC03-UST004-trainer-view-attendees` and `feat/EPIC04-USF003-renew-membership`
 **Checked from:** source in `force-app` (not an org click-through)
-**Still open:** screenshots in `my-gym`; trainer schedule, check-in actions, substitutes, merchandise, discounts, refunds, and renewals are not built
+**Still open:** screenshots in `my-gym`; trainer schedule, substitutes, merchandise, discounts, and refunds are not built on `main` yet
 
 This is the canonical copy. The issue names `CRM-Documentation/EPIC-11_D001_End_User_Manual.md`. Sync that vault from this file when the vault is available.
 
@@ -133,7 +133,7 @@ When a Prospect gets a valid Signed waiver, **EPIC01 Waiver Confirmed Notify** c
 
 1. Open the Member.
 2. Click **Process Membership Payment**.
-3. If the member is already **Active**, screen **Already Active** says no payment was taken and to use Renew Membership instead. Renewal is not built yet (US-F003). Every other status continues.
+3. If the member is already **Active**, screen **Already Active** says no payment was taken and to use **Renew Membership** instead. Every other status continues.
 4. If the waiver gate fails, **Cannot Take Payment** shows the waiver message. No payment record is created.
 5. On **Confirm Membership Tier**, pick Drop-In, Punch Card, Monthly Unlimited, or Annual Prepaid. The member's saved tier is preselected. Choosing a different tier saves it on the Member before payment.
 6. On **Collect Payment**, the screen shows the tier and the line `Processor is simulated (no Stripe). Only Credit Card and Debit Card can decline.`
@@ -156,6 +156,24 @@ Card decline (Credit Card or Debit Card only): screen **Payment Failed**, messag
 
 The 50% referred-friend discount is a calculator in Apex (`calculatePaymentWithReferralDiscount`). The payment screen does not apply it. Staff who want that price type half the amount.
 
+## Front desk: renew a membership
+
+**Verified from source.** On an Active Member, **Renew Membership** runs **EPIC04 Renew Membership**. It does **not** call Process Membership Payment / `processPayment`.
+
+1. Capture a new waiver today (**Capture Waiver**) if one was not already signed today.
+2. Open the Member → **Renew Membership**.
+3. Confirm the tier (optional change is saved on the Member).
+4. Enter amount and payment method (same method list as first payment; processor is simulated).
+5. Finish.
+
+Rules:
+
+- Member must be **Active**. Prospects use **Process Membership Payment**.
+- Non–Drop-In tiers: `Expiry_Date__c` must be today or earlier (not due yet → blocked).
+- Waiver: Signed with `Signature_Timestamp__c` on/after today. An older valid waiver is not enough for renewal.
+- Expiry extends from the later of today and the current expiry (Monthly +30, Annual +365, Punch +180 and +10 classes). `Start_Date__c` is unchanged.
+- Creates a Completed `Payment_Transaction__c`. Does not resend the welcome email or award the referral again. A receipt can still email.
+
 ## Front desk: book a class
 
 **Verified from source.** Inserting a Booking fails unless the member is Active and has a valid signed waiver. Messages:
@@ -172,14 +190,13 @@ A punch-card booking decrements Classes Remaining. There is no front-desk bookin
 
 **Not built.**
 
-- Renew a membership. There is no renewal screen. **Process Membership Payment** stops Active members (US-F003).
 - Sell merchandise. Merchandise Sale and Sale Line Item exist as objects. There is no sale screen.
 - Apply a discount with manager approval. No approval process.
 - Refund or return. No refund action.
 
 ## How to verify this draft
 
-1. In **Boxing Gym CRM**, open a Member and confirm **Capture Waiver**, **Select Membership Tier**, **Process Membership Payment**, and **Unconvert** are on the record.
+1. In **Boxing Gym CRM**, open a Member and confirm **Capture Waiver**, **Select Membership Tier**, **Process Membership Payment**, **Renew Membership**, and **Unconvert** are on the record.
 2. On a Lead, confirm **Capture Waiver** and **Convert to Member** are on the record.
 3. Confirm **Walk-In Lead Registration** is on **Home** (Gym Manager Home).
 4. Run **Capture Waiver**, sign the pad, and confirm a Signed Waiver Record appears.
