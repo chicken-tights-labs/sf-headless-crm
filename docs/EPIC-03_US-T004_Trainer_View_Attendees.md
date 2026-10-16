@@ -12,7 +12,7 @@ Issue: #49. Kanban: `t-ab762acbff85`.
 | Columns         | Member name, check-in status, waiver status, booking status                                                  |
 | Check-in status | From `Checked_In_At__c` + `Status__c` (Confirmed / Completed / No-Show / Cancelled). No Attended value       |
 | Waiver status   | `EPIC01_MemberOnboarding_Service.waiverStatusByMember`                                                       |
-| Scope           | Read-only. Mark Attended + waiver block are US-T005 / US-T006                                                |
+| Check-in        | Row action **Mark Attended** (US-T005 / US-T006) sets Completed + timestamp after waiver gate                |
 
 ## How to use
 

@@ -3,9 +3,9 @@
 Issue: #37. Kanban: `t_9d84897e`.
 
 **Status:** Draft
-**Last verified:** 2026-10-15 against branches `feat/EPIC03-UST004-trainer-view-attendees` and `feat/EPIC04-USF003-renew-membership`
+**Last verified:** 2026-10-15 against branch `feat/EPIC03-UST005-UST006-mark-attended-waiver-block`
 **Checked from:** source in `force-app` (not an org click-through)
-**Still open:** screenshots in `my-gym`; trainer schedule, substitutes, merchandise, discounts, and refunds are not built on `main` yet
+**Still open:** screenshots in `my-gym`; trainer schedule, QR/phone check-in, substitutes, merchandise, discounts, and refunds are not built yet
 
 This is the canonical copy. The issue names `CRM-Documentation/EPIC-11_D001_End_User_Manual.md`. Sync that vault from this file when the vault is available.
 
@@ -19,18 +19,22 @@ Admin setup (users, the permission set, locations, waiver templates, tier values
 
 ## Trainer workflows
 
-**Partially built.** Class attendee roster is on the Scheduled Session record. Schedule, check-in actions, substitutes, and trainer-only medical notes are not.
+**Partially built.** Class attendee roster and Mark Attended (with waiver block) are on the Scheduled Session record. Schedule, QR/phone check-in, substitutes, and trainer-only medical notes are not.
 
-### Trainer: view class attendees
+### Trainer: view class attendees and mark attended
 
-**Verified from source.** Open a **Scheduled Session** in Boxing Gym CRM. The **Attendees** tab (default) lists every booking for that session: member name, check-in status (`Checked in` / `Not checked in` / `No-Show` / `Cancelled`), waiver status from the same rules as payment and booking, and booking status. Read-only — Mark Attended is US-T005.
+**Verified from source.** Open a **Scheduled Session** in Boxing Gym CRM. The **Attendees** tab (default) lists every booking for that session: member name, check-in status (`Checked in` / `Not checked in` / `No-Show` / `Cancelled`), waiver status, and booking status.
+
+1. Open the row menu → **Mark Attended**.
+2. On success: booking `Status__c = Completed` and `Checked_In_At__c` is set. There is no Attended picklist value.
+3. Without a valid Signed waiver: blocked with `Cannot check in - member does not have a valid signed waiver`. Capture a waiver (US-F005), then retry. The booking insert trigger is not used at check-in.
 
 | Asked for                 | What exists                                                                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | View my class schedule    | No trainer schedule screen. The report **Upcoming Sessions and Capacity** lists sessions from today forward. See US-D002.                                            |
 | Check in by QR code       | No QR check-in.                                                                                                                                                      |
 | Check in by phone lookup  | No phone-lookup check-in.                                                                                                                                            |
-| Mark attendance           | No Mark Attended action yet (US-T005). The Attendees tab is the screen that will get it.                                                                             |
+| Mark attendance           | **Verified from source.** Row action **Mark Attended** on the Attendees tab (US-T005 / US-T006).                                                                     |
 | View class attendee lists | **Verified from source.** On a Scheduled Session, the **Attendees** tab lists bookings with member name, check-in status, and waiver status (US-T004).               |
 | Open a member profile     | A CRM user can open a Member record. There is no trainer profile or trainer app.                                                                                     |
 | View medical notes        | `Member__c.Medical_Notes__c` (Medical Notes) is a text area. The permission set does not hide it from other CRM fields. No separate medical-notes permission exists. |

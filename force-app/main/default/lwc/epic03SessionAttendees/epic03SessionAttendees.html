@@ -7,6 +7,12 @@
         <p class="slds-text-color_error" role="alert">{error}</p>
       </template>
 
+      <template if:true={actionError}>
+        <p class="slds-text-color_error slds-m-bottom_small" role="alert">
+          {actionError}
+        </p>
+      </template>
+
       <template if:true={isEmpty}>
         <p>No bookings for this session yet.</p>
       </template>
@@ -17,10 +23,11 @@
           data={attendees}
           columns={columns}
           hide-checkbox-column
+          onrowaction={handleRowAction}
         ></lightning-datatable>
       </template>
 
-      <!-- US-T005 / US-T006 / US-T002 / US-T003: check-in actions and scan/phone go here -->
+      <!-- US-T002 / US-T003: QR scan and phone lookup go here; they call markAttended -->
     </div>
   </lightning-card>
 </template>

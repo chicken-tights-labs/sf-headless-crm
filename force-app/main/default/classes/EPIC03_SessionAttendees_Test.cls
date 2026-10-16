@@ -1,5 +1,5 @@
 /**
- * EPIC03-US-T004: session attendee roster (read-only check-in screen base).
+ * EPIC03-US-T004 / US-T005 / US-T006: attendee roster + mark attended with waiver block.
  */
 @isTest
 private class EPIC03_SessionAttendees_Test {
@@ -132,5 +132,64 @@ private class EPIC03_SessionAttendees_Test {
       EPIC03_SessionAttendees_Controller.CHECKIN_NOT_CHECKED_IN,
       EPIC03_SessionAttendees_Controller.checkInLabel('Confirmed', null)
     );
+  }
+
+  @isTest
+  static void markAttendedSetsCompletedAndTimestamp() {
+    Id sid = sessionId();
+    Member__c avery = memberNamed('Avery');
+    Booking__c booking = EPIC01_TestDataFactory.newBooking(
+      avery.Id,
+      sid,
+      locId()
+    );
+    insert booking;
+
+    Test.startTest();
+    EPIC03_SessionAttendees_Controller.MarkResult result = EPIC03_SessionAttendees_Controller.markAttended(
+      booking.Id
+    );
+    Test.stopTest();
+
+    System.assertEquals(true, result.success, result.message);
+    Booking__c updated = [
+      SELECT Status__c, Checked_In_At__c
+      FROM Booking__c
+      WHERE Id = :booking.Id
+    ];
+    System.assertEquals('Completed', updated.Status__c);
+    System.assertNotEquals(null, updated.Checked_In_At__c);
+  }
+
+  @isTest
+  static void markAttendedBlockedWithoutValidWaiver() {
+    Id sid = sessionId();
+    Member__c avery = memberNamed('Avery');
+    Booking__c booking = EPIC01_TestDataFactory.newBooking(
+      avery.Id,
+      sid,
+      locId()
+    );
+    insert booking;
+    delete [SELECT Id FROM Waiver_Record__c WHERE Member__c = :avery.Id];
+
+    Test.startTest();
+    EPIC03_SessionAttendees_Controller.MarkResult result = EPIC03_SessionAttendees_Controller.markAttended(
+      booking.Id
+    );
+    Test.stopTest();
+
+    System.assertEquals(false, result.success);
+    System.assertEquals(
+      EPIC03_SessionAttendees_Controller.MSG_CHECKIN_NO_WAIVER,
+      result.message
+    );
+    Booking__c unchanged = [
+      SELECT Status__c, Checked_In_At__c
+      FROM Booking__c
+      WHERE Id = :booking.Id
+    ];
+    System.assertEquals('Confirmed', unchanged.Status__c);
+    System.assertEquals(null, unchanged.Checked_In_At__c);
   }
 }
