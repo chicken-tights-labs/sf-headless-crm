@@ -43,6 +43,7 @@ const ROWS = [
     bookingId: "a0B000000000001",
     memberId: "a0A000000000001",
     memberName: "Avery Johnson",
+    memberUrl: "/a0A000000000001",
     bookingStatus: "Confirmed",
     checkInStatus: "Not checked in",
     waiverStatus: "Signed"

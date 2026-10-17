@@ -7,7 +7,15 @@ import markAttended from "@salesforce/apex/EPIC03_SessionAttendees_Controller.ma
 const ACTIONS = [{ label: "Mark Attended", name: "mark_attended" }];
 
 export const COLUMNS = [
-  { label: "Member", fieldName: "memberName", type: "text" },
+  {
+    label: "Member",
+    fieldName: "memberUrl",
+    type: "url",
+    typeAttributes: {
+      label: { fieldName: "memberName" },
+      target: "_self"
+    }
+  },
   { label: "Check-in", fieldName: "checkInStatus", type: "text" },
   { label: "Waiver", fieldName: "waiverStatus", type: "text" },
   { label: "Booking status", fieldName: "bookingStatus", type: "text" },

@@ -418,8 +418,14 @@
         <type>Facet</type>
     </flexiPageRegions>
 
-    <!-- Details tab: field sections + mobile fallback -->
+    <!-- Details tab: trainer profile + field sections + mobile fallback -->
     <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentName>epic03MemberProfile</componentName>
+                <identifier>c_epic03MemberProfile</identifier>
+            </componentInstance>
+        </itemInstances>
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties><name>columns</name><value

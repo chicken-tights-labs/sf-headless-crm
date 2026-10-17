@@ -1,0 +1,35 @@
+<template>
+  <lightning-card title="Trainer profile" icon-name="standard:contact">
+    <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+      <template if:true={error}>
+        <p class="slds-text-color_error" role="alert">{error}</p>
+      </template>
+
+      <template if:true={hasProfile}>
+        <dl class="slds-dl_horizontal">
+          <dt class="slds-dl_horizontal__label">Name</dt>
+          <dd class="slds-dl_horizontal__detail">{profile.name}</dd>
+
+          <dt class="slds-dl_horizontal__label">Membership tier</dt>
+          <dd class="slds-dl_horizontal__detail">{tierDisplay}</dd>
+
+          <dt class="slds-dl_horizontal__label">Status</dt>
+          <dd class="slds-dl_horizontal__detail">{statusDisplay}</dd>
+
+          <dt class="slds-dl_horizontal__label">Expiry date</dt>
+          <dd class="slds-dl_horizontal__detail">{expiryDisplay}</dd>
+
+          <template if:true={showMedicalNotes}>
+            <dt class="slds-dl_horizontal__label">Medical notes</dt>
+            <dd class="slds-dl_horizontal__detail slds-whitespace_pre-wrap">
+              {medicalNotesDisplay}
+            </dd>
+          </template>
+        </dl>
+        <p class="slds-text-body_small slds-m-top_small slds-text-color_weak">
+          Read-only. Edit membership and notes elsewhere (not on this view).
+        </p>
+      </template>
+    </div>
+  </lightning-card>
+</template>
