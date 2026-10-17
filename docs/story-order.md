@@ -1,6 +1,6 @@
 # Story Order: EPIC-03, EPIC-04, EPIC-11
 
-**Last updated:** 2026-10-12
+**Last updated:** 2026-10-16
 **Supersedes:** the sequencing, C2, and trainer-app offline sections of [`EPIC-03_04_Conflict_Analysis.md`](./EPIC-03_04_Conflict_Analysis.md)
 
 This is the order the open stories are expected to merge. Each story's GitHub issue has a dependency comment with the details. If this file and an issue comment disagree, the newer one wins, and this file gets updated in the same PR.
@@ -59,7 +59,7 @@ This is the order the open stories are expected to merge. Each story's GitHub is
 - **One attendance write.** Check-in sets `Booking__c.Checked_In_At__c` and `Status__c = Completed`. There is no Attended value.
 - **The check-in waiver block calls `waiverStatusByMember`.** `EPIC01_BookingWaiverGuard` runs when a booking is created, not at check-in. Booking stays guarded by the trigger.
 - **A QR scan records class attendance,** not gym entry. Scanners: camera in the Salesforce mobile app, or a handheld scanner typing into the screen. Salesforce stores a random check-in code per member; #64 delivers it.
-- **Medical notes:** trainers only in Salesforce. Members and guardians see their own notes in the member app.
+- **Medical notes:** trainers only in Salesforce (read-only via `Boxing_Gym_Trainer_Medical_Notes`). Front desk and managers do not see `Medical_Notes__c`. Members and guardians enter and update notes in the member app. This story does not grant CRM edit FLS.
 - **Discounts and refunds are merchandise only.** Promo codes live in a new `Promo_Code__c` object, managed by users with a new manager permission set. A manager PIN covers one-off discounts.
 - **Renewal** extends `Expiry_Date__c` from the later of today and the current expiry. It needs a new signed waiver. It does not call `processPayment`, resend the welcome email, or award the referral again.
 - **Substitute** uses a new trainer lookup on `Scheduled_Session__c`. `Assigned_Trainer__c` stays the original trainer.
@@ -73,7 +73,7 @@ This is the order the open stories are expected to merge. Each story's GitHub is
 
 | Issue    | Question                                                                                                                     |
 | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| #54      | Who enters or updates medical notes, if front desk and managers cannot see them?                                             |
+| #54      | Decided: members/guardians enter and update via the member app; trainers read-only in Salesforce; no CRM staff edit FLS.     |
 | #61      | Where is a manager's PIN stored, and who sets it? Does 10% or less skip the PIN? Do promo codes expire or have usage limits? |
 | #57      | Decided: Signed waiver with Signature_Timestamp__c on/after today (Capture Waiver before renewing).                          |
 | #47, #64 | How is a lost code replaced so the old one stops working?                                                                    |
