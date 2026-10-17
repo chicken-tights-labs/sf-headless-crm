@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+  <description
+  >EPIC03-US-T009: read-only access to Member__c.Medical_Notes__c for trainers. Assign in addition to Boxing Gym CRM Access. Front desk and managers must not receive this set.</description>
+  <hasActivationRequired>false</hasActivationRequired>
+  <label>Boxing Gym Trainer Medical Notes</label>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Member__c.Medical_Notes__c</field>
+    <readable>true</readable>
+  </fieldPermissions>
+</PermissionSet>

@@ -19,7 +19,7 @@ Admin setup (users, the permission set, locations, waiver templates, tier values
 
 ## Trainer workflows
 
-**Partially built.** Class attendee roster and Mark Attended (with waiver block) are on the Scheduled Session record. Schedule, QR/phone check-in, substitutes, and trainer-only medical notes are not.
+**Partially built.** Class attendee roster and Mark Attended (with waiver block) are on the Scheduled Session record. Trainer medical notes use a separate read-only permission set. Schedule, QR/phone check-in, and substitutes are not.
 
 ### Trainer: view class attendees and mark attended
 
@@ -29,17 +29,17 @@ Admin setup (users, the permission set, locations, waiver templates, tier values
 2. On success: booking `Status__c = Completed` and `Checked_In_At__c` is set. There is no Attended picklist value.
 3. Without a valid Signed waiver: blocked with `Cannot check in - member does not have a valid signed waiver`. Capture a waiver (US-F005), then retry. The booking insert trigger is not used at check-in.
 
-| Asked for                 | What exists                                                                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| View my class schedule    | No trainer schedule screen. The report **Upcoming Sessions and Capacity** lists sessions from today forward. See US-D002.                                            |
-| Check in by QR code       | No QR check-in.                                                                                                                                                      |
-| Check in by phone lookup  | No phone-lookup check-in.                                                                                                                                            |
-| Mark attendance           | **Verified from source.** Row action **Mark Attended** on the Attendees tab (US-T005 / US-T006).                                                                     |
-| View class attendee lists | **Verified from source.** On a Scheduled Session, the **Attendees** tab lists bookings with member name, check-in status, and waiver status (US-T004).               |
-| Open a member profile     | A CRM user can open a Member record. There is no trainer profile or trainer app.                                                                                     |
-| View medical notes        | `Member__c.Medical_Notes__c` (Medical Notes) is a text area. The permission set does not hide it from other CRM fields. No separate medical-notes permission exists. |
-| Substitute a class        | No substitute-class action.                                                                                                                                          |
-| Create a member record    | Staff create a member by converting a lead (below). There is no trainer "create member" screen.                                                                      |
+| Asked for                 | What exists                                                                                                                                                                                                                                                   |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| View my class schedule    | No trainer schedule screen. The report **Upcoming Sessions and Capacity** lists sessions from today forward. See US-D002.                                                                                                                                     |
+| Check in by QR code       | No QR check-in.                                                                                                                                                                                                                                               |
+| Check in by phone lookup  | No phone-lookup check-in.                                                                                                                                                                                                                                     |
+| Mark attendance           | **Verified from source.** Row action **Mark Attended** on the Attendees tab (US-T005 / US-T006).                                                                                                                                                              |
+| View class attendee lists | **Verified from source.** On a Scheduled Session, the **Attendees** tab lists bookings with member name, check-in status, and waiver status (US-T004).                                                                                                        |
+| Open a member profile     | A CRM user can open a Member record. There is no trainer profile or trainer app.                                                                                                                                                                              |
+| View medical notes        | **Verified from source.** Trainers with `Boxing_Gym_Trainer_Medical_Notes` see `Member__c.Medical_Notes__c` read-only. Shared `Boxing_Gym_CRM_Access` does not grant the field (front desk / managers cannot see it). Members update notes in the member app. |
+| Substitute a class        | No substitute-class action.                                                                                                                                                                                                                                   |
+| Create a member record    | Staff create a member by converting a lead (below). There is no trainer "create member" screen.                                                                                                                                                               |
 
 ## Front desk: register a walk-in lead
 
