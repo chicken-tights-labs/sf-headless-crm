@@ -21,6 +21,9 @@ public with sharing class EPIC03_SessionAttendees_Controller {
     public Id memberId;
     @AuraEnabled
     public String memberName;
+    /** Record URL for US-T007 trainer profile navigation. */
+    @AuraEnabled
+    public String memberUrl;
     @AuraEnabled
     public String bookingStatus;
     @AuraEnabled
@@ -76,6 +79,7 @@ public with sharing class EPIC03_SessionAttendees_Controller {
       row.bookingId = b.Id;
       row.memberId = b.Member__c;
       row.memberName = memberDisplayName(b);
+      row.memberUrl = b.Member__c == null ? null : '/' + b.Member__c;
       row.bookingStatus = b.Status__c;
       row.checkedInAt = b.Checked_In_At__c;
       row.checkInStatus = checkInLabel(b.Status__c, b.Checked_In_At__c);
