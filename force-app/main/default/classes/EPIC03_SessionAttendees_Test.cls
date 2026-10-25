@@ -271,4 +271,116 @@ private class EPIC03_SessionAttendees_Test {
     );
     System.assertEquals(0, empty.size());
   }
+
+  @isTest
+  static void findByPhoneMatchesFormattedNumberOnThisSession() {
+    Id sid = sessionId();
+    Member__c avery = memberNamed('Avery');
+    avery.Phone__c = '(336) 555-0100';
+    update avery;
+    Booking__c booking = EPIC01_TestDataFactory.newBooking(
+      avery.Id,
+      sid,
+      locId()
+    );
+    insert booking;
+
+    Test.startTest();
+    EPIC03_SessionAttendees_Controller.PhoneLookupResult result = EPIC03_SessionAttendees_Controller.findByPhone(
+      sid,
+      '+1 336-555-0100'
+    );
+    Test.stopTest();
+
+    System.assertEquals(true, result.validInput);
+    System.assertEquals(1, result.matches.size());
+    System.assertEquals(booking.Id, result.matches[0].bookingId);
+    System.assertEquals(avery.Id, result.matches[0].memberId);
+    System.assertEquals('Avery Johnson', result.matches[0].memberName);
+  }
+
+  @isTest
+  static void findByPhoneIgnoresOtherSession() {
+    Id sid = sessionId();
+    Scheduled_Session__c other = EPIC01_TestDataFactory.createSession(locId());
+    Member__c avery = memberNamed('Avery');
+    Member__c sam = memberNamed('Sam');
+    avery.Phone__c = '336-555-0100';
+    sam.Phone__c = '336-555-0199';
+    update new List<Member__c>{ avery, sam };
+
+    insert EPIC01_TestDataFactory.newBooking(avery.Id, sid, locId());
+    insert EPIC01_TestDataFactory.newBooking(sam.Id, other.Id, locId());
+
+    Test.startTest();
+    EPIC03_SessionAttendees_Controller.PhoneLookupResult result = EPIC03_SessionAttendees_Controller.findByPhone(
+      sid,
+      '3365550199'
+    );
+    Test.stopTest();
+
+    System.assertEquals(true, result.validInput);
+    System.assertEquals(0, result.matches.size());
+    System.assertEquals(
+      EPIC03_SessionAttendees_Controller.MSG_PHONE_NO_MATCH,
+      result.message
+    );
+  }
+
+  @isTest
+  static void findByPhoneReturnsEveryRosterMatch() {
+    Id sid = sessionId();
+    Member__c avery = memberNamed('Avery');
+    Member__c sam = memberNamed('Sam');
+    avery.Phone__c = '336-555-0100';
+    sam.Phone__c = '(336) 555-0100';
+    update new List<Member__c>{ avery, sam };
+
+    insert new List<Booking__c>{
+      EPIC01_TestDataFactory.newBooking(avery.Id, sid, locId()),
+      EPIC01_TestDataFactory.newBooking(sam.Id, sid, locId())
+    };
+
+    Test.startTest();
+    EPIC03_SessionAttendees_Controller.PhoneLookupResult result = EPIC03_SessionAttendees_Controller.findByPhone(
+      sid,
+      '3365550100'
+    );
+    Test.stopTest();
+
+    System.assertEquals(2, result.matches.size());
+    Set<Id> memberIds = new Set<Id>();
+    for (EPIC03_SessionAttendees_Controller.PhoneMatch match : result.matches) {
+      memberIds.add(match.memberId);
+    }
+    System.assert(memberIds.contains(avery.Id));
+    System.assert(memberIds.contains(sam.Id));
+  }
+
+  @isTest
+  static void findByPhoneRejectsShortInputWithoutQuerying() {
+    Test.startTest();
+    EPIC03_SessionAttendees_Controller.PhoneLookupResult blank = EPIC03_SessionAttendees_Controller.findByPhone(
+      sessionId(),
+      '   '
+    );
+    EPIC03_SessionAttendees_Controller.PhoneLookupResult shortNum = EPIC03_SessionAttendees_Controller.findByPhone(
+      sessionId(),
+      '12345'
+    );
+    Test.stopTest();
+
+    System.assertEquals(false, blank.validInput);
+    System.assertEquals(0, blank.matches.size());
+    System.assertEquals(
+      EPIC03_SessionAttendees_Controller.MSG_PHONE_NEED_DIGITS,
+      blank.message
+    );
+    System.assertEquals(false, shortNum.validInput);
+    System.assertEquals(0, shortNum.matches.size());
+    System.assertEquals(
+      EPIC03_SessionAttendees_Controller.MSG_PHONE_NEED_DIGITS,
+      shortNum.message
+    );
+  }
 }

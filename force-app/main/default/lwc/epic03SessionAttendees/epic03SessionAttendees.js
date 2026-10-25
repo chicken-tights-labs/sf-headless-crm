@@ -2,6 +2,7 @@ import { LightningElement, api, wire } from "lwc";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { refreshApex } from "@salesforce/apex";
 import getAttendees from "@salesforce/apex/EPIC03_SessionAttendees_Controller.getAttendees";
+import findByPhone from "@salesforce/apex/EPIC03_SessionAttendees_Controller.findByPhone";
 import markAttended from "@salesforce/apex/EPIC03_SessionAttendees_Controller.markAttended";
 
 const ACTIONS = [{ label: "Mark Attended", name: "mark_attended" }];
@@ -37,6 +38,12 @@ export default class Epic03SessionAttendees extends LightningElement {
   actionError;
   saving = false;
   wiredResult;
+  phoneInput = "";
+  phoneMessage;
+  phoneMatches = [];
+  selectedBookingId;
+  selectedMemberName;
+  finding = false;
 
   @wire(getAttendees, { sessionId: "$recordId" })
   wiredAttendees(result) {
@@ -62,6 +69,75 @@ export default class Epic03SessionAttendees extends LightningElement {
   get countLabel() {
     const n = this.attendees ? this.attendees.length : 0;
     return n === 1 ? "1 attendee" : `${n} attendees`;
+  }
+
+  get hasPhoneMatches() {
+    return this.phoneMatches && this.phoneMatches.length > 0;
+  }
+
+  get showPick() {
+    return this.phoneMatches && this.phoneMatches.length > 1;
+  }
+
+  get canConfirm() {
+    return Boolean(this.selectedBookingId);
+  }
+
+  get showSelectedLabel() {
+    return this.showPick && Boolean(this.selectedMemberName);
+  }
+
+  handlePhoneChange(event) {
+    this.phoneInput = event.target.value;
+  }
+
+  handleFind() {
+    if (this.finding) {
+      return;
+    }
+    this.phoneMessage = undefined;
+    this.phoneMatches = [];
+    this.selectedBookingId = undefined;
+    this.selectedMemberName = undefined;
+    this.finding = true;
+
+    findByPhone({ sessionId: this.recordId, phone: this.phoneInput })
+      .then((result) => {
+        const matches = result && result.matches ? result.matches : [];
+        if (!result || !result.validInput || matches.length === 0) {
+          this.phoneMessage =
+            result && result.message
+              ? result.message
+              : "No booking on this class matches that phone.";
+          return;
+        }
+        this.phoneMatches = matches;
+        if (matches.length === 1) {
+          this.selectedBookingId = matches[0].bookingId;
+          this.selectedMemberName = matches[0].memberName;
+        }
+      })
+      .catch((error) => {
+        this.phoneMessage = this.reduceError(error);
+      })
+      .finally(() => {
+        this.finding = false;
+      });
+  }
+
+  handlePick(event) {
+    this.selectedBookingId = event.currentTarget.dataset.bookingId;
+    this.selectedMemberName = event.currentTarget.dataset.memberName;
+  }
+
+  handleConfirm() {
+    if (!this.selectedBookingId) {
+      return;
+    }
+    this.doMarkAttended({
+      bookingId: this.selectedBookingId,
+      memberName: this.selectedMemberName
+    });
   }
 
   handleRowAction(event) {
@@ -92,6 +168,11 @@ export default class Epic03SessionAttendees extends LightningElement {
           );
           return Promise.resolve();
         }
+        this.phoneInput = "";
+        this.phoneMessage = undefined;
+        this.phoneMatches = [];
+        this.selectedBookingId = undefined;
+        this.selectedMemberName = undefined;
         this.dispatchEvent(
           new ShowToastEvent({
             title: "Checked in",

@@ -1,6 +1,7 @@
 import { createElement } from "lwc";
 import Epic03SessionAttendees from "c/epic03SessionAttendees";
 import getAttendees from "@salesforce/apex/EPIC03_SessionAttendees_Controller.getAttendees";
+import findByPhone from "@salesforce/apex/EPIC03_SessionAttendees_Controller.findByPhone";
 import markAttended from "@salesforce/apex/EPIC03_SessionAttendees_Controller.markAttended";
 
 jest.mock(
@@ -9,6 +10,12 @@ jest.mock(
     const { createApexTestWireAdapter } = require("@salesforce/sfdx-lwc-jest");
     return { default: createApexTestWireAdapter(jest.fn()) };
   },
+  { virtual: true }
+);
+
+jest.mock(
+  "@salesforce/apex/EPIC03_SessionAttendees_Controller.findByPhone",
+  () => ({ default: jest.fn() }),
   { virtual: true }
 );
 
@@ -133,5 +140,52 @@ describe("c-epic03-session-attendees", () => {
     expect(alert.textContent).toContain(
       "Cannot check in - member does not have a valid signed waiver"
     );
+  });
+
+  it("finds a member by phone and confirms with markAttended", async () => {
+    findByPhone.mockResolvedValue({
+      validInput: true,
+      matches: [
+        {
+          bookingId: "a0B000000000009",
+          memberId: "a0A000000000009",
+          memberName: "Sam Walker"
+        }
+      ]
+    });
+    markAttended.mockResolvedValue({
+      success: true,
+      message: "Checked in"
+    });
+
+    const element = createPanel("a0C000000000001");
+    getAttendees.emit(ROWS);
+    await flushPromises();
+
+    const phone = element.shadowRoot.querySelector("lightning-input");
+    phone.value = "3365550100";
+    phone.dispatchEvent(new CustomEvent("change"));
+
+    const findButton = [
+      ...element.shadowRoot.querySelectorAll("lightning-button")
+    ].find((el) => el.label === "Find");
+    findButton.click();
+    await flushPromises();
+
+    expect(findByPhone).toHaveBeenCalledWith({
+      sessionId: "a0C000000000001",
+      phone: "3365550100"
+    });
+    expect(element.shadowRoot.textContent).toContain("Sam Walker");
+
+    const confirmButton = [
+      ...element.shadowRoot.querySelectorAll("lightning-button")
+    ].find((el) => el.label === "Confirm check-in");
+    confirmButton.click();
+    await flushPromises();
+
+    expect(markAttended).toHaveBeenCalledWith({
+      bookingId: "a0B000000000009"
+    });
   });
 });

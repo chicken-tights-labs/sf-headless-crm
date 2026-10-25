@@ -1,7 +1,8 @@
 /**
- * EPIC03-US-T004 / US-T005 / US-T006: session attendee roster and check-in.
+ * EPIC03-US-T004 / US-T005 / US-T006 / US-T003: session attendee roster and check-in.
  * Why Apex: joins Booking__c with waiverStatusByMember; markAttended is the
- * shared attendance write for US-T002 / US-T003 later.
+ * shared attendance write. Phone lookup normalizes Phone__c and matches this
+ * session's bookings only — it does not write Booking__c.
  * Check-in does not use EPIC01_BookingWaiverGuard (that trigger is insert-only).
  */
 public with sharing class EPIC03_SessionAttendees_Controller {
@@ -13,6 +14,8 @@ public with sharing class EPIC03_SessionAttendees_Controller {
   public static final String MSG_CHECKIN_CANCELLED = 'Cannot check in — this booking is Cancelled.';
   public static final String MSG_CHECKIN_NO_SHOW = 'Cannot check in — this booking is marked No-Show.';
   public static final String MSG_CHECKIN_ALREADY = 'This member is already checked in.';
+  public static final String MSG_PHONE_NEED_DIGITS = 'Enter a 10-digit phone number.';
+  public static final String MSG_PHONE_NO_MATCH = 'No booking on this class matches that phone.';
 
   public class AttendeeRow {
     @AuraEnabled
@@ -39,6 +42,24 @@ public with sharing class EPIC03_SessionAttendees_Controller {
     public Boolean success;
     @AuraEnabled
     public String message;
+  }
+
+  public class PhoneMatch {
+    @AuraEnabled
+    public Id bookingId;
+    @AuraEnabled
+    public Id memberId;
+    @AuraEnabled
+    public String memberName;
+  }
+
+  public class PhoneLookupResult {
+    @AuraEnabled
+    public Boolean validInput;
+    @AuraEnabled
+    public String message;
+    @AuraEnabled
+    public List<PhoneMatch> matches;
   }
 
   @AuraEnabled(cacheable=true)
@@ -92,8 +113,59 @@ public with sharing class EPIC03_SessionAttendees_Controller {
   }
 
   /**
+   * US-T003: match a phone to bookings on this session. Does not check anyone in
+   * and does not write Booking__c. Confirm calls markAttended.
+   */
+  @AuraEnabled
+  public static PhoneLookupResult findByPhone(Id sessionId, String phone) {
+    PhoneLookupResult result = new PhoneLookupResult();
+    result.matches = new List<PhoneMatch>();
+    String digits = phoneDigits(phone);
+    if (digits == null) {
+      result.validInput = false;
+      result.message = MSG_PHONE_NEED_DIGITS;
+      return result;
+    }
+    result.validInput = true;
+    if (sessionId == null) {
+      result.message = MSG_PHONE_NO_MATCH;
+      return result;
+    }
+
+    List<Booking__c> bookings = [
+      SELECT
+        Id,
+        Member__c,
+        Member__r.Name,
+        Member__r.First_Name__c,
+        Member__r.Last_Name__c,
+        Member__r.Phone__c
+      FROM Booking__c
+      WHERE Scheduled_Session__c = :sessionId AND Member__c != NULL
+      ORDER BY
+        Member__r.Last_Name__c ASC NULLS LAST,
+        Member__r.First_Name__c ASC NULLS LAST
+    ];
+
+    for (Booking__c booking : bookings) {
+      if (phoneDigits(booking.Member__r.Phone__c) != digits) {
+        continue;
+      }
+      PhoneMatch match = new PhoneMatch();
+      match.bookingId = booking.Id;
+      match.memberId = booking.Member__c;
+      match.memberName = memberDisplayName(booking);
+      result.matches.add(match);
+    }
+    if (result.matches.isEmpty()) {
+      result.message = MSG_PHONE_NO_MATCH;
+    }
+    return result;
+  }
+
+  /**
    * US-T005 + US-T006: set Checked_In_At__c and Status__c = Completed after
-   * waiverStatusByMember returns Signed. Called later by QR/phone check-in.
+   * waiverStatusByMember returns Signed. QR and phone check-in call this.
    */
   @AuraEnabled
   public static MarkResult markAttended(Id bookingId) {
@@ -165,6 +237,22 @@ public with sharing class EPIC03_SessionAttendees_Controller {
       result.message = e.getMessage();
     }
     return result;
+  }
+
+  /**
+   * Digits only. A leading 1 on an 11-digit value is the country code.
+   * Returns null unless the result is exactly 10 digits.
+   */
+  @TestVisible
+  static String phoneDigits(String raw) {
+    if (String.isBlank(raw)) {
+      return null;
+    }
+    String digits = raw.replaceAll('[^0-9]', '');
+    if (digits.length() == 11 && digits.startsWith('1')) {
+      digits = digits.substring(1);
+    }
+    return digits.length() == 10 ? digits : null;
   }
 
   @TestVisible

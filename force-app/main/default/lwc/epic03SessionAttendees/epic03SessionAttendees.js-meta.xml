@@ -4,7 +4,7 @@
     <isExposed>true</isExposed>
     <masterLabel>Session Attendees</masterLabel>
     <description
-  >EPIC03-US-T004: read-only class attendee roster (check-in screen base).</description>
+  >EPIC03-US-T004 / US-T003: class attendee roster and phone check-in.</description>
     <targets>
         <target>lightning__RecordPage</target>
     </targets>
