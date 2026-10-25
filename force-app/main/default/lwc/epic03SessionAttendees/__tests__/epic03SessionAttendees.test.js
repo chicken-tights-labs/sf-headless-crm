@@ -91,6 +91,36 @@ function createPanel(recordId) {
   return element;
 }
 
+function codeInput(element) {
+  return [...element.shadowRoot.querySelectorAll("lightning-input")].find(
+    (el) => el.label === "Check-in code"
+  );
+}
+
+function button(element, label) {
+  return [...element.shadowRoot.querySelectorAll("lightning-button")].find(
+    (el) => el.label === label
+  );
+}
+
+function submitCode(element, value) {
+  const input = codeInput(element);
+  input.value = value;
+  input.dispatchEvent(new CustomEvent("change"));
+  button(element, "Check in").click();
+}
+
+const QUEUED_CODE_MATCH = {
+  validInput: true,
+  matches: [
+    {
+      bookingId: "a0B000000000012",
+      memberId: "a0A000000000012",
+      memberName: "Two Member"
+    }
+  ]
+};
+
 describe("c-epic03-session-attendees", () => {
   afterEach(() => {
     while (document.body.firstChild) {
@@ -229,16 +259,7 @@ describe("c-epic03-session-attendees", () => {
     getAttendees.emit(ROWS);
     await flushPromises();
 
-    const code = [
-      ...element.shadowRoot.querySelectorAll("lightning-input")
-    ].find((el) => el.label === "Check-in code");
-    code.value = "AB12";
-    code.dispatchEvent(new CustomEvent("change"));
-
-    const checkIn = [
-      ...element.shadowRoot.querySelectorAll("lightning-button")
-    ].find((el) => el.label === "Check in");
-    checkIn.click();
+    submitCode(element, "AB12");
     await flushPromises();
 
     expect(findByCode).toHaveBeenCalledWith({
@@ -289,27 +310,166 @@ describe("c-epic03-session-attendees", () => {
     getAttendees.emit(ROWS);
     await flushPromises();
 
-    const code = [
-      ...element.shadowRoot.querySelectorAll("lightning-input")
-    ].find((el) => el.label === "Check-in code");
-    const checkIn = () =>
-      [...element.shadowRoot.querySelectorAll("lightning-button")].find(
-        (el) => el.label === "Check in"
-      );
-
-    code.value = "ONE";
-    code.dispatchEvent(new CustomEvent("change"));
-    checkIn().click();
+    submitCode(element, "ONE");
     await flushPromises();
     expect(markAttended).toHaveBeenCalledTimes(1);
 
-    code.value = "TWO";
-    code.dispatchEvent(new CustomEvent("change"));
-    checkIn().click();
+    submitCode(element, "TWO");
     await flushPromises();
     expect(findByCode).toHaveBeenCalledTimes(1);
 
     finishFirst({ success: true, message: "Checked in" });
+    await flushPromises();
+    await flushPromises();
+
+    expect(findByCode).toHaveBeenNthCalledWith(2, {
+      sessionId: "a0C000000000001",
+      code: "TWO"
+    });
+    expect(markAttended).toHaveBeenNthCalledWith(2, {
+      bookingId: "a0B000000000012"
+    });
+  });
+
+  it("checks in a queued code after phone confirm save finishes", async () => {
+    let finishSave;
+    const pendingSave = new Promise((resolve) => {
+      finishSave = resolve;
+    });
+    findByPhone.mockResolvedValue({
+      validInput: true,
+      matches: [
+        {
+          bookingId: "a0B000000000009",
+          memberId: "a0A000000000009",
+          memberName: "Sam Walker"
+        }
+      ]
+    });
+    findByCode.mockResolvedValue(QUEUED_CODE_MATCH);
+    markAttended
+      .mockImplementationOnce(() => pendingSave)
+      .mockResolvedValueOnce({ success: true, message: "Checked in" });
+
+    const element = createPanel("a0C000000000001");
+    getAttendees.emit(ROWS);
+    await flushPromises();
+
+    const phone = element.shadowRoot.querySelector("lightning-input");
+    phone.value = "3365550100";
+    phone.dispatchEvent(new CustomEvent("change"));
+    button(element, "Find").click();
+    await flushPromises();
+
+    button(element, "Confirm check-in").click();
+    await flushPromises();
+    expect(markAttended).toHaveBeenCalledTimes(1);
+
+    submitCode(element, "TWO");
+    await flushPromises();
+    expect(findByCode).not.toHaveBeenCalled();
+
+    finishSave({ success: true, message: "Checked in" });
+    await flushPromises();
+    await flushPromises();
+
+    expect(findByCode).toHaveBeenCalledWith({
+      sessionId: "a0C000000000001",
+      code: "TWO"
+    });
+    expect(markAttended).toHaveBeenNthCalledWith(2, {
+      bookingId: "a0B000000000012"
+    });
+  });
+
+  it("checks in a queued code after row Mark Attended save finishes", async () => {
+    let finishSave;
+    const pendingSave = new Promise((resolve) => {
+      finishSave = resolve;
+    });
+    findByCode.mockResolvedValue(QUEUED_CODE_MATCH);
+    markAttended
+      .mockImplementationOnce(() => pendingSave)
+      .mockResolvedValueOnce({ success: true, message: "Checked in" });
+
+    const element = createPanel("a0C000000000001");
+    getAttendees.emit(ROWS);
+    await flushPromises();
+
+    const table = element.shadowRoot.querySelector("lightning-datatable");
+    table.dispatchEvent(
+      new CustomEvent("rowaction", {
+        detail: {
+          action: { name: "mark_attended" },
+          row: ROWS[0]
+        }
+      })
+    );
+    await flushPromises();
+    expect(markAttended).toHaveBeenCalledTimes(1);
+
+    submitCode(element, "TWO");
+    await flushPromises();
+    expect(findByCode).not.toHaveBeenCalled();
+
+    finishSave({ success: true, message: "Checked in" });
+    await flushPromises();
+    await flushPromises();
+
+    expect(findByCode).toHaveBeenCalledWith({
+      sessionId: "a0C000000000001",
+      code: "TWO"
+    });
+    expect(markAttended).toHaveBeenNthCalledWith(2, {
+      bookingId: "a0B000000000012"
+    });
+  });
+
+  it("checks in a queued code after code Select save finishes", async () => {
+    let finishSave;
+    const pendingSave = new Promise((resolve) => {
+      finishSave = resolve;
+    });
+    findByCode
+      .mockResolvedValueOnce({
+        validInput: true,
+        matches: [
+          {
+            bookingId: "a0B000000000013",
+            memberId: "a0A000000000013",
+            memberName: "Pat One"
+          },
+          {
+            bookingId: "a0B000000000014",
+            memberId: "a0A000000000014",
+            memberName: "Pat Two"
+          }
+        ]
+      })
+      .mockResolvedValueOnce(QUEUED_CODE_MATCH);
+    markAttended
+      .mockImplementationOnce(() => pendingSave)
+      .mockResolvedValueOnce({ success: true, message: "Checked in" });
+
+    const element = createPanel("a0C000000000001");
+    getAttendees.emit(ROWS);
+    await flushPromises();
+
+    submitCode(element, "PAT");
+    await flushPromises();
+    expect(element.shadowRoot.textContent).toContain(
+      "Select the booking to check in."
+    );
+
+    button(element, "Select").click();
+    await flushPromises();
+    expect(markAttended).toHaveBeenCalledTimes(1);
+
+    submitCode(element, "TWO");
+    await flushPromises();
+    expect(findByCode).toHaveBeenCalledTimes(1);
+
+    finishSave({ success: true, message: "Checked in" });
     await flushPromises();
     await flushPromises();
 

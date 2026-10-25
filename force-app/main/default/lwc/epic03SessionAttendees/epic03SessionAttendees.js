@@ -239,12 +239,17 @@ export default class Epic03SessionAttendees extends LightningElement {
       })
       .finally(() => {
         this.findingCode = false;
-        if (this.codeQueue.length) {
-          const next = this.codeQueue.shift();
-          this.codeInput = next;
-          this.runCodeLookup(next);
-        }
+        this.drainCodeQueue();
       });
+  }
+
+  drainCodeQueue() {
+    if (this.findingCode || this.saving || this.codeQueue.length === 0) {
+      return;
+    }
+    const next = this.codeQueue.shift();
+    this.codeInput = next;
+    this.runCodeLookup(next);
   }
 
   handleRowAction(event) {
@@ -306,6 +311,7 @@ export default class Epic03SessionAttendees extends LightningElement {
       })
       .finally(() => {
         this.saving = false;
+        this.drainCodeQueue();
       });
   }
 
