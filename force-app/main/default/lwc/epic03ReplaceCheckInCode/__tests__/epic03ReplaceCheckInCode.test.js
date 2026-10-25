@@ -1,7 +1,16 @@
 import { createElement } from "lwc";
+import { refreshApex } from "@salesforce/apex";
 import Epic03ReplaceCheckInCode from "c/epic03ReplaceCheckInCode";
 import currentCode from "@salesforce/apex/EPIC03_CheckInCode_Service.currentCode";
 import replaceCode from "@salesforce/apex/EPIC03_CheckInCode_Service.replaceCode";
+
+jest.mock(
+  "@salesforce/apex",
+  () => ({
+    refreshApex: jest.fn(() => Promise.resolve())
+  }),
+  { virtual: true }
+);
 
 jest.mock(
   "@salesforce/apex/EPIC03_CheckInCode_Service.currentCode",
@@ -57,5 +66,6 @@ describe("c-epic03-replace-check-in-code", () => {
     expect(element.shadowRoot.textContent).toContain(
       "The previous code no longer works."
     );
+    expect(refreshApex).toHaveBeenCalled();
   });
 });

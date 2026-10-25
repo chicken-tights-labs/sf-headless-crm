@@ -254,4 +254,71 @@ describe("c-epic03-session-attendees", () => {
       )
     ).toBeUndefined();
   });
+
+  it("checks in a second code after the first save finishes", async () => {
+    let finishFirst;
+    const firstSave = new Promise((resolve) => {
+      finishFirst = resolve;
+    });
+    findByCode
+      .mockResolvedValueOnce({
+        validInput: true,
+        matches: [
+          {
+            bookingId: "a0B000000000011",
+            memberId: "a0A000000000011",
+            memberName: "One Member"
+          }
+        ]
+      })
+      .mockResolvedValueOnce({
+        validInput: true,
+        matches: [
+          {
+            bookingId: "a0B000000000012",
+            memberId: "a0A000000000012",
+            memberName: "Two Member"
+          }
+        ]
+      });
+    markAttended
+      .mockImplementationOnce(() => firstSave)
+      .mockResolvedValueOnce({ success: true, message: "Checked in" });
+
+    const element = createPanel("a0C000000000001");
+    getAttendees.emit(ROWS);
+    await flushPromises();
+
+    const code = [
+      ...element.shadowRoot.querySelectorAll("lightning-input")
+    ].find((el) => el.label === "Check-in code");
+    const checkIn = () =>
+      [...element.shadowRoot.querySelectorAll("lightning-button")].find(
+        (el) => el.label === "Check in"
+      );
+
+    code.value = "ONE";
+    code.dispatchEvent(new CustomEvent("change"));
+    checkIn().click();
+    await flushPromises();
+    expect(markAttended).toHaveBeenCalledTimes(1);
+
+    code.value = "TWO";
+    code.dispatchEvent(new CustomEvent("change"));
+    checkIn().click();
+    await flushPromises();
+    expect(findByCode).toHaveBeenCalledTimes(1);
+
+    finishFirst({ success: true, message: "Checked in" });
+    await flushPromises();
+    await flushPromises();
+
+    expect(findByCode).toHaveBeenNthCalledWith(2, {
+      sessionId: "a0C000000000001",
+      code: "TWO"
+    });
+    expect(markAttended).toHaveBeenNthCalledWith(2, {
+      bookingId: "a0B000000000012"
+    });
+  });
 });

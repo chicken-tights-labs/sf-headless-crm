@@ -1,4 +1,5 @@
 import { LightningElement, api, wire } from "lwc";
+import { refreshApex } from "@salesforce/apex";
 import currentCode from "@salesforce/apex/EPIC03_CheckInCode_Service.currentCode";
 import replaceCode from "@salesforce/apex/EPIC03_CheckInCode_Service.replaceCode";
 
@@ -9,9 +10,12 @@ export default class Epic03ReplaceCheckInCode extends LightningElement {
   message;
   error;
   replacing = false;
+  wiredResult;
 
   @wire(currentCode, { memberId: "$recordId" })
-  wiredCode({ data, error }) {
+  wiredCode(result) {
+    this.wiredResult = result;
+    const { data, error } = result;
     if (error) {
       this.error = this.reduceError(error);
       return;
@@ -38,6 +42,7 @@ export default class Epic03ReplaceCheckInCode extends LightningElement {
       .then((next) => {
         this.code = next;
         this.message = "The previous code no longer works.";
+        return refreshApex(this.wiredResult);
       })
       .catch((error) => {
         this.error = this.reduceError(error);

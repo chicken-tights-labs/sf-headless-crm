@@ -52,6 +52,7 @@ export default class Epic03SessionAttendees extends LightningElement {
   findingCode = false;
   scanAvailable = false;
   scanner;
+  codeQueue = [];
 
   connectedCallback() {
     this.scanner = getBarcodeScanner();
@@ -168,7 +169,7 @@ export default class Epic03SessionAttendees extends LightningElement {
   }
 
   handleScan() {
-    if (!this.scanner || this.findingCode) {
+    if (!this.scanner) {
       return;
     }
     const options = {
@@ -200,14 +201,20 @@ export default class Epic03SessionAttendees extends LightningElement {
   }
 
   handleCodeSubmit() {
-    if (this.findingCode) {
+    const code = this.codeInput;
+    if (this.findingCode || this.saving) {
+      this.codeQueue.push(code);
       return;
     }
+    this.runCodeLookup(code);
+  }
+
+  runCodeLookup(code) {
     this.codeMessage = undefined;
     this.codeMatches = [];
     this.findingCode = true;
 
-    findByCode({ sessionId: this.recordId, code: this.codeInput })
+    return findByCode({ sessionId: this.recordId, code })
       .then((result) => {
         const matches = result && result.matches ? result.matches : [];
         if (!result || !result.validInput || matches.length === 0) {
@@ -215,23 +222,28 @@ export default class Epic03SessionAttendees extends LightningElement {
             result && result.message
               ? result.message
               : "No booking on this class matches that code.";
-          return;
+          return null;
         }
         if (matches.length === 1) {
-          this.doMarkAttended({
+          return this.doMarkAttended({
             bookingId: matches[0].bookingId,
             memberName: matches[0].memberName
           });
-          return;
         }
         this.codeMatches = matches;
         this.codeMessage = "Select the booking to check in.";
+        return null;
       })
       .catch((error) => {
         this.codeMessage = this.reduceError(error);
       })
       .finally(() => {
         this.findingCode = false;
+        if (this.codeQueue.length) {
+          const next = this.codeQueue.shift();
+          this.codeInput = next;
+          this.runCodeLookup(next);
+        }
       });
   }
 
@@ -245,12 +257,12 @@ export default class Epic03SessionAttendees extends LightningElement {
 
   doMarkAttended(row) {
     if (this.saving || !row || !row.bookingId) {
-      return;
+      return Promise.resolve();
     }
     this.actionError = undefined;
     this.saving = true;
 
-    markAttended({ bookingId: row.bookingId })
+    return markAttended({ bookingId: row.bookingId })
       .then((result) => {
         if (!result.success) {
           this.actionError = result.message;
