@@ -383,4 +383,70 @@ private class EPIC03_SessionAttendees_Test {
       shortNum.message
     );
   }
+
+  @isTest
+  static void findByCodeMatchesThisSessionIgnoringCase() {
+    Id sid = sessionId();
+    Member__c avery = [
+      SELECT Id, Check_In_Code__c
+      FROM Member__c
+      WHERE First_Name__c = 'Avery'
+      LIMIT 1
+    ];
+    Booking__c booking = EPIC01_TestDataFactory.newBooking(
+      avery.Id,
+      sid,
+      locId()
+    );
+    insert booking;
+
+    Test.startTest();
+    EPIC03_SessionAttendees_Controller.PhoneLookupResult result = EPIC03_SessionAttendees_Controller.findByCode(
+      sid,
+      avery.Check_In_Code__c.toLowerCase()
+    );
+    Test.stopTest();
+
+    System.assertEquals(true, result.validInput);
+    System.assertEquals(1, result.matches.size());
+    System.assertEquals(booking.Id, result.matches[0].bookingId);
+    System.assertEquals('Avery Johnson', result.matches[0].memberName);
+  }
+
+  @isTest
+  static void findByCodeIgnoresOtherSessionAndBlankInput() {
+    Id sid = sessionId();
+    Scheduled_Session__c other = EPIC01_TestDataFactory.createSession(locId());
+    Member__c sam = [
+      SELECT Id, Check_In_Code__c
+      FROM Member__c
+      WHERE First_Name__c = 'Sam'
+      LIMIT 1
+    ];
+    insert EPIC01_TestDataFactory.newBooking(sam.Id, other.Id, locId());
+
+    Test.startTest();
+    EPIC03_SessionAttendees_Controller.PhoneLookupResult otherSession = EPIC03_SessionAttendees_Controller.findByCode(
+      sid,
+      sam.Check_In_Code__c
+    );
+    EPIC03_SessionAttendees_Controller.PhoneLookupResult blank = EPIC03_SessionAttendees_Controller.findByCode(
+      sid,
+      '   '
+    );
+    Test.stopTest();
+
+    System.assertEquals(true, otherSession.validInput);
+    System.assertEquals(0, otherSession.matches.size());
+    System.assertEquals(
+      EPIC03_SessionAttendees_Controller.MSG_CODE_NO_MATCH,
+      otherSession.message
+    );
+    System.assertEquals(false, blank.validInput);
+    System.assertEquals(0, blank.matches.size());
+    System.assertEquals(
+      EPIC03_SessionAttendees_Controller.MSG_CODE_REQUIRED,
+      blank.message
+    );
+  }
 }

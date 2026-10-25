@@ -4,7 +4,7 @@
     <isExposed>true</isExposed>
     <masterLabel>Session Attendees</masterLabel>
     <description
-  >EPIC03-US-T004 / US-T003: class attendee roster and phone check-in.</description>
+  >EPIC03-US-T004 / US-T003 / US-T002: class roster, phone check-in, and QR check-in.</description>
     <targets>
         <target>lightning__RecordPage</target>
     </targets>

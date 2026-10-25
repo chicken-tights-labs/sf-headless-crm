@@ -3,9 +3,9 @@
 Issue: #37. Kanban: `t_9d84897e`.
 
 **Status:** Draft
-**Last verified:** 2026-10-25 against branch `feat/EPIC03-UST003-phone-check-in`
+**Last verified:** 2026-10-25 against branch `feat/EPIC03-UST002-qr-check-in`
 **Checked from:** source in `force-app` (not an org click-through)
-**Still open:** screenshots in `my-gym`; trainer schedule, QR check-in, substitutes, merchandise, discounts, and refunds are not built yet
+**Still open:** screenshots in `my-gym`; trainer schedule, substitutes, merchandise, discounts, and refunds are not built yet
 
 This is the canonical copy. The issue names `CRM-Documentation/EPIC-11_D001_End_User_Manual.md`. Sync that vault from this file when the vault is available.
 
@@ -19,7 +19,7 @@ Admin setup (users, the permission set, locations, waiver templates, tier values
 
 ## Trainer workflows
 
-**Partially built.** Class attendee roster, Mark Attended (with waiver block), phone check-in, and trainer member profile (with permission-gated medical notes) are in the Boxing Gym CRM app. Schedule, QR check-in, and substitutes are not.
+**Partially built.** Class attendee roster, Mark Attended (with waiver block), phone check-in, QR check-in, and trainer member profile (with permission-gated medical notes) are in the Boxing Gym CRM app. Schedule and substitutes are not.
 
 ### Trainer: view class attendees and mark attended
 
@@ -39,10 +39,18 @@ Admin setup (users, the permission set, locations, waiver templates, tier values
 4. No booking on this class for that phone: `No booking on this class matches that phone.`
 5. Blank or not 10 digits: `Enter a 10-digit phone number.` Nothing is searched.
 
+### Trainer: check in by QR code
+
+**Verified from source.** On the same **Attendees** tab, type a check-in code or click **Check in**. A handheld scanner can type the code and press Enter. On the Salesforce mobile app, **Scan QR** uses the camera. A desktop browser has no camera button.
+
+A scan looks up `Check-In Code` on bookings for **this class**. One match runs **Mark Attended**, including the waiver block. It does not create a booking. No match: `No booking on this class matches that code.`
+
+The code is a random value on the member. It is not the phone number or email. **Replace check-in code** on the Member page overwrites it. The previous code stops working. The wallet pass and fob that show the code are #64, outside this repo.
+
 | Asked for                 | What exists                                                                                                                                                                                                                       |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | View my class schedule    | No trainer schedule screen. The report **Upcoming Sessions and Capacity** lists sessions from today forward. See US-D002.                                                                                                         |
-| Check in by QR code       | No QR check-in.                                                                                                                                                                                                                   |
+| Check in by QR code       | **Verified from source.** On the session **Attendees** tab, a typed or scanned code matches this class. One match calls Mark Attended (US-T002). **Replace check-in code** on the Member page overwrites the code.                |
 | Check in by phone lookup  | **Verified from source.** On the session **Attendees** tab, **Find** matches a 10-digit phone to this class's bookings. **Confirm check-in** calls Mark Attended (US-T003). A member who is not booked is not added.              |
 | Mark attendance           | **Verified from source.** Row action **Mark Attended** on the Attendees tab (US-T005 / US-T006).                                                                                                                                  |
 | View class attendee lists | **Verified from source.** On a Scheduled Session, the **Attendees** tab lists bookings with member name, check-in status, and waiver status (US-T004).                                                                            |
@@ -215,4 +223,4 @@ A punch-card booking decrements Classes Remaining. There is no front-desk bookin
 3. Confirm **Walk-In Lead Registration** is on **Home** (Gym Manager Home).
 4. Run **Capture Waiver**, sign the pad, and confirm a Signed Waiver Record appears.
 5. Run the tier action with no Signed waiver and expect **Waiver Required**.
-6. Do not expect QR check-in, merchandise, or refunds. Those sections stay **Not built** until the feature exists.
+6. Do not expect merchandise or refunds. Those sections stay **Not built** until the feature exists. QR check-in is on the session Attendees tab.

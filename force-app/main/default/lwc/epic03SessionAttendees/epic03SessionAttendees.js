@@ -1,8 +1,10 @@
 import { LightningElement, api, wire } from "lwc";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { refreshApex } from "@salesforce/apex";
+import { getBarcodeScanner } from "lightning/mobileCapabilities";
 import getAttendees from "@salesforce/apex/EPIC03_SessionAttendees_Controller.getAttendees";
 import findByPhone from "@salesforce/apex/EPIC03_SessionAttendees_Controller.findByPhone";
+import findByCode from "@salesforce/apex/EPIC03_SessionAttendees_Controller.findByCode";
 import markAttended from "@salesforce/apex/EPIC03_SessionAttendees_Controller.markAttended";
 
 const ACTIONS = [{ label: "Mark Attended", name: "mark_attended" }];
@@ -44,6 +46,20 @@ export default class Epic03SessionAttendees extends LightningElement {
   selectedBookingId;
   selectedMemberName;
   finding = false;
+  codeInput = "";
+  codeMessage;
+  codeMatches = [];
+  findingCode = false;
+  scanAvailable = false;
+  scanner;
+  codeQueue = [];
+
+  connectedCallback() {
+    this.scanner = getBarcodeScanner();
+    this.scanAvailable = Boolean(
+      this.scanner && this.scanner.isAvailable && this.scanner.isAvailable()
+    );
+  }
 
   @wire(getAttendees, { sessionId: "$recordId" })
   wiredAttendees(result) {
@@ -140,6 +156,102 @@ export default class Epic03SessionAttendees extends LightningElement {
     });
   }
 
+  get hasCodeMatches() {
+    return this.codeMatches && this.codeMatches.length > 1;
+  }
+
+  handleCodeChange(event) {
+    this.codeInput = event.target.value;
+  }
+
+  handleCodeCommit() {
+    this.handleCodeSubmit();
+  }
+
+  handleScan() {
+    if (!this.scanner) {
+      return;
+    }
+    const options = {
+      barcodeTypes: [this.scanner.barcodeTypes.QR]
+    };
+    this.scanner
+      .beginCapture(options)
+      .then((barcode) => {
+        this.codeInput = barcode && barcode.value ? barcode.value : "";
+        this.handleCodeSubmit();
+      })
+      .catch((error) => {
+        const code = error && error.code ? String(error.code) : "";
+        if (code.toLowerCase().includes("dismiss")) {
+          return;
+        }
+        this.codeMessage = this.reduceError(error);
+      })
+      .finally(() => {
+        this.scanner.endCapture();
+      });
+  }
+
+  handleCodePick(event) {
+    this.doMarkAttended({
+      bookingId: event.currentTarget.dataset.bookingId,
+      memberName: event.currentTarget.dataset.memberName
+    });
+  }
+
+  handleCodeSubmit() {
+    const code = this.codeInput;
+    if (this.findingCode || this.saving) {
+      this.codeQueue.push(code);
+      return;
+    }
+    this.runCodeLookup(code);
+  }
+
+  runCodeLookup(code) {
+    this.codeMessage = undefined;
+    this.codeMatches = [];
+    this.findingCode = true;
+
+    return findByCode({ sessionId: this.recordId, code })
+      .then((result) => {
+        const matches = result && result.matches ? result.matches : [];
+        if (!result || !result.validInput || matches.length === 0) {
+          this.codeMessage =
+            result && result.message
+              ? result.message
+              : "No booking on this class matches that code.";
+          return null;
+        }
+        if (matches.length === 1) {
+          return this.doMarkAttended({
+            bookingId: matches[0].bookingId,
+            memberName: matches[0].memberName
+          });
+        }
+        this.codeMatches = matches;
+        this.codeMessage = "Select the booking to check in.";
+        return null;
+      })
+      .catch((error) => {
+        this.codeMessage = this.reduceError(error);
+      })
+      .finally(() => {
+        this.findingCode = false;
+        this.drainCodeQueue();
+      });
+  }
+
+  drainCodeQueue() {
+    if (this.findingCode || this.saving || this.codeQueue.length === 0) {
+      return;
+    }
+    const next = this.codeQueue.shift();
+    this.codeInput = next;
+    this.runCodeLookup(next);
+  }
+
   handleRowAction(event) {
     const action = event.detail.action;
     const row = event.detail.row;
@@ -150,12 +262,12 @@ export default class Epic03SessionAttendees extends LightningElement {
 
   doMarkAttended(row) {
     if (this.saving || !row || !row.bookingId) {
-      return;
+      return Promise.resolve();
     }
     this.actionError = undefined;
     this.saving = true;
 
-    markAttended({ bookingId: row.bookingId })
+    return markAttended({ bookingId: row.bookingId })
       .then((result) => {
         if (!result.success) {
           this.actionError = result.message;
@@ -173,6 +285,9 @@ export default class Epic03SessionAttendees extends LightningElement {
         this.phoneMatches = [];
         this.selectedBookingId = undefined;
         this.selectedMemberName = undefined;
+        this.codeInput = "";
+        this.codeMessage = undefined;
+        this.codeMatches = [];
         this.dispatchEvent(
           new ShowToastEvent({
             title: "Checked in",
@@ -196,6 +311,7 @@ export default class Epic03SessionAttendees extends LightningElement {
       })
       .finally(() => {
         this.saving = false;
+        this.drainCodeQueue();
       });
   }
 
