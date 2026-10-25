@@ -3,7 +3,7 @@
 Issue: #40. Kanban: `t_7b14be8b`.
 
 **Status:** Draft
-**Last verified:** 2026-10-12 against `main` `06fa226`
+**Last verified:** 2026-10-25 against branch `feat/EPIC03-UST002-qr-check-in` for the Check-In Code permission. Earlier sections were last checked 2026-10-12 against `main` `06fa226`.
 **Checked from:** source in `force-app` (not an org click-through)
 **Still open:** screenshots in `my-gym`; Apex class access and Referral Reward tab are gaps, not finished admin features; Obsidian copy
 
@@ -60,20 +60,22 @@ flowchart TD
   perm --> line
 ```
 
-| Layer                | What is in source                                                                                                 |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Profile              | None. Use a standard Salesforce profile. The scratch-org admin uses System Administrator.                         |
-| Permission set       | `Boxing_Gym_CRM_Access`, label **Boxing Gym CRM Access**. Not activation-required.                                |
-| Role                 | None.                                                                                                             |
-| Org-wide default     | `ReadWrite` (Public Read/Write) on every custom object except `Sale_Line_Item__c`, which is `ControlledByParent`. |
-| Sharing rules        | None.                                                                                                             |
-| Field-level security | Every field listed in the permission set is readable and editable.                                                |
+| Layer                | What is in source                                                                                                                          |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Profile              | None. Use a standard Salesforce profile. The scratch-org admin uses System Administrator.                                                  |
+| Permission set       | `Boxing_Gym_CRM_Access`, label **Boxing Gym CRM Access**. Not activation-required.                                                         |
+| Role                 | None.                                                                                                                                      |
+| Org-wide default     | `ReadWrite` (Public Read/Write) on every custom object except `Sale_Line_Item__c`, which is `ControlledByParent`.                          |
+| Sharing rules        | None.                                                                                                                                      |
+| Field-level security | Every field listed in the permission set is readable and editable, except **Check-In Code** on Member, which is readable and not editable. |
 
 `Boxing Gym CRM Access` grants Create, Read, Edit, Delete, View All, and Modify All on these objects:
 
 Franchise Owner, Franchise Location, Waiver Template, Lead, Member, Booking, Default Class Template, Scheduled Session, Sale Line Item, Merchandise Sale, Payment Transaction, Product Category, Royalty Report, Inventory Item, Waiver Record.
 
 It also makes those objects' tabs Visible, except Referral Reward.
+
+**Check-In Code** (`Member__c.Check_In_Code__c`) is readable and not editable. A before-save trigger fills a blank value with a random code. **Replace check-in code** on the Member page overwrites it, and the previous code stops working.
 
 ### Why the permission set is required
 

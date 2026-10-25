@@ -71,11 +71,11 @@ This is the order the open stories are expected to merge. Each story's GitHub is
 
 ## Open questions
 
-| Issue    | Question                                                                                                                     |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| #54      | Decided: members/guardians enter and update via the member app; trainers read-only in Salesforce; no CRM staff edit FLS.     |
-| #61      | Where is a manager's PIN stored, and who sets it? Does 10% or less skip the PIN? Do promo codes expire or have usage limits? |
-| #57      | Decided: Signed waiver with Signature_Timestamp__c on/after today (Capture Waiver before renewing).                          |
-| #47, #64 | How is a lost code replaced so the old one stops working?                                                                    |
-| #64      | Which repo and team build the wallet pass and fob?                                                                           |
-| #65      | Gym Manager Home or a separate front desk page? Default the location to the staff member's gym?                              |
+| Issue    | Question                                                                                                                                                         |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| #54      | Decided: members/guardians enter and update via the member app; trainers read-only in Salesforce; no CRM staff edit FLS.                                         |
+| #61      | Where is a manager's PIN stored, and who sets it? Does 10% or less skip the PIN? Do promo codes expire or have usage limits?                                     |
+| #57      | Decided: Signed waiver with Signature_Timestamp__c on/after today (Capture Waiver before renewing).                                                              |
+| #47, #64 | Decided for #47: **Replace check-in code** overwrites `Member__c.Check_In_Code__c`, so the previous code stops working. #64 still owns delivery of the new code. |
+| #64      | Which repo and team build the wallet pass and fob?                                                                                                               |
+| #65      | Gym Manager Home or a separate front desk page? Default the location to the staff member's gym?                                                                  |

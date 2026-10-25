@@ -1,0 +1,20 @@
+<template>
+  <div class="slds-p-around_medium">
+    <p class="slds-text-title_bold">{displayCode}</p>
+    <template if:true={message}>
+      <p class="slds-m-top_x-small" role="status">{message}</p>
+    </template>
+    <template if:true={error}>
+      <p class="slds-m-top_x-small slds-text-color_error" role="alert">
+        {error}
+      </p>
+    </template>
+    <lightning-button
+      class="slds-m-top_small"
+      variant="brand"
+      label="Replace check-in code"
+      onclick={handleReplace}
+      disabled={replacing}
+    ></lightning-button>
+  </div>
+</template>

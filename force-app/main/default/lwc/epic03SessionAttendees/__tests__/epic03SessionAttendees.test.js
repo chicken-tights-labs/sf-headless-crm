@@ -2,6 +2,7 @@ import { createElement } from "lwc";
 import Epic03SessionAttendees from "c/epic03SessionAttendees";
 import getAttendees from "@salesforce/apex/EPIC03_SessionAttendees_Controller.getAttendees";
 import findByPhone from "@salesforce/apex/EPIC03_SessionAttendees_Controller.findByPhone";
+import findByCode from "@salesforce/apex/EPIC03_SessionAttendees_Controller.findByCode";
 import markAttended from "@salesforce/apex/EPIC03_SessionAttendees_Controller.markAttended";
 
 jest.mock(
@@ -14,7 +15,26 @@ jest.mock(
 );
 
 jest.mock(
+  "lightning/mobileCapabilities",
+  () => ({
+    getBarcodeScanner: () => ({
+      isAvailable: () => false,
+      barcodeTypes: { QR: "qr" },
+      beginCapture: jest.fn(),
+      endCapture: jest.fn()
+    })
+  }),
+  { virtual: true }
+);
+
+jest.mock(
   "@salesforce/apex/EPIC03_SessionAttendees_Controller.findByPhone",
+  () => ({ default: jest.fn() }),
+  { virtual: true }
+);
+
+jest.mock(
+  "@salesforce/apex/EPIC03_SessionAttendees_Controller.findByCode",
   () => ({ default: jest.fn() }),
   { virtual: true }
 );
@@ -187,5 +207,51 @@ describe("c-epic03-session-attendees", () => {
     expect(markAttended).toHaveBeenCalledWith({
       bookingId: "a0B000000000009"
     });
+  });
+
+  it("checks in a scanned code through markAttended", async () => {
+    findByCode.mockResolvedValue({
+      validInput: true,
+      matches: [
+        {
+          bookingId: "a0B000000000010",
+          memberId: "a0A000000000010",
+          memberName: "Riley Chen"
+        }
+      ]
+    });
+    markAttended.mockResolvedValue({
+      success: true,
+      message: "Checked in"
+    });
+
+    const element = createPanel("a0C000000000001");
+    getAttendees.emit(ROWS);
+    await flushPromises();
+
+    const code = [
+      ...element.shadowRoot.querySelectorAll("lightning-input")
+    ].find((el) => el.label === "Check-in code");
+    code.value = "AB12";
+    code.dispatchEvent(new CustomEvent("change"));
+
+    const checkIn = [
+      ...element.shadowRoot.querySelectorAll("lightning-button")
+    ].find((el) => el.label === "Check in");
+    checkIn.click();
+    await flushPromises();
+
+    expect(findByCode).toHaveBeenCalledWith({
+      sessionId: "a0C000000000001",
+      code: "AB12"
+    });
+    expect(markAttended).toHaveBeenCalledWith({
+      bookingId: "a0B000000000010"
+    });
+    expect(
+      [...element.shadowRoot.querySelectorAll("lightning-button")].find(
+        (el) => el.label === "Scan QR"
+      )
+    ).toBeUndefined();
   });
 });

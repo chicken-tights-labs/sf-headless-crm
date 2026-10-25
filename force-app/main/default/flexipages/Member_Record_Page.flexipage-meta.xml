@@ -22,6 +22,9 @@
                             <value>Member__c.Unconvert</value>
                         </valueListItems>
                         <valueListItems>
+                            <value>Member__c.Replace_Check_In_Code</value>
+                        </valueListItems>
+                        <valueListItems>
                             <value>Edit</value>
                         </valueListItems>
                     </valueList>
@@ -32,7 +35,7 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>numVisibleActions</name>
-                    <value>6</value>
+                    <value>7</value>
                 </componentInstanceProperties>
                 <componentName>force:highlightsPanel</componentName>
                 <identifier>force_highlightsPanel</identifier>

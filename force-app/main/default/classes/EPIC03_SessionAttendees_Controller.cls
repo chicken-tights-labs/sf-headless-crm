@@ -16,6 +16,8 @@ public with sharing class EPIC03_SessionAttendees_Controller {
   public static final String MSG_CHECKIN_ALREADY = 'This member is already checked in.';
   public static final String MSG_PHONE_NEED_DIGITS = 'Enter a 10-digit phone number.';
   public static final String MSG_PHONE_NO_MATCH = 'No booking on this class matches that phone.';
+  public static final String MSG_CODE_REQUIRED = 'Enter a check-in code.';
+  public static final String MSG_CODE_NO_MATCH = 'No booking on this class matches that code.';
 
   public class AttendeeRow {
     @AuraEnabled
@@ -164,6 +166,55 @@ public with sharing class EPIC03_SessionAttendees_Controller {
   }
 
   /**
+   * US-T002: match a scanned check-in code to bookings on this session.
+   * Does not write Booking__c. One match is checked in through markAttended.
+   */
+  @AuraEnabled
+  public static PhoneLookupResult findByCode(Id sessionId, String code) {
+    PhoneLookupResult result = new PhoneLookupResult();
+    result.matches = new List<PhoneMatch>();
+    String normalized = normalizeCode(code);
+    if (normalized == null) {
+      result.validInput = false;
+      result.message = MSG_CODE_REQUIRED;
+      return result;
+    }
+    result.validInput = true;
+    if (sessionId == null) {
+      result.message = MSG_CODE_NO_MATCH;
+      return result;
+    }
+
+    List<Booking__c> bookings = [
+      SELECT
+        Id,
+        Member__c,
+        Member__r.Name,
+        Member__r.First_Name__c,
+        Member__r.Last_Name__c
+      FROM Booking__c
+      WHERE
+        Scheduled_Session__c = :sessionId
+        AND Member__r.Check_In_Code__c = :normalized
+      ORDER BY
+        Member__r.Last_Name__c ASC NULLS LAST,
+        Member__r.First_Name__c ASC NULLS LAST
+    ];
+
+    for (Booking__c booking : bookings) {
+      PhoneMatch match = new PhoneMatch();
+      match.bookingId = booking.Id;
+      match.memberId = booking.Member__c;
+      match.memberName = memberDisplayName(booking);
+      result.matches.add(match);
+    }
+    if (result.matches.isEmpty()) {
+      result.message = MSG_CODE_NO_MATCH;
+    }
+    return result;
+  }
+
+  /**
    * US-T005 + US-T006: set Checked_In_At__c and Status__c = Completed after
    * waiverStatusByMember returns Signed. QR and phone check-in call this.
    */
@@ -243,6 +294,15 @@ public with sharing class EPIC03_SessionAttendees_Controller {
    * Digits only. A leading 1 on an 11-digit value is the country code.
    * Returns null unless the result is exactly 10 digits.
    */
+  @TestVisible
+  static String normalizeCode(String raw) {
+    if (String.isBlank(raw)) {
+      return null;
+    }
+    String code = raw.trim().toUpperCase();
+    return String.isBlank(code) ? null : code;
+  }
+
   @TestVisible
   static String phoneDigits(String raw) {
     if (String.isBlank(raw)) {

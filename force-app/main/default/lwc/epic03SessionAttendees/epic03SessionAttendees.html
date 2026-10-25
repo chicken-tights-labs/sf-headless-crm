@@ -75,7 +75,49 @@
           </template>
         </template>
       </div>
-      <!-- US-T002: QR scan goes here; it calls markAttended -->
+
+      <div class="slds-m-top_medium">
+        <lightning-input
+          label="Check-in code"
+          autocomplete="off"
+          value={codeInput}
+          onchange={handleCodeChange}
+          oncommit={handleCodeCommit}
+        ></lightning-input>
+        <template if:true={scanAvailable}>
+          <lightning-button
+            class="slds-m-top_x-small slds-m-right_x-small"
+            label="Scan QR"
+            onclick={handleScan}
+            disabled={findingCode}
+          ></lightning-button>
+        </template>
+        <lightning-button
+          class="slds-m-top_x-small"
+          label="Check in"
+          variant="brand"
+          onclick={handleCodeSubmit}
+          disabled={findingCode}
+        ></lightning-button>
+        <template if:true={codeMessage}>
+          <p class="slds-m-top_x-small" role="status">{codeMessage}</p>
+        </template>
+        <template if:true={hasCodeMatches}>
+          <ul class="slds-m-top_x-small">
+            <template for:each={codeMatches} for:item="match">
+              <li key={match.bookingId}>
+                {match.memberName}
+                <lightning-button
+                  label="Select"
+                  data-booking-id={match.bookingId}
+                  data-member-name={match.memberName}
+                  onclick={handleCodePick}
+                ></lightning-button>
+              </li>
+            </template>
+          </ul>
+        </template>
+      </div>
     </div>
   </lightning-card>
 </template>
