@@ -13,6 +13,10 @@
     <enabled>true</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>EPIC03_TrainerSchedule_Controller</apexClass>
+    <enabled>true</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>EPIC04_LeadRegistration_Controller</apexClass>
     <enabled>true</enabled>
   </classAccesses>
@@ -55,6 +59,10 @@
   </tabSettings>
   <tabSettings>
     <tab>Merchandise_Sale__c</tab>
+    <visibility>Visible</visibility>
+  </tabSettings>
+  <tabSettings>
+    <tab>My_Schedule</tab>
     <visibility>Visible</visibility>
   </tabSettings>
   <tabSettings>
