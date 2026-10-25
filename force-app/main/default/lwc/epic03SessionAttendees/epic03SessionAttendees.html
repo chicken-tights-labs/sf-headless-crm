@@ -27,7 +27,55 @@
         ></lightning-datatable>
       </template>
 
-      <!-- US-T002 / US-T003: QR scan and phone lookup go here; they call markAttended -->
+      <div class="slds-m-top_medium">
+        <lightning-input
+          type="tel"
+          label="Phone"
+          autocomplete="tel"
+          value={phoneInput}
+          onchange={handlePhoneChange}
+        ></lightning-input>
+        <lightning-button
+          class="slds-m-top_x-small"
+          label="Find"
+          onclick={handleFind}
+          disabled={finding}
+        ></lightning-button>
+
+        <template if:true={phoneMessage}>
+          <p class="slds-m-top_x-small" role="status">{phoneMessage}</p>
+        </template>
+
+        <template if:true={hasPhoneMatches}>
+          <ul class="slds-m-top_x-small">
+            <template for:each={phoneMatches} for:item="match">
+              <li key={match.bookingId}>
+                {match.memberName}
+                <template if:true={showPick}>
+                  <lightning-button
+                    label="Select"
+                    data-booking-id={match.bookingId}
+                    data-member-name={match.memberName}
+                    onclick={handlePick}
+                  ></lightning-button>
+                </template>
+              </li>
+            </template>
+          </ul>
+          <template if:true={showSelectedLabel}>
+            <p class="slds-m-top_x-small">Selected: {selectedMemberName}</p>
+          </template>
+          <template if:true={canConfirm}>
+            <lightning-button
+              variant="brand"
+              label="Confirm check-in"
+              onclick={handleConfirm}
+              disabled={saving}
+            ></lightning-button>
+          </template>
+        </template>
+      </div>
+      <!-- US-T002: QR scan goes here; it calls markAttended -->
     </div>
   </lightning-card>
 </template>

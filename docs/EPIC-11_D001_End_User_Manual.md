@@ -3,9 +3,9 @@
 Issue: #37. Kanban: `t_9d84897e`.
 
 **Status:** Draft
-**Last verified:** 2026-10-15 against branch `feat/EPIC03-UST005-UST006-mark-attended-waiver-block`
+**Last verified:** 2026-10-25 against branch `feat/EPIC03-UST003-phone-check-in`
 **Checked from:** source in `force-app` (not an org click-through)
-**Still open:** screenshots in `my-gym`; trainer schedule, QR/phone check-in, substitutes, merchandise, discounts, and refunds are not built yet
+**Still open:** screenshots in `my-gym`; trainer schedule, QR check-in, substitutes, merchandise, discounts, and refunds are not built yet
 
 This is the canonical copy. The issue names `CRM-Documentation/EPIC-11_D001_End_User_Manual.md`. Sync that vault from this file when the vault is available.
 
@@ -19,7 +19,7 @@ Admin setup (users, the permission set, locations, waiver templates, tier values
 
 ## Trainer workflows
 
-**Partially built.** Class attendee roster, Mark Attended (with waiver block), and trainer member profile (with permission-gated medical notes) are in the Boxing Gym CRM app. Schedule, QR/phone check-in, and substitutes are not.
+**Partially built.** Class attendee roster, Mark Attended (with waiver block), phone check-in, and trainer member profile (with permission-gated medical notes) are in the Boxing Gym CRM app. Schedule, QR check-in, and substitutes are not.
 
 ### Trainer: view class attendees and mark attended
 
@@ -29,11 +29,21 @@ Admin setup (users, the permission set, locations, waiver templates, tier values
 2. On success: booking `Status__c = Completed` and `Checked_In_At__c` is set. There is no Attended picklist value.
 3. Without a valid Signed waiver: blocked with `Cannot check in - member does not have a valid signed waiver`. Capture a waiver (US-F005), then retry. The booking insert trigger is not used at check-in.
 
+### Trainer: check in by phone
+
+**Verified from source.** On the same **Attendees** tab, enter a phone number and click **Find**. The search compares digits only (punctuation and a leading `+1` are ignored) to `Phone` on bookings for **this class**. It does not check anyone in.
+
+1. One match: the member name appears with **Confirm check-in**.
+2. Several bookings share that phone: click **Select** on one name, then **Confirm check-in**.
+3. Confirm runs the same **Mark Attended** action, including the waiver block. A missing booking is not created.
+4. No booking on this class for that phone: `No booking on this class matches that phone.`
+5. Blank or not 10 digits: `Enter a 10-digit phone number.` Nothing is searched.
+
 | Asked for                 | What exists                                                                                                                                                                                                                       |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | View my class schedule    | No trainer schedule screen. The report **Upcoming Sessions and Capacity** lists sessions from today forward. See US-D002.                                                                                                         |
 | Check in by QR code       | No QR check-in.                                                                                                                                                                                                                   |
-| Check in by phone lookup  | No phone-lookup check-in.                                                                                                                                                                                                         |
+| Check in by phone lookup  | **Verified from source.** On the session **Attendees** tab, **Find** matches a 10-digit phone to this class's bookings. **Confirm check-in** calls Mark Attended (US-T003). A member who is not booked is not added.              |
 | Mark attendance           | **Verified from source.** Row action **Mark Attended** on the Attendees tab (US-T005 / US-T006).                                                                                                                                  |
 | View class attendee lists | **Verified from source.** On a Scheduled Session, the **Attendees** tab lists bookings with member name, check-in status, and waiver status (US-T004).                                                                            |
 | Open a member profile     | **Verified from source.** From a session **Attendees** list, click the member name. The Member page shows a read-only **Trainer profile** card (name, tier, status, expiry). There is no separate trainer app.                    |
