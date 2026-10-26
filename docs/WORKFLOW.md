@@ -100,7 +100,10 @@ After PR merges to `main`:
 
    > Without this, fields like `Scheduled_Session__c.Start_Time__c` are in the schema
    > but not queryable (FLS on fresh scratch orgs). Tooling API `FieldDefinition` may
-   > show fields exist while Data API SOQL returns `No such column`.
+   > show fields exist while Data API SOQL returns `No such column`. Do **not** treat
+   > that as a failed field deploy — assign the permset first.
+
+5. **Verify the deploy** (do not eyeball the success table — assert the fields):
 
    ```bash
    sf project deploy report --target-org my-gym --use-most-recent --json > /tmp/dr.json
@@ -134,11 +137,24 @@ After PR merges to `main`:
    > "no data" instead. Either way: if you see no deploy fields, suspect the missing
    > flag before you suspect the deploy.)
 
-5. Post-deploy sanity check:
+6. Post-deploy sanity check (confirm FLS-gated fields are queryable too):
    ```bash
    sf data query --target-org my-gym -q "SELECT COUNT() FROM Waiver_Record__c" --json
+   sf data query --target-org my-gym \
+     -q "SELECT Id, Name, Start_Time__c FROM Scheduled_Session__c LIMIT 1" --json
    ```
-6. Comment on the issue with handoff protocol (see section 8).
+7. Comment on the issue with handoff protocol (see section 8).
+
+### Org-ready checklist (Hermes + Cursor)
+
+An org is ready for verification only when **all** are true:
+
+1. Expected branch/commit is checked out
+2. `sf project deploy start --source-dir force-app --target-org <alias> --test-level RunRelevantTests` succeeded
+3. Deploy report: `Succeeded`, 0 component errors, tests > 0 when Apex actually changed
+4. `Boxing_Gym_CRM_Access` assigned to the verification user
+5. Sanity SOQL works for both a simple COUNT and a custom field that needs FLS (e.g. `Scheduled_Session__c.Start_Time__c`)
+6. Then UI click-through
 
 **Why this matters:** a bare `sf project deploy start` performs **no Apex tests**
 (`numberTestsCompleted: 0`). Without the test level, "deployed successfully" means
