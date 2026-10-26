@@ -3,7 +3,7 @@
 Issue: #37. Kanban: `t_9d84897e`.
 
 **Status:** Draft
-**Last verified:** 2026-10-25 against branch `feat/EPIC03-UST001-trainer-schedule`
+**Last verified:** 2026-10-25 against branch `feat/EPIC03-bug-home-flexipage-activation`
 **Checked from:** source in `force-app` (not an org click-through)
 **Still open:** screenshots in `my-gym`; substitutes, merchandise, discounts, and refunds are not built yet
 
@@ -23,7 +23,7 @@ Admin setup (users, the permission set, locations, waiver templates, tier values
 
 ### Trainer: view my schedule
 
-**Verified from source.** Open Boxing Gym CRM. On **Home** (desktop), the **My schedule** card lists classes assigned to the logged-in user for the current week. The **My Schedule** tab shows the same list (useful on phone).
+**Verified from source.** Open the **Boxing Gym CRM** app from the App Launcher. On **Home**, the **My schedule** card lists classes assigned to the logged-in user for the current week. The **My Schedule** tab shows the same list (useful if Home is not the custom page). Home is wired in app metadata (`Gym_Manager_Home`), not via Setup Lightning Pages activation.
 
 Each row shows session name (opens the Scheduled Session), start time, location, booked count (non-cancelled bookings), and capacity (`Max_Capacity__c`). Cancelled sessions and other trainers' classes do not appear. Sessions with no start time in this week do not appear.
 

@@ -16,9 +16,11 @@ Issue: #46. Kanban: `t-ad823027db53`.
 
 ## How to use
 
-1. Open Boxing Gym CRM.
+1. Open the **Boxing Gym CRM** app (App Launcher — not the default Salesforce app).
 2. On **Home**, see **My schedule** for classes assigned to you this week — or open the **My Schedule** tab.
 3. Click a class name to open the Scheduled Session (Attendees / check-in).
+
+Home is assigned by `Boxing_Gym_CRM` CustomApplication overrides (`standard-home` → `Gym_Manager_Home`), not by a FlexiPageAssignment / Setup activation checkbox. If Home looks wrong after a scratch recreate, redeploy the app metadata (#84).
 
 ## Docs
 

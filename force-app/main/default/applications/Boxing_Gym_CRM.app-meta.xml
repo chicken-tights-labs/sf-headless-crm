@@ -30,6 +30,15 @@
     <pageOrSobjectType>Lead__c</pageOrSobjectType>
     <type>Flexipage</type>
   </actionOverrides>
+  <!-- Scratch/System Administrator often needs an explicit profile override to see App Home. -->
+  <profileActionOverrides>
+    <actionName>Tab</actionName>
+    <content>Gym_Manager_Home</content>
+    <formFactor>Large</formFactor>
+    <pageOrSobjectType>standard-home</pageOrSobjectType>
+    <type>Flexipage</type>
+    <profile>Admin</profile>
+  </profileActionOverrides>
   <tabs>standard-Home</tabs>
   <tabs>My_Schedule</tabs>
   <tabs>Member__c</tabs>
