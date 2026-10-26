@@ -3,9 +3,9 @@
 Issue: #37. Kanban: `t_9d84897e`.
 
 **Status:** Draft
-**Last verified:** 2026-10-25 against branch `feat/EPIC03-bug-home-flexipage-activation`
+**Last verified:** 2026-10-26 against branch `feat/EPIC04-USF006-merchandise-sale`
 **Checked from:** source in `force-app` (not an org click-through)
-**Still open:** screenshots in `my-gym`; substitutes, merchandise, discounts, and refunds are not built yet
+**Still open:** screenshots in `my-gym`; substitutes, discounts, and refunds are not built yet
 
 This is the canonical copy. The issue names `CRM-Documentation/EPIC-11_D001_End_User_Manual.md`. Sync that vault from this file when the vault is available.
 
@@ -214,11 +214,29 @@ Rules:
 
 A punch-card booking decrements Classes Remaining. There is no front-desk booking wizard in source. Staff create a Booking record.
 
+## Front desk: sell merchandise
+
+**Verified from source.** **Sell Merchandise** is on Boxing Gym CRM **Home**, under Walk-In Lead Registration.
+
+1. Choose the gym. The item list is active, in-stock inventory at that gym.
+2. Find the member (at least two characters) and select them.
+3. Choose an item and quantity, then **Add to cart**. Quantity cannot exceed stock. Adding the same item again increases the quantity.
+4. Choose a payment method: Cash, Card, Account Credit, or Gift Card.
+5. **Complete sale.**
+
+What it writes:
+
+- `Merchandise_Sale__c` with the member, gym, payment method, and total.
+- One `Sale_Line_Item__c` per item. The price is `Unit_Price__c` at that moment.
+- `Inventory_Item__c.Current_Stock__c` goes down by the quantity sold.
+- `Payment_Transaction__c` with type Merchandise Purchase and status Completed. Card is stored as Credit Card. Cash, Gift Card, and Account Credit keep those names.
+
+This screen does not call **Process Membership Payment**. A merchandise sale does not change membership dates, send the welcome email, or award a referral. Discounts and refunds are not on this screen.
+
 ## Front desk stories that are not built
 
 **Not built.**
 
-- Sell merchandise. Merchandise Sale and Sale Line Item exist as objects. There is no sale screen.
 - Apply a discount with manager approval. No approval process.
 - Refund or return. No refund action.
 
@@ -229,4 +247,4 @@ A punch-card booking decrements Classes Remaining. There is no front-desk bookin
 3. Confirm **Walk-In Lead Registration** is on **Home** (Gym Manager Home).
 4. Run **Capture Waiver**, sign the pad, and confirm a Signed Waiver Record appears.
 5. Run the tier action with no Signed waiver and expect **Waiver Required**.
-6. Do not expect merchandise or refunds. Those sections stay **Not built** until the feature exists. QR check-in is on the session Attendees tab.
+6. On **Home**, confirm **Sell Merchandise** is under Walk-In Lead Registration. Discounts and refunds stay **Not built**. QR check-in is on the session Attendees tab.

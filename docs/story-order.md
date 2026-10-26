@@ -1,6 +1,6 @@
 # Story Order: EPIC-03, EPIC-04, EPIC-11
 
-**Last updated:** 2026-10-16
+**Last updated:** 2026-10-26
 **Supersedes:** the sequencing, C2, and trainer-app offline sections of [`EPIC-03_04_Conflict_Analysis.md`](./EPIC-03_04_Conflict_Analysis.md)
 
 This is the order the open stories are expected to merge. Each story's GitHub issue has a dependency comment with the details. If this file and an issue comment disagree, the newer one wins, and this file gets updated in the same PR.
@@ -64,10 +64,11 @@ This is the order the open stories are expected to merge. Each story's GitHub is
 - **Renewal** extends `Expiry_Date__c` from the later of today and the current expiry. It needs a new signed waiver. It does not call `processPayment`, resend the welcome email, or award the referral again.
 - **Substitute** uses a new trainer lookup on `Scheduled_Session__c`. `Assigned_Trainer__c` stays the original trainer.
 - **Do not create** `Order__c`, `Payment__c`, `Refund__c`, `Discount_Request__c`, `Check_In__c`, or `Medical_Note__c` from older docs. Use `Payment_Transaction__c`, `Merchandise_Sale__c`, `Sale_Line_Item__c`, `Booking__c`, and `Member__c.Medical_Notes__c`.
+- **Merchandise payment does not call `processPayment`.** #60 writes `Payment_Transaction__c` with type Merchandise Purchase. It does not activate a membership, reset dates, send the welcome email, or award a referral. Card on the sale is stored as Credit Card. Account Credit is a `Transaction_Method__c` value.
 
 ## Shared files
 
-`Boxing_Gym_CRM_Access.permissionset-meta.xml` is touched by #54, #61, #47, and #55. `Member__c` gets a new field from #47. Rebase on `main` before opening each PR.
+`Boxing_Gym_CRM_Access.permissionset-meta.xml` is touched by #54, #60, #61, #47, and #55. `Member__c` gets a new field from #47. Rebase on `main` before opening each PR.
 
 ## Open questions
 

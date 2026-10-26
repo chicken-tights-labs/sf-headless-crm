@@ -1,0 +1,113 @@
+<template>
+  <lightning-card title="Sell Merchandise" icon-name="standard:product">
+    <div class="slds-m-around_medium">
+      <lightning-combobox
+        label="Gym"
+        placeholder="Select a gym"
+        options={locationOptions}
+        value={franchiseLocationId}
+        onchange={handleLocationChange}
+      ></lightning-combobox>
+      <template if:true={locationsError}>
+        <p class="slds-text-color_error slds-m-top_small">{locationsError}</p>
+      </template>
+
+      <lightning-input
+        class="slds-m-top_small"
+        label="Find member"
+        value={memberTerm}
+        onchange={handleMemberTermChange}
+      ></lightning-input>
+      <lightning-combobox
+        label="Member"
+        placeholder="Search, then choose a member"
+        options={memberOptions}
+        value={memberId}
+        onchange={handleMemberChange}
+      ></lightning-combobox>
+
+      <lightning-combobox
+        class="slds-m-top_small"
+        label="Item"
+        placeholder="Select an item"
+        options={inventoryOptions}
+        value={inventoryItemId}
+        onchange={handleItemChange}
+      ></lightning-combobox>
+      <template if:true={inventoryMessage}>
+        <p class="slds-text-color_weak slds-m-top_x-small">
+          {inventoryMessage}
+        </p>
+      </template>
+      <lightning-input
+        type="number"
+        label="Quantity"
+        min="1"
+        step="1"
+        value={quantity}
+        onchange={handleQuantityChange}
+      ></lightning-input>
+      <div class="slds-m-top_small">
+        <lightning-button
+          label="Add to cart"
+          onclick={handleAdd}
+        ></lightning-button>
+      </div>
+
+      <template if:true={hasCart}>
+        <table class="slds-table slds-table_cell-buffer slds-m-top_medium">
+          <thead>
+            <tr>
+              <th scope="col">Item</th>
+              <th scope="col">Qty</th>
+              <th scope="col">Price</th>
+              <th scope="col">Total</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <template for:each={cartLines} for:item="line">
+              <tr key={line.inventoryItemId}>
+                <td>{line.name}</td>
+                <td>{line.quantity}</td>
+                <td>{line.unitPriceLabel}</td>
+                <td>{line.lineTotalLabel}</td>
+                <td>
+                  <lightning-button
+                    label="Remove"
+                    data-id={line.inventoryItemId}
+                    onclick={handleRemove}
+                  ></lightning-button>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+        <p class="slds-m-top_small">Cart total {cartTotalLabel}</p>
+      </template>
+
+      <lightning-combobox
+        class="slds-m-top_small"
+        label="Payment method"
+        placeholder="Select a payment method"
+        options={paymentMethodOptions}
+        value={paymentMethod}
+        onchange={handlePaymentChange}
+      ></lightning-combobox>
+      <div class="slds-m-top_medium">
+        <lightning-button
+          variant="brand"
+          label="Complete sale"
+          disabled={completeDisabled}
+          onclick={handleComplete}
+        ></lightning-button>
+      </div>
+      <template if:true={message}>
+        <p class="slds-text-heading_small slds-m-top_small">{message}</p>
+      </template>
+      <template if:true={error}>
+        <p class="slds-text-color_error slds-m-top_small">{error}</p>
+      </template>
+    </div>
+  </lightning-card>
+</template>

@@ -29,6 +29,12 @@
         </itemInstances>
         <itemInstances>
             <componentInstance>
+                <componentName>epic04MerchandiseSale</componentName>
+                <identifier>epic04MerchandiseSale</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
                 <componentInstanceProperties>
                     <name>decorate</name>
                     <value>true</value>
