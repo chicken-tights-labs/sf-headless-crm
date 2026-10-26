@@ -92,7 +92,15 @@ After PR merges to `main`:
    flaky/unrelated test classes (e.g. `DataManager_QuotaTest`) that depend on
    org-specific Documents and would fail a full-suite deploy on noise.
    This matches `.github/workflows/ci.yml` and `.github/workflows/deploy.yml`.
-4. **Verify the deploy** (do not eyeball the success table — assert the fields):
+4. **Assign the permission set** (FLS on custom fields — mandatory after every deploy):
+
+   ```bash
+   sf org assign permset --target-org my-gym --name Boxing_Gym_CRM_Access
+   ```
+
+   > Without this, fields like `Scheduled_Session__c.Start_Time__c` are in the schema
+   > but not queryable (FLS on fresh scratch orgs). Tooling API `FieldDefinition` may
+   > show fields exist while Data API SOQL returns `No such column`.
 
    ```bash
    sf project deploy report --target-org my-gym --use-most-recent --json > /tmp/dr.json
