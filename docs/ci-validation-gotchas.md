@@ -20,18 +20,34 @@ That is a failure to reach the tests, not a clean test run. Always read the **Co
 
 `RunRelevantTests` enforces **75% coverage per selected Apex class**. With 28/28 passing, PR #30's second CI run still failed with `EPIC01_MemberUnconvert_Action - Test coverage of selected Apex Class is 73.333%, at least 75% test coverage is required`. The uncovered lines were the `catch` branch (the failure path). The "Failing: 0" count and the `Running Tests` summary hide this: look for the coverage warning above `Dry-run complete`. Every new Apex class needs tests for both the success path and the error/catch path, including invocable wrappers.
 
+## 1c. False "missing fields" after deploy (FLS)
+
+When a scratch org is created and components deploy, custom fields may appear
+"missing" (`No such column`) in SOQL queries. This is an **FLS issue, not a
+deploy bug**:
+
+| Symptom                                                                            | Root cause                                                                                                                                                                                                        | Fix                                                                                                                       |
+| ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `sf data query` or SOQL returns `No such column: <field>__c` after deploy succeeds | Custom fields are deployed to schema but have **no FLS** on a fresh scratch org until the permission set is assigned. System Administrator has no FLS on custom fields until `Boxing_Gym_CRM_Access` is assigned. | `sf org assign permset --target-org <org> --name Boxing_Gym_CRM_Access` then re-verify. **Mandatory after every deploy.** |
+
+> Deploy may report components `created: true` yet SOQL still returns `No such column`
+> until the permission set is assigned. A successful deploy does **not** mean fields
+> are queryable. Use Tooling `FieldDefinition` to confirm schema; use Data API SOQL
+> after the permset assign to confirm access. See `docs/WORKFLOW.md` §7 and
+> `docs/environment.md`.
+
 ## 2. Hand-written metadata cannot be validated locally without an org
 
 Flows, quick actions and similar XML are easy to get subtly wrong. The project's `sourceApiVersion` is **58.0**, and the deploy rejects properties from newer versions.
 
 Known issues we have hit:
 
-| Symptom | Cause | Fix |
-|---|---|---|
-| `Property 'versionString' not valid in version 58.0` | `<versionString>` inside a Flow `actionCalls` element | Remove it |
-| QuickAction `Required fields are missing: [Component]` (type Flow) | Seen alongside the flow errors above; may be a knock-on of the flow failing, not confirmed | Re-check after the flows deploy; if it persists, fix the QuickAction XML shape |
-| `'GreaterThanOrEqual' is not a valid value for enum 'FlowRecordFilterOperator'` | Record-triggered start filters use `GreaterThanOrEqualTo`, not `GreaterThanOrEqual`. Date `>=` is safer as a Flow formula + Decision (PRs #43/#44) | Use `EqualTo`/`IsNull` in start filters; put date logic in a formula |
-| `Picklist fields are only supported in certain functions` in a Flow formula | `{!Get_Record.Picklist__c} = "Value"` is invalid | Use `ISPICKVAL({!Get_Record.Picklist__c}, "Value")` |
+| Symptom                                                                         | Cause                                                                                                                                              | Fix                                                                            |
+| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `Property 'versionString' not valid in version 58.0`                            | `<versionString>` inside a Flow `actionCalls` element                                                                                              | Remove it                                                                      |
+| QuickAction `Required fields are missing: [Component]` (type Flow)              | Seen alongside the flow errors above; may be a knock-on of the flow failing, not confirmed                                                         | Re-check after the flows deploy; if it persists, fix the QuickAction XML shape |
+| `'GreaterThanOrEqual' is not a valid value for enum 'FlowRecordFilterOperator'` | Record-triggered start filters use `GreaterThanOrEqualTo`, not `GreaterThanOrEqual`. Date `>=` is safer as a Flow formula + Decision (PRs #43/#44) | Use `EqualTo`/`IsNull` in start filters; put date logic in a formula           |
+| `Picklist fields are only supported in certain functions` in a Flow formula     | `{!Get_Record.Picklist__c} = "Value"` is invalid                                                                                                   | Use `ISPICKVAL({!Get_Record.Picklist__c}, "Value")`                            |
 
 Before pushing Flow, QuickAction, validation-rule or layout XML, run a check-only deploy of just those files against a confirmed org (see `docs/environment.md`), for example:
 
