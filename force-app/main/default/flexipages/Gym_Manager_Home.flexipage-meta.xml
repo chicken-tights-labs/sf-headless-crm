@@ -49,6 +49,12 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
+                <componentName>epic03TrainerSchedule</componentName>
+                <identifier>epic03TrainerSchedule</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
                 <componentInstanceProperties>
                     <name>decorate</name>
                     <value>true</value>
@@ -56,7 +62,7 @@
                 <componentInstanceProperties>
                     <name>richTextValue</name>
                     <value
-          >&lt;p&gt;&lt;strong&gt;Classes &amp;amp; Bookings&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Open the &lt;strong&gt;Scheduled Session&lt;/strong&gt; tab for the &lt;strong&gt;This Week&amp;rsquo;s Classes&lt;/strong&gt; list view, or the &lt;strong&gt;Booking&lt;/strong&gt; tab to see check-ins.&lt;/p&gt;</value>
+          >&lt;p&gt;&lt;strong&gt;Classes &amp;amp; Bookings&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Your assigned classes for this week are above. Open a class for the Attendees tab, or use &lt;strong&gt;Scheduled Session &amp;rarr; This Week&amp;rsquo;s Classes&lt;/strong&gt; for every location.&lt;/p&gt;</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:richText</componentName>
                 <identifier>richText_classes</identifier>

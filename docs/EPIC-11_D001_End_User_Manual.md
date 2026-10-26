@@ -3,9 +3,9 @@
 Issue: #37. Kanban: `t_9d84897e`.
 
 **Status:** Draft
-**Last verified:** 2026-10-25 against branch `feat/EPIC03-UST002-qr-check-in`
+**Last verified:** 2026-10-25 against branch `feat/EPIC03-UST001-trainer-schedule`
 **Checked from:** source in `force-app` (not an org click-through)
-**Still open:** screenshots in `my-gym`; trainer schedule, substitutes, merchandise, discounts, and refunds are not built yet
+**Still open:** screenshots in `my-gym`; substitutes, merchandise, discounts, and refunds are not built yet
 
 This is the canonical copy. The issue names `CRM-Documentation/EPIC-11_D001_End_User_Manual.md`. Sync that vault from this file when the vault is available.
 
@@ -19,7 +19,13 @@ Admin setup (users, the permission set, locations, waiver templates, tier values
 
 ## Trainer workflows
 
-**Partially built.** Class attendee roster, Mark Attended (with waiver block), phone check-in, QR check-in, and trainer member profile (with permission-gated medical notes) are in the Boxing Gym CRM app. Schedule and substitutes are not.
+**Partially built.** My schedule (this week), class attendee roster, Mark Attended (with waiver block), phone check-in, QR check-in, and trainer member profile (with permission-gated medical notes) are in the Boxing Gym CRM app. Substitutes are not.
+
+### Trainer: view my schedule
+
+**Verified from source.** Open Boxing Gym CRM. On **Home** (desktop), the **My schedule** card lists classes assigned to the logged-in user for the current week. The **My Schedule** tab shows the same list (useful on phone).
+
+Each row shows session name (opens the Scheduled Session), start time, location, booked count (non-cancelled bookings), and capacity (`Max_Capacity__c`). Cancelled sessions and other trainers' classes do not appear. Sessions with no start time in this week do not appear.
 
 ### Trainer: view class attendees and mark attended
 
@@ -49,7 +55,7 @@ The code is a random value on the member. It is not the phone number or email. *
 
 | Asked for                 | What exists                                                                                                                                                                                                                       |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| View my class schedule    | No trainer schedule screen. The report **Upcoming Sessions and Capacity** lists sessions from today forward. See US-D002.                                                                                                         |
+| View my class schedule    | **Verified from source.** **My schedule** on Home and the **My Schedule** tab list this week's classes assigned to you (US-T001).                                                                                                 |
 | Check in by QR code       | **Verified from source.** On the session **Attendees** tab, a typed or scanned code matches this class. One match calls Mark Attended (US-T002). **Replace check-in code** on the Member page overwrites the code.                |
 | Check in by phone lookup  | **Verified from source.** On the session **Attendees** tab, **Find** matches a 10-digit phone to this class's bookings. **Confirm check-in** calls Mark Attended (US-T003). A member who is not booked is not added.              |
 | Mark attendance           | **Verified from source.** Row action **Mark Attended** on the Attendees tab (US-T005 / US-T006).                                                                                                                                  |

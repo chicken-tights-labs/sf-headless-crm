@@ -1,0 +1,24 @@
+<template>
+  <lightning-card title="My schedule" icon-name="standard:event">
+    <div class="slds-p-horizontal_medium slds-p-bottom_small">
+      <p class="slds-text-body_small slds-m-bottom_small">{countLabel}</p>
+
+      <template if:true={error}>
+        <p class="slds-text-color_error" role="alert">{error}</p>
+      </template>
+
+      <template if:true={isEmpty}>
+        <p>No classes assigned to you this week.</p>
+      </template>
+
+      <template if:true={hasRows}>
+        <lightning-datatable
+          key-field="sessionId"
+          data={sessions}
+          columns={columns}
+          hide-checkbox-column
+        ></lightning-datatable>
+      </template>
+    </div>
+  </lightning-card>
+</template>

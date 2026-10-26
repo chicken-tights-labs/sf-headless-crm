@@ -31,6 +31,7 @@
     <type>Flexipage</type>
   </actionOverrides>
   <tabs>standard-Home</tabs>
+  <tabs>My_Schedule</tabs>
   <tabs>Member__c</tabs>
   <tabs>Scheduled_Session__c</tabs>
   <tabs>Booking__c</tabs>
