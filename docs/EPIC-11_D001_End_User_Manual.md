@@ -3,7 +3,7 @@
 Issue: #37. Kanban: `t_9d84897e`.
 
 **Status:** Draft
-**Last verified:** 2026-10-25 against branch `feat/EPIC03-UST001-trainer-schedule`
+**Last verified:** 2026-10-25 against branch `feat/EPIC03-bug-home-flexipage-activation`
 **Checked from:** source in `force-app` (not an org click-through)
 **Still open:** screenshots in `my-gym`; substitutes, merchandise, discounts, and refunds are not built yet
 
