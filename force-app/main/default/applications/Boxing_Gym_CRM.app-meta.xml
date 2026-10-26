@@ -17,6 +17,30 @@
     <type>Flexipage</type>
   </actionOverrides>
   <actionOverrides>
+    <actionName>Tab</actionName>
+    <content>Gym_Manager_Home</content>
+    <formFactor>Small</formFactor>
+    <pageOrSobjectType>standard-home</pageOrSobjectType>
+    <type>Flexipage</type>
+  </actionOverrides>
+  <!-- Scratch/System Administrator often needs an explicit profile override to see App Home. -->
+  <profileActionOverrides>
+    <actionName>Tab</actionName>
+    <content>Gym_Manager_Home</content>
+    <formFactor>Large</formFactor>
+    <pageOrSobjectType>standard-home</pageOrSobjectType>
+    <type>Flexipage</type>
+    <profile>Admin</profile>
+  </profileActionOverrides>
+  <profileActionOverrides>
+    <actionName>Tab</actionName>
+    <content>Gym_Manager_Home</content>
+    <formFactor>Small</formFactor>
+    <pageOrSobjectType>standard-home</pageOrSobjectType>
+    <type>Flexipage</type>
+    <profile>Admin</profile>
+  </profileActionOverrides>
+  <actionOverrides>
     <actionName>View</actionName>
     <content>Lead_Record_Page</content>
     <formFactor>Large</formFactor>
