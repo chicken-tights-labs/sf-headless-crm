@@ -21,6 +21,10 @@
     <enabled>true</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>EPIC04_MerchandiseSale_Controller</apexClass>
+    <enabled>true</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>EPIC04_WaiverCapture_Controller</apexClass>
     <enabled>true</enabled>
   </classAccesses>

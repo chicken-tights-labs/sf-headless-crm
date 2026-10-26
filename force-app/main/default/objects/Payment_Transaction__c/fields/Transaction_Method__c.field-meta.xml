@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
   <fullName>Transaction_Method__c</fullName>
   <label>Transaction Method</label>
@@ -35,6 +35,10 @@
       <value>
         <fullName>Gift Card</fullName>
         <label>Gift Card</label>
+      </value>
+      <value>
+        <fullName>Account Credit</fullName>
+        <label>Account Credit</label>
       </value>
     </valueSetDefinition>
   </valueSet>
