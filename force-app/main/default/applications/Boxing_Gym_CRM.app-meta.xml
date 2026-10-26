@@ -23,13 +23,6 @@
     <pageOrSobjectType>Lead__c</pageOrSobjectType>
     <type>Flexipage</type>
   </actionOverrides>
-  <actionOverrides>
-    <actionName>View</actionName>
-    <content>Lead_Record_Page</content>
-    <formFactor>Small</formFactor>
-    <pageOrSobjectType>Lead__c</pageOrSobjectType>
-    <type>Flexipage</type>
-  </actionOverrides>
   <!-- Scratch/System Administrator often needs an explicit profile override to see App Home. -->
   <profileActionOverrides>
     <actionName>Tab</actionName>
