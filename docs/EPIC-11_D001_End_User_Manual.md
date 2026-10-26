@@ -3,9 +3,9 @@
 Issue: #37. Kanban: `t_9d84897e`.
 
 **Status:** Draft
-**Last verified:** 2026-10-26 against branch `feat/EPIC04-USF006-merchandise-sale`
+**Last verified:** 2026-10-26 against branch `feat/EPIC04-USF007-merchandise-discount`
 **Checked from:** source in `force-app` (not an org click-through)
-**Still open:** screenshots in `my-gym`; substitutes, discounts, and refunds are not built yet
+**Still open:** screenshots in `my-gym`; substitutes and refunds are not built yet
 
 This is the canonical copy. The issue names `CRM-Documentation/EPIC-11_D001_End_User_Manual.md`. Sync that vault from this file when the vault is available.
 
@@ -231,13 +231,25 @@ What it writes:
 - `Inventory_Item__c.Current_Stock__c` goes down by the quantity sold.
 - `Payment_Transaction__c` with type Merchandise Purchase and status Completed. Card is stored as Credit Card. Cash, Gift Card, and Account Credit keep those names.
 
-This screen does not call **Process Membership Payment**. A merchandise sale does not change membership dates, send the welcome email, or award a referral. Discounts and refunds are not on this screen.
+This screen does not call **Process Membership Payment**. A merchandise sale does not change membership dates, send the welcome email, or award a referral.
+
+### Discount
+
+**Verified from source.** On the same card, before payment:
+
+- Leave discount and promo code blank to charge full price.
+- **Discount %** of 1 to 10 needs no PIN. The sale records you as Discount Approved By, reason Staff discount.
+- **Discount %** above 10 shows **Manager PIN**. A wrong or missing PIN refuses the sale and leaves stock unchanged. The message is `Manager approval required for this discount tier`. The approver stored is the manager whose PIN matched.
+- **Promo code** uses a code a manager created. It can be any percent from 1 to 99 and does not ask for a PIN. A code that is inactive or past its expiration date is refused. A code is valid through the end of its expiration date. There is no usage limit.
+- Enter a percent or a promo code, not both.
+- Line items stay at shelf price. The sale total and the payment use the discounted amount.
+
+Managers with **Boxing Gym Manager** see **Merchandise manager PIN** on Home and can replace their own 4 to 6 digit PIN. They create codes on the **Promo Code** tab. Front desk cannot read the stored PIN.
 
 ## Front desk stories that are not built
 
 **Not built.**
 
-- Apply a discount with manager approval. No approval process.
 - Refund or return. No refund action.
 
 ## How to verify this draft
@@ -247,4 +259,4 @@ This screen does not call **Process Membership Payment**. A merchandise sale doe
 3. Confirm **Walk-In Lead Registration** is on **Home** (Gym Manager Home).
 4. Run **Capture Waiver**, sign the pad, and confirm a Signed Waiver Record appears.
 5. Run the tier action with no Signed waiver and expect **Waiver Required**.
-6. On **Home**, confirm **Sell Merchandise** is under Walk-In Lead Registration. Discounts and refunds stay **Not built**. QR check-in is on the session Attendees tab.
+6. On **Home**, confirm **Sell Merchandise** is under Walk-In Lead Registration. A discount above 10% asks for a manager PIN. Refunds stay **Not built**. QR check-in is on the session Attendees tab.

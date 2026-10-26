@@ -86,6 +86,33 @@
         <p class="slds-m-top_small">Cart total {cartTotalLabel}</p>
       </template>
 
+      <lightning-input
+        class="slds-m-top_small"
+        type="number"
+        label="Discount %"
+        min="0"
+        max="99"
+        step="1"
+        value={discountPercent}
+        onchange={handleDiscountChange}
+      ></lightning-input>
+      <template if:true={showAmountDue}>
+        <p class="slds-m-top_x-small">Amount due {amountDueLabel}</p>
+      </template>
+      <template if:true={pinRequired}>
+        <lightning-input
+          type="password"
+          label="Manager PIN"
+          value={managerPin}
+          onchange={handlePinChange}
+        ></lightning-input>
+      </template>
+      <lightning-input
+        label="Promo code"
+        value={promoCode}
+        onchange={handlePromoChange}
+      ></lightning-input>
+
       <lightning-combobox
         class="slds-m-top_small"
         label="Payment method"

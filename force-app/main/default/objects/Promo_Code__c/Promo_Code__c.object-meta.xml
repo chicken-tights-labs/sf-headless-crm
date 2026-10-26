@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+  <deploymentStatus>Deployed</deploymentStatus>
+  <description
+  >Merchandise promo code. Managers create codes. A code past its expiration date is refused. No usage limit.</description>
+  <label>Promo Code</label>
+  <pluralLabel>Promo Codes</pluralLabel>
+  <nameField>
+    <displayFormat>PC-{0000}</displayFormat>
+    <label>Promo Code Number</label>
+    <type>AutoNumber</type>
+  </nameField>
+  <sharingModel>ReadWrite</sharingModel>
+  <externalSharingModel>ReadWrite</externalSharingModel>
+</CustomObject>

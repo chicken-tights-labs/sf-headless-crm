@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fullName>Pin_Hash__c</fullName>
+  <label>PIN Hash</label>
+  <type>Text</type>
+  <length>64</length>
+  <required>true</required>
+  <description
+  >SHA-256 of the user id and PIN. Not granted on any permission set.</description>
+</CustomField>

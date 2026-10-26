@@ -35,6 +35,12 @@
         </itemInstances>
         <itemInstances>
             <componentInstance>
+                <componentName>epic04ManagerPin</componentName>
+                <identifier>epic04ManagerPin</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
                 <componentInstanceProperties>
                     <name>decorate</name>
                     <value>true</value>

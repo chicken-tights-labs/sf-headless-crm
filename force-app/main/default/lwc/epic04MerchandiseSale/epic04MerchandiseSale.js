@@ -33,6 +33,9 @@ export default class Epic04MerchandiseSale extends LightningElement {
   @track memberOptions = [];
   @track memberId = "";
   @track paymentMethod = "";
+  @track discountPercent = "";
+  @track promoCode = "";
+  @track managerPin = "";
   @track message = "";
   @track error;
   @track saving = false;
@@ -70,9 +73,33 @@ export default class Epic04MerchandiseSale extends LightningElement {
     return undefined;
   }
 
+  get shelfTotal() {
+    return this.cartLines.reduce((sum, line) => sum + line.lineTotal, 0);
+  }
+
   get cartTotalLabel() {
-    const total = this.cartLines.reduce((sum, line) => sum + line.lineTotal, 0);
-    return money(total);
+    return money(this.shelfTotal);
+  }
+
+  get discountPercentNumber() {
+    const percent = Number(this.discountPercent);
+    if (!this.discountPercent || !Number.isInteger(percent) || percent <= 0) {
+      return 0;
+    }
+    return percent;
+  }
+
+  get amountDueLabel() {
+    const due = this.shelfTotal * (1 - this.discountPercentNumber / 100);
+    return money(due);
+  }
+
+  get showAmountDue() {
+    return this.discountPercentNumber > 0;
+  }
+
+  get pinRequired() {
+    return this.discountPercentNumber > 10;
   }
 
   get hasCart() {
@@ -134,6 +161,21 @@ export default class Epic04MerchandiseSale extends LightningElement {
     this.paymentMethod = event.detail.value;
   }
 
+  handleDiscountChange(event) {
+    this.discountPercent = event.target.value;
+    if (!this.pinRequired) {
+      this.managerPin = "";
+    }
+  }
+
+  handlePromoChange(event) {
+    this.promoCode = event.target.value;
+  }
+
+  handlePinChange(event) {
+    this.managerPin = event.target.value;
+  }
+
   handleAdd() {
     this.error = undefined;
     this.message = "";
@@ -186,7 +228,10 @@ export default class Epic04MerchandiseSale extends LightningElement {
       lines: this.cartLines.map((line) => ({
         inventoryItemId: line.inventoryItemId,
         quantity: line.quantity
-      }))
+      })),
+      discountPercent: this.discountPercentNumber || null,
+      promoCode: this.promoCode ? this.promoCode.trim() : null,
+      managerPin: this.pinRequired ? this.managerPin : null
     })
       .then((result) => {
         this.message = `Sale completed. Total ${money(result.totalAmount)}.`;
@@ -197,6 +242,9 @@ export default class Epic04MerchandiseSale extends LightningElement {
         this.memberTerm = "";
         this.memberOptions = [];
         this.paymentMethod = "";
+        this.discountPercent = "";
+        this.promoCode = "";
+        this.managerPin = "";
         return this.loadInventory();
       })
       .catch((err) => {

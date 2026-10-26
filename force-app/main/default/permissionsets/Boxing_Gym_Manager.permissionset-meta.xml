@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+  <classAccesses>
+    <apexClass>EPIC04_ManagerPin_Service</apexClass>
+    <enabled>true</enabled>
+  </classAccesses>
+  <customPermissions>
+    <enabled>true</enabled>
+    <name>Manage_Merchandise_Discount</name>
+  </customPermissions>
+  <description
+  >EPIC04-US-F007: create merchandise promo codes and set your own manager PIN. Assign in addition to Boxing Gym CRM Access. Does not grant access to the PIN hash.</description>
+  <hasActivationRequired>false</hasActivationRequired>
+  <label>Boxing Gym Manager</label>
+  <fieldPermissions>
+    <editable>true</editable>
+    <field>Promo_Code__c.Is_Active__c</field>
+    <readable>true</readable>
+  </fieldPermissions>
+  <objectPermissions>
+    <allowCreate>true</allowCreate>
+    <allowDelete>true</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <modifyAllRecords>false</modifyAllRecords>
+    <object>Promo_Code__c</object>
+    <viewAllRecords>true</viewAllRecords>
+  </objectPermissions>
+  <tabSettings>
+    <tab>Promo_Code__c</tab>
+    <visibility>Visible</visibility>
+  </tabSettings>
+</PermissionSet>
