@@ -44,6 +44,26 @@
         </div>
       </template>
 
+      <template if:true={showSavedLead}>
+        <p class="slds-text-color_error" role="alert">{error}</p>
+        <p class="slds-m-top_small">
+          <a href={leadUrl}>Open lead</a>
+        </p>
+        <div class="slds-m-top_medium">
+          <lightning-button
+            variant="brand"
+            label="Try convert again"
+            onclick={handleRetryConvert}
+            disabled={saving}
+          ></lightning-button>
+          <lightning-button
+            class="slds-m-left_x-small"
+            label="Done"
+            onclick={handleDone}
+          ></lightning-button>
+        </div>
+      </template>
+
       <template if:true={memberId}>
         <p class="slds-text-heading_small">{message}</p>
         <p class="slds-m-top_small">{prospectNote}</p>
@@ -78,7 +98,7 @@
         <p class="slds-m-top_small">{paymentClosed}</p>
       </template>
 
-      <template if:true={error}>
+      <template if:true={showFormError}>
         <p class="slds-text-color_error slds-m-top_small" role="alert">
           {error}
         </p>

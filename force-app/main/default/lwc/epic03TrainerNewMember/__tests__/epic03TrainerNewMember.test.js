@@ -225,8 +225,28 @@ describe("c-epic03-trainer-new-member", () => {
       "Cannot convert: Lead has no Franchise Location assigned"
     );
     expect(errorText(element)[0]).toContain(MSG_LEAD_SAVED);
+    expect(button(element, "New Member")).toBeUndefined();
     expect(button(element, "Take payment")).toBeUndefined();
+    expect(element.shadowRoot.querySelector("a").href).toContain(
+      `/lightning/r/Lead__c/${LEAD_ID}/view`
+    );
     expect(element.shadowRoot.querySelector("lightning-flow")).toBeNull();
+
+    convertForScreen.mockResolvedValue({
+      success: true,
+      message: "Lead converted to Member John_Smith",
+      memberId: MEMBER_ID
+    });
+    button(element, "Try convert again").click();
+    await flushPromises();
+
+    expect(createLead).toHaveBeenCalledTimes(1);
+    expect(convertForScreen).toHaveBeenCalledTimes(2);
+    expect(convertForScreen).toHaveBeenLastCalledWith({ leadId: LEAD_ID });
+    expect(element.shadowRoot.textContent).toContain(
+      "Lead converted to Member John_Smith"
+    );
+    expect(button(element, "Take payment")).toBeTruthy();
   });
 
   it("shows the server error and does not convert when the lead is rejected", async () => {

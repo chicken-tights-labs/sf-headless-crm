@@ -65,7 +65,7 @@ The card calls the existing walk-in action (`EPIC04_LeadRegistration_Controller.
 
 4. Click **Take payment** only if they are paying now. That opens the existing **Process Membership Payment** flow (`EPIC01_Process_Membership_Payment`). Active still comes from that flow. A missing signed waiver blocks payment and leaves the member Prospect. Click **Done** to register someone else without paying.
 
-If the name or gym is missing, the card does not call Apex. If the lead saves and conversion fails, the card shows the conversion message plus: `The walk-in lead was saved. Open the lead and use Convert to Member.`
+If the name or gym is missing, the card does not call Apex. If the lead saves and conversion fails, the form closes. The card shows the conversion message plus `The walk-in lead was saved. Open the lead and use Convert to Member.`, and an **Open lead** link. **Try convert again** calls convert for that same lead. **Done** clears the card so the next **New Member** starts a new walk-in.
 
 | Asked for                 | What exists                                                                                                                                                                                                                       |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -28,6 +28,7 @@ export default class Epic03TrainerNewMember extends LightningElement {
   @track locationOptions = [];
   @track locationsError;
   @track saving = false;
+  @track savedLeadId;
   @track memberId;
   @track showPayment = false;
   @track paymentInputs = [];
@@ -48,7 +49,15 @@ export default class Epic03TrainerNewMember extends LightningElement {
   }
 
   get showForm() {
-    return !this.memberId;
+    return !this.memberId && !this.savedLeadId;
+  }
+
+  get showSavedLead() {
+    return this.savedLeadId && !this.memberId;
+  }
+
+  get showFormError() {
+    return this.error && this.showForm;
   }
 
   get prospectNote() {
@@ -62,6 +71,12 @@ export default class Epic03TrainerNewMember extends LightningElement {
   get memberUrl() {
     return this.memberId
       ? `/lightning/r/Member__c/${this.memberId}/view`
+      : undefined;
+  }
+
+  get leadUrl() {
+    return this.savedLeadId
+      ? `/lightning/r/Lead__c/${this.savedLeadId}/view`
       : undefined;
   }
 
@@ -107,21 +122,45 @@ export default class Epic03TrainerNewMember extends LightningElement {
       email: this.email,
       franchiseLocationId: this.franchiseLocationId
     })
-      .then((leadId) => convertForScreen({ leadId }))
-      .then((result) => {
-        if (!result || !result.success) {
-          this.error = `${(result && result.message) || "Could not convert the lead."} ${MSG_LEAD_SAVED}`;
-          return;
-        }
-        this.memberId = result.memberId;
-        this.message = result.message;
+      .then((leadId) => {
+        this.savedLeadId = leadId;
+        return convertForScreen({ leadId });
       })
+      .then((result) => this.applyConvertResult(result))
       .catch((error) => {
-        this.error = this.reduceError(error);
+        this.error = this.savedLeadId
+          ? `${this.reduceError(error)} ${MSG_LEAD_SAVED}`
+          : this.reduceError(error);
       })
       .finally(() => {
         this.saving = false;
       });
+  }
+
+  handleRetryConvert() {
+    if (!this.savedLeadId) {
+      return;
+    }
+    this.saving = true;
+    this.error = undefined;
+    convertForScreen({ leadId: this.savedLeadId })
+      .then((result) => this.applyConvertResult(result))
+      .catch((error) => {
+        this.error = `${this.reduceError(error)} ${MSG_LEAD_SAVED}`;
+      })
+      .finally(() => {
+        this.saving = false;
+      });
+  }
+
+  applyConvertResult(result) {
+    if (!result || !result.success) {
+      this.error = `${(result && result.message) || "Could not convert the lead."} ${MSG_LEAD_SAVED}`;
+      return;
+    }
+    this.error = undefined;
+    this.memberId = result.memberId;
+    this.message = result.message;
   }
 
   handleTakePayment() {
@@ -145,6 +184,7 @@ export default class Epic03TrainerNewMember extends LightningElement {
   }
 
   handleDone() {
+    this.savedLeadId = undefined;
     this.memberId = undefined;
     this.message = "";
     this.error = undefined;

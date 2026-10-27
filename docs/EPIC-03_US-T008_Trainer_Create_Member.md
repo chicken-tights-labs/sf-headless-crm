@@ -22,6 +22,8 @@ Issue: #53. Kanban: `t-a63d5906d6ac`.
 
 A missing signed waiver blocks payment inside the existing flow and leaves the member Prospect. There is no second lead, convert, or payment path.
 
+If the lead saves and conversion fails, the card keeps that lead Id, links to the lead, and **Try convert again** calls `convertForScreen` only. **Done** is what starts another walk-in.
+
 ## Docs
 
 - Update `docs/EPIC-11_D001_End_User_Manual.md` in the same PR.
