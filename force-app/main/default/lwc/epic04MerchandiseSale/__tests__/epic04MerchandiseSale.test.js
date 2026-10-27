@@ -181,11 +181,29 @@ describe("c-epic04-merchandise-sale", () => {
       memberId: "a03000000000001AAA",
       franchiseLocationId: LOCATIONS[0].Id,
       paymentMethod: "Card",
-      lines: [{ inventoryItemId: GLOVES.Id, quantity: 2 }]
+      lines: [{ inventoryItemId: GLOVES.Id, quantity: 2 }],
+      discountPercent: null,
+      promoCode: null,
+      managerPin: null
     });
     expect(element.shadowRoot.textContent).toContain(
       "Sale completed. Total $80.00."
     );
+  });
+
+  it("asks for a manager PIN when the discount is above 10 percent", async () => {
+    const element = createForm();
+    getActiveLocations.emit(LOCATIONS);
+    await flushPromises();
+
+    type(element, "Discount %", "10");
+    await flushPromises();
+    expect(field(element, "Manager PIN")).toBeUndefined();
+    expect(element.shadowRoot.textContent).toContain("Amount due");
+
+    type(element, "Discount %", "15");
+    await flushPromises();
+    expect(field(element, "Manager PIN")).toBeTruthy();
   });
 
   it("blocks a quantity above the stock on hand", async () => {

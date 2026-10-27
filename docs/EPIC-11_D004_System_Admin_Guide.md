@@ -3,7 +3,7 @@
 Issue: #40. Kanban: `t_7b14be8b`.
 
 **Status:** Draft
-**Last verified:** 2026-10-25 against branch `feat/EPIC03-UST002-qr-check-in` for the Check-In Code permission. Earlier sections were last checked 2026-10-12 against `main` `06fa226`.
+**Last verified:** 2026-10-26 against branch `feat/EPIC04-USF007-merchandise-discount` for the manager permission set and Manager PIN sharing. Earlier sections were last checked 2026-10-12 against `main` `06fa226`, and Check-In Code on 2026-10-25.
 **Checked from:** source in `force-app` (not an org click-through)
 **Still open:** screenshots in `my-gym`; Apex class access and Referral Reward tab are gaps, not finished admin features; Obsidian copy
 
@@ -44,7 +44,7 @@ Franchise Owners, Waiver Templates, Default Class Templates, Inventory Items, Pr
 
 ## Security model
 
-There is one custom permission set and no custom profiles, roles, or sharing rules in source.
+There are three custom permission sets and no custom profiles, roles, or sharing rules in source. `Manager_Pin__c` is private. Front desk cannot read it.
 
 ```mermaid
 flowchart TD
@@ -60,14 +60,14 @@ flowchart TD
   perm --> line
 ```
 
-| Layer                | What is in source                                                                                                                          |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| Profile              | None. Use a standard Salesforce profile. The scratch-org admin uses System Administrator.                                                  |
-| Permission set       | `Boxing_Gym_CRM_Access`, label **Boxing Gym CRM Access**. Not activation-required.                                                         |
-| Role                 | None.                                                                                                                                      |
-| Org-wide default     | `ReadWrite` (Public Read/Write) on every custom object except `Sale_Line_Item__c`, which is `ControlledByParent`.                          |
-| Sharing rules        | None.                                                                                                                                      |
-| Field-level security | Every field listed in the permission set is readable and editable, except **Check-In Code** on Member, which is readable and not editable. |
+| Layer                | What is in source                                                                                                                                                                                          |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Profile              | None. Use a standard Salesforce profile. The scratch-org admin uses System Administrator.                                                                                                                  |
+| Permission set       | `Boxing_Gym_CRM_Access` for staff. `Boxing_Gym_Manager` in addition for promo codes and a merchandise PIN. `Boxing_Gym_Trainer_Medical_Notes` for trainer medical-note read. None are activation-required. |
+| Role                 | None.                                                                                                                                                                                                      |
+| Org-wide default     | `ReadWrite` (Public Read/Write) on custom objects except `Sale_Line_Item__c` (`ControlledByParent`) and `Manager_Pin__c` (`Private`).                                                                      |
+| Sharing rules        | None.                                                                                                                                                                                                      |
+| Field-level security | Every field listed in the permission set is readable and editable, except **Check-In Code** on Member, which is readable and not editable.                                                                 |
 
 `Boxing Gym CRM Access` grants Create, Read, Edit, Delete, View All, and Modify All on these objects:
 
@@ -76,6 +76,8 @@ Franchise Owner, Franchise Location, Waiver Template, Lead, Member, Booking, Def
 It also makes those objects' tabs Visible, except Referral Reward.
 
 **Check-In Code** (`Member__c.Check_In_Code__c`) is readable and not editable. A before-save trigger fills a blank value with a random code. **Replace check-in code** on the Member page overwrites it, and the previous code stops working.
+
+On **Boxing Gym CRM Access**, `Promo_Code__c.Is_Active__c` is readable and not editable. **Boxing Gym Manager** can edit it. The PIN hash is on no permission set.
 
 ### Why the permission set is required
 
@@ -107,7 +109,7 @@ Do not "fix" those gaps only in the org. Add them to `force-app/main/default/per
 4. **User License**: Salesforce (or the license your org actually has). This repo does not define a license type.
 5. **Profile**: a standard profile that may use Lightning. For the scratch and dev admin, that is **System Administrator**. This project does not ship a Trainer, Front Desk, or Manager profile.
 6. Save.
-7. Assign **Boxing Gym CRM Access** (see above). Without it, custom fields stay invisible.
+7. Assign **Boxing Gym CRM Access** (see above). Without it, custom fields stay invisible. Assign **Boxing Gym Manager** as well when this person creates promo codes or approves a merchandise discount above 10%. They set the PIN on Home. Do not assign that set to front desk.
 8. Confirm the user can open the **Boxing Gym CRM** app from the App Launcher.
 
 ### Deactivate a user
@@ -130,17 +132,21 @@ You cannot set the password to a chosen value from this guide. Scratch-org login
 
 ### Roles
 
-There is nothing to assign. Setup → Roles will not show a gym role hierarchy from this project. Access is the profile plus **Boxing Gym CRM Access**, which is full access to the CRM objects (View All and Modify All). It is not a least-privilege trainer or front-desk set.
+There is nothing to assign. Setup → Roles will not show a gym role hierarchy from this project. Access is the profile plus **Boxing Gym CRM Access**, which is full access to the CRM objects (View All and Modify All). Add **Boxing Gym Manager** only for people who create promo codes or approve a merchandise discount. It is not a least-privilege trainer or front-desk set.
 
 ## Permissions and security
 
 ### Permission set architecture
 
-One set does all CRM access. It is not split by trainer, front desk, manager, or franchise owner.
+**Boxing Gym CRM Access** is still the base set. Two more sets add a narrow grant. They do not replace it.
 
-| File                                                                                 | API name                | Label                 |
-| ------------------------------------------------------------------------------------ | ----------------------- | --------------------- |
-| `force-app/main/default/permissionsets/Boxing_Gym_CRM_Access.permissionset-meta.xml` | `Boxing_Gym_CRM_Access` | Boxing Gym CRM Access |
+| File                                                                                            | API name                           | Label                            |
+| ----------------------------------------------------------------------------------------------- | ---------------------------------- | -------------------------------- |
+| `force-app/main/default/permissionsets/Boxing_Gym_CRM_Access.permissionset-meta.xml`            | `Boxing_Gym_CRM_Access`            | Boxing Gym CRM Access            |
+| `force-app/main/default/permissionsets/Boxing_Gym_Manager.permissionset-meta.xml`               | `Boxing_Gym_Manager`               | Boxing Gym Manager               |
+| `force-app/main/default/permissionsets/Boxing_Gym_Trainer_Medical_Notes.permissionset-meta.xml` | `Boxing_Gym_Trainer_Medical_Notes` | Boxing Gym Trainer Medical Notes |
+
+**Boxing Gym Manager** grants the custom permission Manage Merchandise Discount, create and edit on Promo Code, and the Promo Code tab. It does not grant the PIN hash field. The PIN is saved only through **Merchandise manager PIN** on Home.
 
 ### Field-level security
 

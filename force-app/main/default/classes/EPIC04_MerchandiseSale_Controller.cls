@@ -13,6 +13,14 @@ public with sharing class EPIC04_MerchandiseSale_Controller {
   public static final String MSG_ITEM = 'That item is not for sale at this gym.';
   public static final String MSG_QTY = 'Quantity must be a whole number greater than zero.';
   public static final String PAYMENT_TYPE = 'Merchandise Purchase';
+  public static final String MSG_DISCOUNT = 'Enter a whole discount from 1 to 99.';
+  public static final String MSG_BOTH = 'Use a promo code or a discount percent, not both.';
+  public static final String MSG_PROMO = 'That promo code is not valid.';
+  public static final String MSG_PIN_REQUIRED = 'Manager approval required for this discount tier';
+  public static final String REASON_STAFF = 'Staff discount';
+  public static final String REASON_PIN = 'Manager PIN';
+  public static final String REASON_PROMO = 'Promo code';
+  public static final Decimal PIN_FREE_MAX = 10;
 
   private static final Map<String, String> METHOD_TO_TXN = new Map<String, String>{
     'Cash' => 'Cash',
@@ -87,12 +95,32 @@ public with sharing class EPIC04_MerchandiseSale_Controller {
     ];
   }
 
-  @AuraEnabled
   public static SaleResult completeSale(
     Id memberId,
     Id franchiseLocationId,
     String paymentMethod,
     List<LineInput> lines
+  ) {
+    return completeSale(
+      memberId,
+      franchiseLocationId,
+      paymentMethod,
+      lines,
+      null,
+      null,
+      null
+    );
+  }
+
+  @AuraEnabled
+  public static SaleResult completeSale(
+    Id memberId,
+    Id franchiseLocationId,
+    String paymentMethod,
+    List<LineInput> lines,
+    Decimal discountPercent,
+    String promoCode,
+    String managerPin
   ) {
     if (memberId == null) {
       throw auraError(MSG_MEMBER);
@@ -174,18 +202,35 @@ public with sharing class EPIC04_MerchandiseSale_Controller {
       );
     }
 
+    AppliedDiscount discount = resolveDiscount(
+      discountPercent,
+      promoCode,
+      managerPin
+    );
+    Decimal payable = total;
+    if (discount.percent != null) {
+      payable = (total *
+        (100 - discount.percent) /
+        100)
+        .setScale(2, RoundingMode.HALF_UP);
+    }
+
     Merchandise_Sale__c sale = new Merchandise_Sale__c(
       Name = 'MS-' + String.valueOf(Datetime.now().getTime()),
       Member__c = memberId,
       Franchise_Location__c = franchiseLocationId,
       Payment_Method__c = paymentMethod,
       Sale_Date__c = Datetime.now(),
-      Total_Amount__c = total
+      Total_Amount__c = payable,
+      Discount_Percentage__c = discount.percent,
+      Discount_Approved_By__c = discount.approvedBy,
+      Manager_Override_Reason__c = discount.reason,
+      Promo_Code__c = discount.promoCodeId
     );
     Payment_Transaction__c payment = new Payment_Transaction__c(
       Member__c = memberId,
       Franchise_Location__c = franchiseLocationId,
-      Amount__c = total,
+      Amount__c = payable,
       Payment_Type__c = PAYMENT_TYPE,
       Transaction_Method__c = METHOD_TO_TXN.get(paymentMethod),
       Status__c = 'Completed',
@@ -210,8 +255,85 @@ public with sharing class EPIC04_MerchandiseSale_Controller {
     SaleResult result = new SaleResult();
     result.saleId = sale.Id;
     result.paymentId = payment.Id;
-    result.totalAmount = total;
+    result.totalAmount = payable;
     return result;
+  }
+
+  private class AppliedDiscount {
+    Decimal percent;
+    Id approvedBy;
+    String reason;
+    Id promoCodeId;
+  }
+
+  private static AppliedDiscount resolveDiscount(
+    Decimal discountPercent,
+    String promoCode,
+    String managerPin
+  ) {
+    AppliedDiscount discount = new AppliedDiscount();
+    Boolean hasPromo = String.isNotBlank(promoCode);
+    Boolean hasPercent = discountPercent != null && discountPercent != 0;
+    if (hasPromo && hasPercent) {
+      throw auraError(MSG_BOTH);
+    }
+    if (!hasPromo && !hasPercent) {
+      return discount;
+    }
+    if (hasPromo) {
+      return promoDiscount(promoCode.trim());
+    }
+    if (
+      discountPercent != discountPercent.intValue() ||
+      discountPercent < 1 ||
+      discountPercent > 99
+    ) {
+      throw auraError(MSG_DISCOUNT);
+    }
+    discount.percent = discountPercent;
+    if (discountPercent <= PIN_FREE_MAX) {
+      discount.approvedBy = UserInfo.getUserId();
+      discount.reason = REASON_STAFF;
+      return discount;
+    }
+    Id approver = EPIC04_ManagerPin_Service.findApprover(managerPin);
+    if (approver == null) {
+      throw auraError(MSG_PIN_REQUIRED);
+    }
+    discount.approvedBy = approver;
+    discount.reason = REASON_PIN;
+    return discount;
+  }
+
+  private static AppliedDiscount promoDiscount(String promoCode) {
+    List<Promo_Code__c> codes = [
+      SELECT Id, Discount_Percentage__c, Expiration_Date__c, Is_Active__c
+      FROM Promo_Code__c
+      WHERE Code__c = :promoCode
+      LIMIT 1
+    ];
+    if (
+      codes.isEmpty() ||
+      codes[0].Is_Active__c != true ||
+      codes[0].Expiration_Date__c == null ||
+      codes[0].Expiration_Date__c < Date.today()
+    ) {
+      throw auraError(MSG_PROMO);
+    }
+    Decimal percent = codes[0].Discount_Percentage__c;
+    if (
+      percent == null ||
+      percent != percent.intValue() ||
+      percent < 1 ||
+      percent > 99
+    ) {
+      throw auraError(MSG_PROMO);
+    }
+    AppliedDiscount discount = new AppliedDiscount();
+    discount.percent = percent;
+    discount.reason = REASON_PROMO;
+    discount.promoCodeId = codes[0].Id;
+    return discount;
   }
 
   private static Map<Id, Integer> aggregateQuantities(List<LineInput> lines) {

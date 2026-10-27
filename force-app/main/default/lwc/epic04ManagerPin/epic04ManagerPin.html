@@ -1,0 +1,30 @@
+<template>
+  <template if:true={allowed}>
+    <lightning-card title="Merchandise manager PIN" icon-name="utility:lock">
+      <div class="slds-m-around_medium">
+        <lightning-input
+          type="password"
+          label="New PIN"
+          value={pin}
+          onchange={handlePinChange}
+        ></lightning-input>
+        <p class="slds-text-color_weak slds-m-top_x-small">
+          4 to 6 digits. Replaces the PIN for your user. Front desk staff cannot
+          see it.
+        </p>
+        <div class="slds-m-top_small">
+          <lightning-button
+            label="Save PIN"
+            onclick={handleSave}
+          ></lightning-button>
+        </div>
+        <template if:true={message}>
+          <p class="slds-m-top_small">{message}</p>
+        </template>
+        <template if:true={error}>
+          <p class="slds-text-color_error slds-m-top_small">{error}</p>
+        </template>
+      </div>
+    </lightning-card>
+  </template>
+</template>

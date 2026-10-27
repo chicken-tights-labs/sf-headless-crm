@@ -60,7 +60,7 @@ This is the order the open stories are expected to merge. Each story's GitHub is
 - **The check-in waiver block calls `waiverStatusByMember`.** `EPIC01_BookingWaiverGuard` runs when a booking is created, not at check-in. Booking stays guarded by the trigger.
 - **A QR scan records class attendance,** not gym entry. Scanners: camera in the Salesforce mobile app, or a handheld scanner typing into the screen. Salesforce stores a random check-in code per member; #64 delivers it.
 - **Medical notes:** trainers only in Salesforce (read-only via `Boxing_Gym_Trainer_Medical_Notes`). Front desk and managers do not see `Medical_Notes__c`. Members and guardians enter and update notes in the member app. This story does not grant CRM edit FLS.
-- **Discounts and refunds are merchandise only.** Promo codes live in a new `Promo_Code__c` object, managed by users with a new manager permission set. A manager PIN covers one-off discounts.
+- **Discounts and refunds are merchandise only.** Promo codes live on `Promo_Code__c`, managed by the Boxing Gym Manager permission set. Each code has an expiration date and no usage limit. A one-off discount of 10% or less needs no PIN. Above 10% needs the manager's own PIN, stored as a hash on private `Manager_Pin__c`. Email or SMS approval is a later story. Do not create `Discount_Request__c`.
 - **Renewal** extends `Expiry_Date__c` from the later of today and the current expiry. It needs a new signed waiver. It does not call `processPayment`, resend the welcome email, or award the referral again.
 - **Substitute** uses a new trainer lookup on `Scheduled_Session__c`. `Assigned_Trainer__c` stays the original trainer.
 - **Do not create** `Order__c`, `Payment__c`, `Refund__c`, `Discount_Request__c`, `Check_In__c`, or `Medical_Note__c` from older docs. Use `Payment_Transaction__c`, `Merchandise_Sale__c`, `Sale_Line_Item__c`, `Booking__c`, and `Member__c.Medical_Notes__c`.
@@ -68,15 +68,15 @@ This is the order the open stories are expected to merge. Each story's GitHub is
 
 ## Shared files
 
-`Boxing_Gym_CRM_Access.permissionset-meta.xml` is touched by #54, #60, #61, #47, and #55. `Member__c` gets a new field from #47. Rebase on `main` before opening each PR.
+`Boxing_Gym_CRM_Access.permissionset-meta.xml` is touched by #54, #60, #61, #47, and #55. #61 also adds `Boxing_Gym_Manager`. `Member__c` gets a new field from #47. Rebase on `main` before opening each PR.
 
 ## Open questions
 
-| Issue    | Question                                                                                                                                                         |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| #54      | Decided: members/guardians enter and update via the member app; trainers read-only in Salesforce; no CRM staff edit FLS.                                         |
-| #61      | Where is a manager's PIN stored, and who sets it? Does 10% or less skip the PIN? Do promo codes expire or have usage limits?                                     |
-| #57      | Decided: Signed waiver with Signature_Timestamp__c on/after today (Capture Waiver before renewing).                                                              |
-| #47, #64 | Decided for #47: **Replace check-in code** overwrites `Member__c.Check_In_Code__c`, so the previous code stops working. #64 still owns delivery of the new code. |
-| #64      | Which repo and team build the wallet pass and fob?                                                                                                               |
-| #65      | Gym Manager Home or a separate front desk page? Default the location to the staff member's gym?                                                                  |
+| Issue    | Question                                                                                                                                                           |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| #54      | Decided: members/guardians enter and update via the member app; trainers read-only in Salesforce; no CRM staff edit FLS.                                           |
+| #61      | Decided: private hashed `Manager_Pin__c`, one PIN per manager, set from Home by Boxing Gym Manager. 10% or less skips the PIN. Promo codes expire. No usage limit. |
+| #57      | Decided: Signed waiver with Signature_Timestamp__c on/after today (Capture Waiver before renewing).                                                                |
+| #47, #64 | Decided for #47: **Replace check-in code** overwrites `Member__c.Check_In_Code__c`, so the previous code stops working. #64 still owns delivery of the new code.   |
+| #64      | Which repo and team build the wallet pass and fob?                                                                                                                 |
+| #65      | Gym Manager Home or a separate front desk page? Default the location to the staff member's gym?                                                                    |

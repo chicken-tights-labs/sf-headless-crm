@@ -48,6 +48,7 @@
   <tabs>Franchise_Location__c</tabs>
   <tabs>Waiver_Record__c</tabs>
   <tabs>Payment_Transaction__c</tabs>
+  <tabs>Promo_Code__c</tabs>
   <tabs>standard-Report</tabs>
   <tabs>standard-Dashboard</tabs>
   <uiType>Lightning</uiType>

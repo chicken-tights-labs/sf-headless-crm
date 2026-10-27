@@ -21,6 +21,10 @@
     <enabled>true</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>EPIC04_ManagerPin_Service</apexClass>
+    <enabled>true</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>EPIC04_MerchandiseSale_Controller</apexClass>
     <enabled>true</enabled>
   </classAccesses>
@@ -177,6 +181,15 @@
     <allowRead>true</allowRead>
     <modifyAllRecords>true</modifyAllRecords>
     <viewAllRecords>true</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <allowCreate>false</allowCreate>
+    <allowDelete>false</allowDelete>
+    <allowEdit>false</allowEdit>
+    <allowRead>true</allowRead>
+    <modifyAllRecords>false</modifyAllRecords>
+    <object>Promo_Code__c</object>
+    <viewAllRecords>false</viewAllRecords>
   </objectPermissions>
   <objectPermissions>
     <object>Merchandise_Sale__c</object>
@@ -645,6 +658,16 @@
   <fieldPermissions>
     <editable>true</editable>
     <field>Merchandise_Sale__c.Discount_Percentage__c</field>
+    <readable>true</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>true</editable>
+    <field>Merchandise_Sale__c.Promo_Code__c</field>
+    <readable>true</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Promo_Code__c.Is_Active__c</field>
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
