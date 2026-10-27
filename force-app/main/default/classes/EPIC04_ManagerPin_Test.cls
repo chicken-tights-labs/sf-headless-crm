@@ -29,7 +29,7 @@ private class EPIC04_ManagerPin_Test {
     Manager_Pin__c stored = [
       SELECT Pin_Hash__c
       FROM Manager_Pin__c
-      WHERE User__c = :UserInfo.getUserId()
+      WHERE User_Id__c = :String.valueOf(UserInfo.getUserId())
     ];
     System.assertNotEquals('4321', stored.Pin_Hash__c);
     System.assertEquals(64, stored.Pin_Hash__c.length());
@@ -49,7 +49,11 @@ private class EPIC04_ManagerPin_Test {
     }
     System.assertEquals(
       1,
-      [SELECT COUNT() FROM Manager_Pin__c WHERE User__c = :UserInfo.getUserId()]
+      [
+        SELECT COUNT()
+        FROM Manager_Pin__c
+        WHERE User_Id__c = :String.valueOf(UserInfo.getUserId())
+      ]
     );
   }
 
