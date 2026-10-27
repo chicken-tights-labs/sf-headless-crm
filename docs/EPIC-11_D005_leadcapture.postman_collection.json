@@ -1,0 +1,41 @@
+{
+  "info": {
+    "name": "NBS Gym CRM lead capture",
+    "description": "The only Apex REST resource in sf-headless-crm. Set baseUrl to the org My Domain and token to a Salesforce access token. Do not add conversion, payment, renewal, merchandise, discount, or refund requests. Those are CRM actions, not URLs. See docs/EPIC-11_D005_API_Documentation.md.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Create lead",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/services/apexrest/leadcapture",
+        "description": "201 Lead created on a new email. 409 when that email is already on a Lead. The location name must be an Active Franchise Location in the org.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"firstName\": \"Maya\",\n  \"lastName\": \"Rodriguez\",\n  \"email\": \"maya.rodriguez@email.com\",\n  \"phone\": \"336-555-0199\",\n  \"leadSource\": \"Web Form\",\n  \"programInterest\": \"Boxing\",\n  \"franchiseLocationName\": \"Lexington HQ\"\n}"
+        }
+      }
+    }
+  ]
+}
