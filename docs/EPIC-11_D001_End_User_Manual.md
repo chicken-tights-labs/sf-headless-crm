@@ -3,7 +3,7 @@
 Issue: #37. Kanban: `t_9d84897e`.
 
 **Status:** Draft
-**Last verified:** 2026-10-26 against branch `feat/EPIC04-USF007-merchandise-discount`
+**Last verified:** 2026-10-27 against branch `feat/EPIC03-UST008-trainer-new-member`
 **Checked from:** source in `force-app` (not an org click-through)
 **Still open:** screenshots in `my-gym`; substitutes and refunds are not built yet
 
@@ -19,7 +19,7 @@ Admin setup (users, the permission set, locations, waiver templates, tier values
 
 ## Trainer workflows
 
-**Partially built.** My schedule (this week), class attendee roster, Mark Attended (with waiver block), phone check-in, QR check-in, and trainer member profile (with permission-gated medical notes) are in the Boxing Gym CRM app. Substitutes are not.
+**Partially built.** My schedule (this week), class attendee roster, Mark Attended (with waiver block), phone check-in, QR check-in, trainer member profile (with permission-gated medical notes), and New Member (walk-in to Prospect, optional payment) are in the Boxing Gym CRM app. Substitutes are not.
 
 ### Trainer: view my schedule
 
@@ -53,6 +53,20 @@ A scan looks up `Check-In Code` on bookings for **this class**. One match runs *
 
 The code is a random value on the member. It is not the phone number or email. **Replace check-in code** on the Member page overwrites it. The previous code stops working. The wallet pass and fob that show the code are #64, outside this repo.
 
+### Trainer: create a member from a walk-in
+
+**Verified from source.** The **New Member** card is on Boxing Gym CRM **Home**, under **My schedule**. It is not on the My Schedule tab. **Needs an org click-through** for screenshots.
+
+1. Enter **First Name**, **Last Name**, **Phone**, and **Email**.
+2. Pick the gym from **Franchise Location**. The list is the same active-location list as Walk-In Lead Registration.
+3. Click **New Member**.
+
+The card calls the existing walk-in action (`EPIC04_LeadRegistration_Controller.createLead`), then the existing convert action (`EPIC01_LeadConversion_Action`). The lead is Walk-In / In Person, and the member is **Prospect**. No payment record is created. The card says the member stays Prospect until payment succeeds, and links to the member.
+
+4. Click **Take payment** only if they are paying now. That opens the existing **Process Membership Payment** flow (`EPIC01_Process_Membership_Payment`). Active still comes from that flow. A missing signed waiver blocks payment and leaves the member Prospect. Click **Done** to register someone else without paying.
+
+If the name or gym is missing, the card does not call Apex. If the lead saves and conversion fails, the card shows the conversion message plus: `The walk-in lead was saved. Open the lead and use Convert to Member.`
+
 | Asked for                 | What exists                                                                                                                                                                                                                       |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | View my class schedule    | **Verified from source.** **My schedule** on Home and the **My Schedule** tab list this week's classes assigned to you (US-T001).                                                                                                 |
@@ -63,7 +77,7 @@ The code is a random value on the member. It is not the phone number or email. *
 | Open a member profile     | **Verified from source.** From a session **Attendees** list, click the member name. The Member page shows a read-only **Trainer profile** card (name, tier, status, expiry). There is no separate trainer app.                    |
 | View medical notes        | **Verified from source.** On **Trainer profile**, medical notes appear only with `Boxing_Gym_Trainer_Medical_Notes` (read-only). Shared `Boxing_Gym_CRM_Access` does not grant the field. Members update notes in the member app. |
 | Substitute a class        | No substitute-class action.                                                                                                                                                                                                       |
-| Create a member record    | Staff create a member by converting a lead (below). There is no trainer "create member" screen.                                                                                                                                   |
+| Create a member record    | **Verified from source.** **New Member** on Home creates a walk-in lead and converts it to a Prospect (US-T008). **Take payment** opens Process Membership Payment. Skipping payment leaves the member Prospect.                  |
 
 ## Front desk: register a walk-in lead
 
@@ -260,3 +274,4 @@ Managers with **Boxing Gym Manager** see **Merchandise manager PIN** on Home and
 4. Run **Capture Waiver**, sign the pad, and confirm a Signed Waiver Record appears.
 5. Run the tier action with no Signed waiver and expect **Waiver Required**.
 6. On **Home**, confirm **Sell Merchandise** is under Walk-In Lead Registration. A discount above 10% asks for a manager PIN. Refunds stay **Not built**. QR check-in is on the session Attendees tab.
+7. On **Home**, under **My schedule**, confirm **New Member**. Creating a member without **Take payment** leaves Status **Prospect**.

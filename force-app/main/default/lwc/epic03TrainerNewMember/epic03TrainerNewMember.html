@@ -1,0 +1,88 @@
+<template>
+  <lightning-card title="New Member" icon-name="standard:person_account">
+    <div class="slds-m-around_medium">
+      <template if:true={showForm}>
+        <lightning-input
+          label="First Name"
+          value={firstName}
+          onchange={handleFirstNameChange}
+        ></lightning-input>
+        <lightning-input
+          label="Last Name"
+          value={lastName}
+          onchange={handleLastNameChange}
+        ></lightning-input>
+        <lightning-input
+          type="tel"
+          label="Phone"
+          value={phone}
+          onchange={handlePhoneChange}
+        ></lightning-input>
+        <lightning-input
+          type="email"
+          label="Email"
+          value={email}
+          onchange={handleEmailChange}
+        ></lightning-input>
+        <lightning-combobox
+          label="Franchise Location"
+          placeholder="Select a gym"
+          options={locationOptions}
+          value={franchiseLocationId}
+          onchange={handleFranchiseLocationChange}
+        ></lightning-combobox>
+        <template if:true={locationsError}>
+          <p class="slds-text-color_error slds-m-top_small">{locationsError}</p>
+        </template>
+        <div class="slds-m-top_medium">
+          <lightning-button
+            variant="brand"
+            label="New Member"
+            onclick={handleCreate}
+            disabled={saving}
+          ></lightning-button>
+        </div>
+      </template>
+
+      <template if:true={memberId}>
+        <p class="slds-text-heading_small">{message}</p>
+        <p class="slds-m-top_small">{prospectNote}</p>
+        <p class="slds-m-top_small">
+          <a href={memberUrl}>Open member</a>
+        </p>
+        <div class="slds-m-top_medium">
+          <lightning-button
+            variant="brand"
+            label="Take payment"
+            onclick={handleTakePayment}
+          ></lightning-button>
+          <lightning-button
+            class="slds-m-left_x-small"
+            label="Done"
+            onclick={handleDone}
+          ></lightning-button>
+        </div>
+      </template>
+
+      <template if:true={showPayment}>
+        <div class="slds-m-top_medium">
+          <lightning-flow
+            flow-api-name={paymentFlow}
+            flow-input-variables={paymentInputs}
+            onstatuschange={handlePaymentStatus}
+          ></lightning-flow>
+        </div>
+      </template>
+
+      <template if:true={paymentClosed}>
+        <p class="slds-m-top_small">{paymentClosed}</p>
+      </template>
+
+      <template if:true={error}>
+        <p class="slds-text-color_error slds-m-top_small" role="alert">
+          {error}
+        </p>
+      </template>
+    </div>
+  </lightning-card>
+</template>

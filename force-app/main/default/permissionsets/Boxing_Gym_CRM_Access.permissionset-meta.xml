@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
   <classAccesses>
+    <apexClass>EPIC01_LeadConversion_Action</apexClass>
+    <enabled>true</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>EPIC03_CheckInCode_Service</apexClass>
     <enabled>true</enabled>
   </classAccesses>

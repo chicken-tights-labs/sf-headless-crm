@@ -5,35 +5,54 @@
  * email in one transaction, with guards that are clearer and testable in code.
  */
 public with sharing class EPIC01_LeadConversion_Action {
+  public class Request {
+    @InvocableVariable(required=true)
+    public Id leadId;
+  }
 
-    public class Request {
-        @InvocableVariable(required=true) public Id leadId;
-    }
+  public class Result {
+    @InvocableVariable
+    @AuraEnabled
+    public Boolean success;
+    @InvocableVariable
+    @AuraEnabled
+    public String message;
+    @InvocableVariable
+    @AuraEnabled
+    public Id memberId;
+  }
 
-    public class Result {
-        @InvocableVariable public Boolean success;
-        @InvocableVariable public String message;
-        @InvocableVariable public Id memberId;
-    }
+  /**
+   * Trainer New Member screen calls this. Why Apex: LWC cannot call an InvocableMethod.
+   * The method only forwards to convert(), so there is still one conversion path.
+   */
+  @AuraEnabled
+  public static Result convertForScreen(Id leadId) {
+    Request req = new Request();
+    req.leadId = leadId;
+    return convert(new List<Request>{ req })[0];
+  }
 
-    @InvocableMethod(label='Convert Lead to Member' description='EPIC01-US-002')
-    public static List<Result> convert(List<Request> requests) {
-        List<Result> results = new List<Result>();
-        for (Request req : requests) {
-            Result r = new Result();
-            Savepoint sp = Database.setSavepoint();
-            try {
-                Member__c m = EPIC01_MemberOnboarding_Service.convertLeadToMember(req.leadId);
-                r.success = true;
-                r.memberId = m.Id;
-                r.message = 'Lead converted to Member ' + m.Name;
-            } catch (Exception e) {
-                Database.rollback(sp);
-                r.success = false;
-                r.message = e.getMessage();
-            }
-            results.add(r);
-        }
-        return results;
+  @InvocableMethod(label='Convert Lead to Member' description='EPIC01-US-002')
+  public static List<Result> convert(List<Request> requests) {
+    List<Result> results = new List<Result>();
+    for (Request req : requests) {
+      Result r = new Result();
+      Savepoint sp = Database.setSavepoint();
+      try {
+        Member__c m = EPIC01_MemberOnboarding_Service.convertLeadToMember(
+          req.leadId
+        );
+        r.success = true;
+        r.memberId = m.Id;
+        r.message = 'Lead converted to Member ' + m.Name;
+      } catch (Exception e) {
+        Database.rollback(sp);
+        r.success = false;
+        r.message = e.getMessage();
+      }
+      results.add(r);
     }
+    return results;
+  }
 }
