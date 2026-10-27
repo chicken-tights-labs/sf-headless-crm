@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Merchandise_Sale__c</fullName>
+    <label>Merchandise Sale</label>
+    <type>Lookup</type>
+    <referenceTo>Merchandise_Sale__c</referenceTo>
+    <relationshipLabel>Payment Transactions</relationshipLabel>
+    <relationshipName>Payment_Transactions</relationshipName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <required>false</required>
+</CustomField>

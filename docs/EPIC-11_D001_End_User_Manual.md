@@ -3,9 +3,9 @@
 Issue: #37. Kanban: `t_9d84897e`.
 
 **Status:** Draft
-**Last verified:** 2026-10-27 against branch `feat/EPIC03-UST010-trainer-substitute`
+**Last verified:** 2026-10-27 against branch `feat/EPIC04-USF008-merchandise-refund`
 **Checked from:** source in `force-app` (not an org click-through)
-**Still open:** screenshots in `my-gym`; refunds are not built yet
+**Still open:** screenshots in `my-gym`
 
 This is the canonical copy. The issue names `CRM-Documentation/EPIC-11_D001_End_User_Manual.md`. Sync that vault from this file when the vault is available.
 
@@ -279,11 +279,28 @@ This screen does not call **Process Membership Payment**. A merchandise sale doe
 
 Managers with **Boxing Gym Manager** see **Merchandise manager PIN** on Home and can replace their own 4 to 6 digit PIN. They create codes on the **Promo Code** tab. Front desk cannot read the stored PIN.
 
+## Front desk: refund a merchandise sale
+
+**Verified from source.** This is a full refund of one merchandise sale. It does not refund a membership.
+
+1. Open **Merchandise Sales** from the App Launcher. That tab is not on the Boxing Gym CRM bar.
+2. Open the sale. **Refund** is on the record.
+3. Enter a reason. There is no manager PIN and no amount to type.
+4. Finish.
+
+What it writes:
+
+- `Merchandise_Sale__c.Status__c` becomes Refunded. The reason is stored on Refund Reason.
+- Sold quantity goes back onto `Inventory_Item__c.Current_Stock__c`.
+- A new `Payment_Transaction__c` with type Refund and status Completed. The amount is the sale total (what the member paid, after any discount). Card is stored as Credit Card. The payment points at this sale.
+
+The original Merchandise Purchase payment stays Completed. The member’s status and dates do not change. A sale that is already Refunded cannot be refunded again. A sale with no status yet can be refunded once.
+
 ## Front desk stories that are not built
 
 **Not built.**
 
-- Refund or return. No refund action.
+- Partial merchandise refunds, and any membership refund.
 
 ## How to verify this draft
 
@@ -292,6 +309,6 @@ Managers with **Boxing Gym Manager** see **Merchandise manager PIN** on Home and
 3. Confirm **Walk-In Lead Registration** is on **Home** (Gym Manager Home).
 4. Run **Capture Waiver**, sign the pad, and confirm a Signed Waiver Record appears.
 5. Run the tier action with no Signed waiver and expect **Waiver Required**.
-6. On **Home**, confirm **Sell Merchandise** is under Walk-In Lead Registration. A discount above 10% asks for a manager PIN. Refunds stay **Not built**. QR check-in is on the session Attendees tab.
+6. On **Home**, confirm **Sell Merchandise** is under Walk-In Lead Registration. A discount above 10% asks for a manager PIN. Open a Merchandise Sale from the App Launcher and confirm **Refund** asks for a reason. QR check-in is on the session Attendees tab.
 7. On **Home**, under **My schedule**, confirm **New Member**. Creating a member without **Take payment** leaves Status **Prospect**.
 8. On a Scheduled Session you are not assigned to, click **Substitute**. Assigned Trainer stays the same and Substitute Trainer is you.

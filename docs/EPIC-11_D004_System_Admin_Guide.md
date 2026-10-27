@@ -3,7 +3,7 @@
 Issue: #40. Kanban: `t_7b14be8b`.
 
 **Status:** Draft
-**Last verified:** 2026-10-26 against branch `feat/EPIC04-USF007-merchandise-discount` for the manager permission set and Manager PIN sharing. Earlier sections were last checked 2026-10-12 against `main` `06fa226`, and Check-In Code on 2026-10-25.
+**Last verified:** 2026-10-27 against branch `feat/EPIC04-USF008-merchandise-refund` for merchandise refund field and class access. Manager PIN sharing was checked 2026-10-26 against `feat/EPIC04-USF007-merchandise-discount`. Earlier sections were last checked 2026-10-12 against `main` `06fa226`, and Check-In Code on 2026-10-25.
 **Checked from:** source in `force-app` (not an org click-through)
 **Still open:** screenshots in `my-gym`; Apex class access and Referral Reward tab are gaps, not finished admin features; Obsidian copy
 
@@ -93,7 +93,7 @@ In the UI: Setup → Permission Sets → **Boxing Gym CRM Access** → Manage As
 
 ### Gaps in the permission set
 
-- **Apex class access is partial.** The set grants only `EPIC04_LeadRegistration_Controller`, which the walk-in card on Home needs. Before go-live, grant `EPIC01_LeadCapture_Rest` to the integration user (profile or a permission set). Screen actions such as Convert to Member call Apex; a user who is not a System Administrator needs class access added in source before those buttons work for them.
+- **Apex class access is partial.** The set grants the CRM screen classes, including `EPIC04_MerchandiseSale_Controller` and `EPIC04_MerchandiseRefund_Action`. Before go-live, grant `EPIC01_LeadCapture_Rest` to the integration user (profile or a permission set). A user who is not a System Administrator needs those class entries or the buttons fail for them.
 - **No Flow access entries.** The set does not name any Flow.
 - **Referral Reward** (`Referral_Reward__c`) has field permissions only. It has no object permission and no tab. Users will not get a normal Referral Rewards tab from this set. Rewards are created by the referral Apex, not by a screen in this guide.
 
