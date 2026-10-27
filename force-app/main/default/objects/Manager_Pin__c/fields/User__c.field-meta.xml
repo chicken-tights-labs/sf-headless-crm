@@ -7,5 +7,4 @@
   <relationshipName>Manager_PINs</relationshipName>
   <deleteConstraint>Restrict</deleteConstraint>
   <required>true</required>
-  <unique>true</unique>
 </CustomField>

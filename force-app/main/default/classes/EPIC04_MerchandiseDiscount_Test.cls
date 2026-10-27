@@ -2,7 +2,7 @@
 private class EPIC04_MerchandiseDiscount_Test {
   @isTest
   static void tenPercentNeedsNoPin() {
-    SaleFixture sale = SaleFixture.make(100);
+    SaleFixture sale = new SaleFixture(100);
     EPIC04_MerchandiseSale_Controller.SaleResult result = sale.sell(
       10,
       null,
@@ -28,7 +28,7 @@ private class EPIC04_MerchandiseDiscount_Test {
 
   @isTest
   static void aboveTenPercentRequiresAManagerPin() {
-    SaleFixture sale = SaleFixture.make(100);
+    SaleFixture sale = new SaleFixture(100);
     try {
       sale.sell(15, null, null);
       System.assert(false, 'expected pin error');
@@ -49,7 +49,7 @@ private class EPIC04_MerchandiseDiscount_Test {
   @isTest
   static void managerPinApprovesFifteenPercent() {
     grantManagerPin('2468');
-    SaleFixture sale = SaleFixture.make(100);
+    SaleFixture sale = new SaleFixture(100);
     EPIC04_MerchandiseSale_Controller.SaleResult result = sale.sell(
       15,
       null,
@@ -72,7 +72,7 @@ private class EPIC04_MerchandiseDiscount_Test {
       Is_Active__c = true
     );
     insert code;
-    SaleFixture sale = SaleFixture.make(100);
+    SaleFixture sale = new SaleFixture(100);
     EPIC04_MerchandiseSale_Controller.SaleResult result = sale.sell(
       null,
       'gloves20',
@@ -106,7 +106,7 @@ private class EPIC04_MerchandiseDiscount_Test {
       Expiration_Date__c = Date.today().addDays(5),
       Is_Active__c = false
     );
-    SaleFixture sale = SaleFixture.make(40);
+    SaleFixture sale = new SaleFixture(40);
     try {
       sale.sell(null, 'OFF', null);
       System.assert(false, 'expected inactive promo');
@@ -151,8 +151,7 @@ private class EPIC04_MerchandiseDiscount_Test {
     Id locationId;
     Id itemId;
 
-    static SaleFixture make(Decimal price) {
-      SaleFixture fixture = new SaleFixture();
+    SaleFixture(Decimal price) {
       Franchise_Location__c location = EPIC01_TestDataFactory.createLocation(
         'Lexington'
       );
@@ -173,10 +172,9 @@ private class EPIC04_MerchandiseDiscount_Test {
         Product_Category__c = category.Id
       );
       insert item;
-      fixture.memberId = member.Id;
-      fixture.locationId = location.Id;
-      fixture.itemId = item.Id;
-      return fixture;
+      memberId = member.Id;
+      locationId = location.Id;
+      itemId = item.Id;
     }
 
     EPIC04_MerchandiseSale_Controller.SaleResult sell(
