@@ -33,6 +33,10 @@
     <enabled>true</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>EPIC04_MerchandiseRefund_Action</apexClass>
+    <enabled>true</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>EPIC04_MerchandiseSale_Controller</apexClass>
     <enabled>true</enabled>
   </classAccesses>
@@ -689,6 +693,16 @@
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>
+    <editable>false</editable>
+    <field>Merchandise_Sale__c.Refund_Reason__c</field>
+    <readable>true</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Merchandise_Sale__c.Status__c</field>
+    <readable>true</readable>
+  </fieldPermissions>
+  <fieldPermissions>
     <editable>true</editable>
     <field>Merchandise_Sale__c.Sale_Date__c</field>
     <readable>true</readable>
@@ -706,6 +720,11 @@
   <fieldPermissions>
     <editable>true</editable>
     <field>Payment_Transaction__c.Transaction_Method__c</field>
+    <readable>true</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Payment_Transaction__c.Merchandise_Sale__c</field>
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>

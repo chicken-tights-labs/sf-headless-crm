@@ -1,6 +1,6 @@
 # Story Order: EPIC-03, EPIC-04, EPIC-11
 
-**Last updated:** 2026-10-26
+**Last updated:** 2026-10-27
 **Supersedes:** the sequencing, C2, and trainer-app offline sections of [`EPIC-03_04_Conflict_Analysis.md`](./EPIC-03_04_Conflict_Analysis.md)
 
 This is the order the open stories are expected to merge. Each story's GitHub issue has a dependency comment with the details. If this file and an issue comment disagree, the newer one wins, and this file gets updated in the same PR.
@@ -65,10 +65,11 @@ This is the order the open stories are expected to merge. Each story's GitHub is
 - **Substitute** uses a new trainer lookup on `Scheduled_Session__c`. `Assigned_Trainer__c` stays the original trainer.
 - **Do not create** `Order__c`, `Payment__c`, `Refund__c`, `Discount_Request__c`, `Check_In__c`, or `Medical_Note__c` from older docs. Use `Payment_Transaction__c`, `Merchandise_Sale__c`, `Sale_Line_Item__c`, `Booking__c`, and `Member__c.Medical_Notes__c`.
 - **Merchandise payment does not call `processPayment`.** #60 writes `Payment_Transaction__c` with type Merchandise Purchase. It does not activate a membership, reset dates, send the welcome email, or award a referral. Card on the sale is stored as Credit Card. Account Credit is a `Transaction_Method__c` value.
+- **Merchandise refund** (#62) is a full refund of one sale. Front desk enters a reason. No manager PIN. Sold quantity goes back to `Current_Stock__c`. A new `Payment_Transaction__c` is type Refund, status Completed, and a positive amount equal to `Total_Amount__c`. The original Merchandise Purchase stays Completed. Membership refunds stay out. It does not call `processPayment`.
 
 ## Shared files
 
-`Boxing_Gym_CRM_Access.permissionset-meta.xml` is touched by #54, #60, #61, #47, and #55. #61 also adds `Boxing_Gym_Manager`. `Member__c` gets a new field from #47. Rebase on `main` before opening each PR.
+`Boxing_Gym_CRM_Access.permissionset-meta.xml` is touched by #54, #60, #61, #62, #47, and #55. #61 also adds `Boxing_Gym_Manager`. `Member__c` gets a new field from #47. Rebase on `main` before opening each PR.
 
 ## Open questions
 
@@ -80,3 +81,4 @@ This is the order the open stories are expected to merge. Each story's GitHub is
 | #47, #64 | Decided for #47: **Replace check-in code** overwrites `Member__c.Check_In_Code__c`, so the previous code stops working. #64 still owns delivery of the new code.   |
 | #64      | Which repo and team build the wallet pass and fob?                                                                                                                 |
 | #65      | Gym Manager Home or a separate front desk page? Default the location to the staff member's gym?                                                                    |
+| #62      | Decided: full merchandise refund, restock in the same save, front desk reason, no PIN. Membership refunds stay out.                                                |

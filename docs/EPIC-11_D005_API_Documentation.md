@@ -3,7 +3,7 @@
 Issue: #41. Kanban: `t_24523042`.
 
 **Status:** Draft
-**Last verified:** 2026-10-08 against `main` `23d6c67`
+**Last verified:** 2026-10-27 against branch `feat/EPIC04-USF008-merchandise-refund` for the merchandise refund note. Earlier API facts were checked 2026-10-08 against `main` `23d6c67`.
 **Checked from:** source in `force-app` (not an org click-through)
 **Still open:** no OAuth client in source; no POS endpoints except lead capture; no Postman collection; class access for `EPIC01_LeadCapture_Rest` is not in the permission set
 
@@ -35,18 +35,18 @@ Why Apex: a Flow cannot expose an inbound REST endpoint.
 
 ### Request body
 
-| JSON field | Required | Notes |
-|---|---|---|
-| firstName | Yes | `First Name is required` |
-| lastName | Yes | `Last Name is required` |
-| email | No | If present, must look like an email. `Please enter a valid email address` |
-| phone | No | If present, 10 digits after removing spaces, dashes, parentheses, dots, and a leading `+1`. `Please enter a valid 10-digit phone number` |
-| leadSource | No | Defaults to `Web Form`. Other values used in source: `Walk-in`, `Facebook Ad`. Must be an active Lead Source value. |
-| programInterest | No | Restricted picklist when set. |
-| referralCode | No | Stored on `Referral_Code_Entered__c`. A before-save flow attributes a valid code. |
-| franchiseLocationId | One of these two | Salesforce Id of a Franchise Location. |
-| franchiseLocationName | One of these two | Name of a Franchise Location whose Status is **Active**. |
-| campaignMetadata | No | Long text. Used for a raw Facebook payload. |
+| JSON field            | Required         | Notes                                                                                                                                    |
+| --------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| firstName             | Yes              | `First Name is required`                                                                                                                 |
+| lastName              | Yes              | `Last Name is required`                                                                                                                  |
+| email                 | No               | If present, must look like an email. `Please enter a valid email address`                                                                |
+| phone                 | No               | If present, 10 digits after removing spaces, dashes, parentheses, dots, and a leading `+1`. `Please enter a valid 10-digit phone number` |
+| leadSource            | No               | Defaults to `Web Form`. Other values used in source: `Walk-in`, `Facebook Ad`. Must be an active Lead Source value.                      |
+| programInterest       | No               | Restricted picklist when set.                                                                                                            |
+| referralCode          | No               | Stored on `Referral_Code_Entered__c`. A before-save flow attributes a valid code.                                                        |
+| franchiseLocationId   | One of these two | Salesforce Id of a Franchise Location.                                                                                                   |
+| franchiseLocationName | One of these two | Name of a Franchise Location whose Status is **Active**.                                                                                 |
+| campaignMetadata      | No               | Long text. Used for a raw Facebook payload.                                                                                              |
 
 Example:
 
@@ -78,12 +78,12 @@ The location name in the example must already exist and be Active. This repo doe
 }
 ```
 
-| HTTP status | When | message |
-|---|---|---|
-| 201 | Lead inserted | `Lead created` |
-| 409 | Same email already on a Lead | `Lead already exists — redirecting to update flow`. `duplicate` is true. `leadId` is the existing lead. There is no update API behind that sentence. |
-| 400 | Validation, unknown location, or a save error | Joined validation messages, or `A valid franchise location is required`, or the DML message. |
-| 400 | Body is not JSON of that shape | `Invalid request body` |
+| HTTP status | When                                          | message                                                                                                                                              |
+| ----------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 201         | Lead inserted                                 | `Lead created`                                                                                                                                       |
+| 409         | Same email already on a Lead                  | `Lead already exists — redirecting to update flow`. `duplicate` is true. `leadId` is the existing lead. There is no update API behind that sentence. |
+| 400         | Validation, unknown location, or a save error | Joined validation messages, or `A valid franchise location is required`, or the DML message.                                                         |
+| 400         | Body is not JSON of that shape                | `Invalid request body`                                                                                                                               |
 
 Duplicate detection is email only. Phone is not checked for duplicates.
 
@@ -104,7 +104,7 @@ Side effects after a successful insert, not in the JSON:
 - Discount application
 - Refund / return
 
-Conversion and payment exist as record quick actions in the CRM (US-D001), not as REST.
+Conversion, payment, and merchandise refund exist as record actions in the CRM (US-D001), not as REST.
 
 ## Objects a caller will meet
 
@@ -138,13 +138,13 @@ flowchart LR
 
 **Verified from source** for this endpoint only.
 
-| Situation | Retry |
-|---|---|
-| 400 validation or location | Fix the body. Retrying the same body fails again. |
-| 409 duplicate email | Do not insert again. The response already returns the existing `leadId`. There is no PATCH. |
-| 400 `Invalid request body` | Send JSON that deserializes to the request fields. |
-| Salesforce auth failure | Token problem, outside this class. |
-| Rate limit | Not implemented here. Salesforce platform limits still apply. |
+| Situation                  | Retry                                                                                       |
+| -------------------------- | ------------------------------------------------------------------------------------------- |
+| 400 validation or location | Fix the body. Retrying the same body fails again.                                           |
+| 409 duplicate email        | Do not insert again. The response already returns the existing `leadId`. There is no PATCH. |
+| 400 `Invalid request body` | Send JSON that deserializes to the request fields.                                          |
+| Salesforce auth failure    | Token problem, outside this class.                                                          |
+| Rate limit                 | Not implemented here. Salesforce platform limits still apply.                               |
 
 ## How to verify this draft
 
