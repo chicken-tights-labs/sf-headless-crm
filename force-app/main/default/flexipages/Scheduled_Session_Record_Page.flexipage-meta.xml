@@ -4,6 +4,17 @@
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
+                    <name>actionNames</name>
+                    <valueList>
+                        <valueListItems>
+                            <value>Scheduled_Session__c.Substitute</value>
+                        </valueListItems>
+                        <valueListItems>
+                            <value>Edit</value>
+                        </valueListItems>
+                    </valueList>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
                     <name>collapsed</name>
                     <value>false</value>
                 </componentInstanceProperties>
@@ -85,6 +96,14 @@
           >none</value></fieldInstanceProperties>
                 <fieldItem>Record.Assigned_Trainer__c</fieldItem>
                 <identifier>RecordAssigned_Trainer__cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties><name>uiBehavior</name><value
+          >none</value></fieldInstanceProperties>
+                <fieldItem>Record.Substitute_Trainer__c</fieldItem>
+                <identifier>RecordSubstitute_Trainer__cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>

@@ -17,6 +17,10 @@
     <enabled>true</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>EPIC03_SubstituteTrainer_Action</apexClass>
+    <enabled>true</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>EPIC03_TrainerSchedule_Controller</apexClass>
     <enabled>true</enabled>
   </classAccesses>
@@ -757,6 +761,11 @@
   <fieldPermissions>
     <editable>true</editable>
     <field>Scheduled_Session__c.Is_Location_Custom__c</field>
+    <readable>true</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>true</editable>
+    <field>Scheduled_Session__c.Substitute_Trainer__c</field>
     <readable>true</readable>
   </fieldPermissions>
   <fieldPermissions>

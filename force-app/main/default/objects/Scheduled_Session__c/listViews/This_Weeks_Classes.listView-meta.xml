@@ -5,6 +5,7 @@
     <columns>Franchise_Location__c</columns>
     <columns>Program_Type__c</columns>
     <columns>Assigned_Trainer__c</columns>
+    <columns>Substitute_Trainer__c</columns>
     <columns>Start_Time__c</columns>
     <columns>End_Time__c</columns>
     <columns>Max_Capacity__c</columns>

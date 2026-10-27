@@ -3,9 +3,9 @@
 Issue: #37. Kanban: `t_9d84897e`.
 
 **Status:** Draft
-**Last verified:** 2026-10-27 against branch `feat/EPIC03-UST008-trainer-new-member`
+**Last verified:** 2026-10-27 against branch `feat/EPIC03-UST010-trainer-substitute`
 **Checked from:** source in `force-app` (not an org click-through)
-**Still open:** screenshots in `my-gym`; substitutes and refunds are not built yet
+**Still open:** screenshots in `my-gym`; refunds are not built yet
 
 This is the canonical copy. The issue names `CRM-Documentation/EPIC-11_D001_End_User_Manual.md`. Sync that vault from this file when the vault is available.
 
@@ -19,7 +19,7 @@ Admin setup (users, the permission set, locations, waiver templates, tier values
 
 ## Trainer workflows
 
-**Partially built.** My schedule (this week), class attendee roster, Mark Attended (with waiver block), phone check-in, QR check-in, trainer member profile (with permission-gated medical notes), and New Member (walk-in to Prospect, optional payment) are in the Boxing Gym CRM app. Substitutes are not.
+**Partially built.** My schedule (this week), class attendee roster, Mark Attended (with waiver block), phone check-in, QR check-in, trainer member profile (with permission-gated medical notes), New Member (walk-in to Prospect, optional payment), and class substitute are in the Boxing Gym CRM app.
 
 ### Trainer: view my schedule
 
@@ -53,6 +53,25 @@ A scan looks up `Check-In Code` on bookings for **this class**. One match runs *
 
 The code is a random value on the member. It is not the phone number or email. **Replace check-in code** on the Member page overwrites it. The previous code stops working. The wallet pass and fob that show the code are #64, outside this repo.
 
+### Trainer: substitute for a class
+
+**Verified from source.** **Substitute** is on the Scheduled Session highlights panel in Boxing Gym CRM. Open the class from **Scheduled Session → This Week's Classes**. My schedule still lists only classes assigned to you. **Needs an org click-through** for screenshots.
+
+1. Open a class whose Assigned Trainer is someone else, and whose status is Scheduled.
+2. Click **Substitute**.
+
+You are stored in **Substitute Trainer**. Assigned Trainer does not change. Start time does not change. The assigned trainer gets an email, subject `Substitute covering your class`, saying you are covering the class and they remain the assigned trainer. A missing email or a mail failure still saves the substitute. The screen says which of those happened.
+
+These clicks do not change the class:
+
+| Message                                              | What happened                             |
+| ---------------------------------------------------- | ----------------------------------------- |
+| You are already the assigned trainer for this class. | You cannot substitute for your own class. |
+| You are already the substitute for this class.       | You are already covering it.              |
+| This class already has a substitute.                 | Someone else is already the substitute.   |
+| Cancelled classes cannot be covered.                 | Status is Cancelled.                      |
+| Completed classes cannot be covered.                 | Status is Completed.                      |
+
 ### Trainer: create a member from a walk-in
 
 **Verified from source.** The **New Member** card is on Boxing Gym CRM **Home**, under **My schedule**. It is not on the My Schedule tab. **Needs an org click-through** for screenshots.
@@ -76,7 +95,7 @@ If the name or gym is missing, the card does not call Apex. If the lead saves an
 | View class attendee lists | **Verified from source.** On a Scheduled Session, the **Attendees** tab lists bookings with member name, check-in status, and waiver status (US-T004).                                                                            |
 | Open a member profile     | **Verified from source.** From a session **Attendees** list, click the member name. The Member page shows a read-only **Trainer profile** card (name, tier, status, expiry). There is no separate trainer app.                    |
 | View medical notes        | **Verified from source.** On **Trainer profile**, medical notes appear only with `Boxing_Gym_Trainer_Medical_Notes` (read-only). Shared `Boxing_Gym_CRM_Access` does not grant the field. Members update notes in the member app. |
-| Substitute a class        | No substitute-class action.                                                                                                                                                                                                       |
+| Substitute a class        | **Verified from source.** On a Scheduled Session you are not assigned to, **Substitute** sets Substitute Trainer to you and emails the assigned trainer (US-T010). Assigned Trainer and the class time stay the same.             |
 | Create a member record    | **Verified from source.** **New Member** on Home creates a walk-in lead and converts it to a Prospect (US-T008). **Take payment** opens Process Membership Payment. Skipping payment leaves the member Prospect.                  |
 
 ## Front desk: register a walk-in lead
@@ -275,3 +294,4 @@ Managers with **Boxing Gym Manager** see **Merchandise manager PIN** on Home and
 5. Run the tier action with no Signed waiver and expect **Waiver Required**.
 6. On **Home**, confirm **Sell Merchandise** is under Walk-In Lead Registration. A discount above 10% asks for a manager PIN. Refunds stay **Not built**. QR check-in is on the session Attendees tab.
 7. On **Home**, under **My schedule**, confirm **New Member**. Creating a member without **Take payment** leaves Status **Prospect**.
+8. On a Scheduled Session you are not assigned to, click **Substitute**. Assigned Trainer stays the same and Substitute Trainer is you.
