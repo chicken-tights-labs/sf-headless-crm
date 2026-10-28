@@ -1,0 +1,20 @@
+---
+description: UI placement and look for Boxing Gym CRM Lightning screens
+globs: force-app/**/lwc/**,force-app/**/aura/**,force-app/**/flexipages/**,force-app/**/flows/**,force-app/**/applications/**,force-app/**/layouts/**,force-app/**/quickActions/**
+alwaysApply: false
+---
+
+# Boxing Gym CRM UI
+
+One task lives in one place. Put it on Home or on the record that staff already open. Do not add a second entry point, a new app, or a new page type for the same task.
+
+```text
+Refund stays on the Merchandise Sale record.
+It does not also appear as a Home card.
+```
+
+Use Salesforce Lightning Design System components (`lightning-card`, `lightning-button`, `lightning-input`, `lightning-record-form`). Do not invent a custom visual style with raw HTML and CSS.
+
+Consider desktop and phone. The Home override exists for large screens only. A new screen sets both form factors, or names which one it cannot support.
+
+Do not add a color or a font. The app brand is the existing header color `#000000` in `Boxing_Gym_CRM.app-meta.xml`. Use SLDS styling hooks that are already in the component. Do not set a new `headerColor`, `background-color`, or `font-family`.

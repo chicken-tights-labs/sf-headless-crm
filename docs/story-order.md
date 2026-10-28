@@ -1,6 +1,6 @@
 # Story Order: EPIC-03, EPIC-04, EPIC-11
 
-**Last updated:** 2026-10-27
+**Last updated:** 2026-10-27. EPIC-06 lead-capture access added the same day.
 **Supersedes:** the sequencing, C2, and trainer-app offline sections of [`EPIC-03_04_Conflict_Analysis.md`](./EPIC-03_04_Conflict_Analysis.md)
 
 This is the order the open stories are expected to merge. Each story's GitHub issue has a dependency comment with the details. If this file and an issue comment disagree, the newer one wins, and this file gets updated in the same PR.
@@ -82,3 +82,16 @@ This is the order the open stories are expected to merge. Each story's GitHub is
 | #64      | Which repo and team build the wallet pass and fob?                                                                                                                 |
 | #65      | Gym Manager Home or a separate front desk page? Default the location to the staff member's gym?                                                                    |
 | #62      | Decided: full merchandise refund, restock in the same save, front desk reason, no PIN. Membership refunds stay out.                                                |
+| #92      | Decided: JWT bearer from the server, on Developer Edition `chickentightslabs`. Stop if External Client App creation is blocked.                                    |
+
+## EPIC-06: External access for lead capture
+
+Epic #92. One story per pull request. Do not start the next story until the previous one is merged. If #93 finds that Salesforce still blocks External Client App creation, stop.
+
+| Issue | Story                                                  | Depends on                               |
+| ----- | ------------------------------------------------------ | ---------------------------------------- |
+| #93   | US-A001 Confirm the External Client App can be created | None                                     |
+| #94   | US-A002 Integration user for lead capture              | #93                                      |
+| #95   | US-A003 External Client App for JWT bearer             | #93, #94                                 |
+| #96   | US-A004 Bring the app back into source                 | #95                                      |
+| #97   | US-A005 Call lead capture with the server token        | #95. Relates to #41. Does not close #41. |
